@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Планировщик, ресурсы и вытеснение · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Выбор узла в две фазы, сходство и пометки, запросы Запросы и лимиты × Два разных обещания: сколько ресурса поду гарантируют и сколько он не может превысить.">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/05.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/05.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/05.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/05.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/05.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Планировщик, ресурсы и вытеснение">
+<meta property="og:description" content="Выбор узла в две фазы, сходство и пометки, запросы Запросы и лимиты × Два разных обещания: сколько ресурса поду гарантируют и сколько он не может превысить.">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/05.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Планировщик, ресурсы и вытеснение","description":"Выбор узла в две фазы, сходство и пометки, запросы Запросы и лимиты × Два разных обещания: сколько ресурса поду гарантируют и сколько он не может превысить.","url":"https://y-kolyada.github.io/kubernetes/ru/05.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/"}}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/05.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="05.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/05.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/05.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html" aria-current="page"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Планировщик, ресурсы и вытеснение</h1>
+    <p class="page-size" data-words="2086">Слов: 2086</p>
+    <p class="lead">Выбор узла в две фазы, сходство и пометки, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">запросы</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Запросы и лимиты</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Два разных обещания: сколько ресурса поду гарантируют и сколько он не может превысить.</span><span class="term-links"><a href="glossary.html#term-requests-limits">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> против лимитов, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">три класса обслуживания</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Класс обслуживания (QoS)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Категория пода, выводимая из его запросов и лимитов, а не задаваемая полем.</span><span class="term-links"><a href="glossary.html#term-qos">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, торможение CPU и OOM, давление на узле, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">вытеснение</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Вытеснение (Eviction)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Удаление подов с узла, когда ресурсов не хватает, или при обслуживании.</span><span class="term-links"><a href="glossary.html#term-eviction">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> и обслуживание узла без простоя.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p><span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">Планировщик</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Планировщик (Scheduler)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Компонент, выбирающий узел для нового пода в две фазы: отсев непригодных и оценка оставшихся.</span><span class="term-links"><a href="glossary.html#term-scheduler">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> размещает поды не по фактическому потреблению узлов, а по заявленным запросам. Он складывает запросы уже размещённых подов, сравнивает с доступным на узле и решает. Фактическая загрузка узла при этом его не интересует вовсе. Отсюда два симметричных и очень распространённых состояния кластера: узлы заняты на двадцать процентов, а новый под не размещается, потому что запросы завышены; или узлы перегружены и поды тормозят, потому что запросы занижены. Запрос - это не подсказка и не пожелание, это обязательство кластера перед вашим подом и единственная цифра, по которой считается вместимость.</p>
+    </div>
+
+    <h2 id="two-phases">1 · Две фазы выбора узла <a class="anchor-link" href="#two-phases">#</a></h2>
+    <p>Планировщик работает с подами, у которых узел ещё не выбран, и делает это в два приёма. Сначала отсев: он отбрасывает узлы, на которых под не может оказаться в принципе - не хватает запрошенных ресурсов, не подходят метки узла, не свободен нужный порт, узел помечен как нежелательный и под не несёт допуска, нужный носитель хранения недоступен в этой зоне. Затем оценка: оставшиеся узлы получают баллы по нескольким правилам сразу - сколько ресурсов останется свободными, разнесены ли реплики одного набора, лежит ли уже образ на узле, - и под уходит на лучший.</p>
+    <p>Если после отсева не осталось ни одного узла, под остаётся в состоянии ожидания, и события объекта содержат точную причину по каждому узлу. Это одно из немногих мест в Kubernetes, где кластер прямо говорит, что ему мешало, и первая команда при нерасселённом поде - всегда просмотр его событий.</p>
+    <p>Выбор узла делается один раз. Планировщик не возвращается к уже размещённому поду: если потом на узле стало тесно, под не переедет сам - это работа других механизмов, вытеснения и перезапуска контроллером. Поэтому кластер постепенно приходит в состояние неравномерное относительно текущей нагрузки, и ровно поэтому существуют отдельные инструменты перебалансировки.</p>
+
+    <h2 id="placement">2 · Как вы влияете на выбор <a class="anchor-link" href="#placement">#</a></h2>
+    <p>Инструментов четыре, и путать их дорого.</p>
+    <ul>
+      <li><strong>Селектор узла</strong> - простейшее требование совпадения меток узла. Либо узел их несёт, либо он отсеян.</li>
+      <li><strong>Сходство с узлом</strong> - то же самое, но с выражениями и, главное, с двумя степенями строгости: обязательное требование участвует в отсеве, предпочтительное - только в оценке. Разница в том, что при нехватке подходящих узлов обязательное оставит под в ожидании, а предпочтительное разместит его где получится. Выбирать надо осознанно: «предпочтительно на узлах с диском» означает, что под может оказаться без диска.</li>
+      <li><strong>Сходство и анти-сходство с подами</strong> - размещение относительно других подов: рядом с такими же или, чаще, подальше от таких же. Областью «рядом» и «подальше» управляет ключ топологии: узел, зона, стойка. Анти-сходство по узлу не даёт двум репликам встать на один узел, по зоне - в одну зону. Это ваш основной инструмент против отказа, который уносит сразу всё.</li>
+      <li><strong>Пометки узла и допуски к ним</strong> - обратная логика: не под выбирает узел, а узел <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">отталкивает</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Отталкивающая метка и разрешение</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Пара механизмов, которой узел отказывает подам, а под получает право на нём размещаться.</span><span class="term-links"><a href="glossary.html#term-taint-toleration">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> поды. Узел несёт пометку, и попасть на него может только под с соответствующим допуском. Так резервируют узлы под особую нагрузку и так же помечают узлы с проблемами. Отдельный вид пометки не только запрещает размещение, но и выгоняет уже работающие поды, и именно им кластер пользуется, когда узел перестал отвечать.</li>
+    </ul>
+    <p>Для равномерного разнесения реплик по зонам отказа есть отдельное, более точное средство - ограничения распределения по топологии: вы задаёте допустимый перекос между областями и говорите, что делать, когда его не удержать. Это удобнее анти-сходства там, где нужно «примерно равномерно», а не «строго не вместе».</p>
+<pre data-run="syntax"><code>spec:
+  tolerations:
+    - key: workload
+      operator: Equal
+      value: batch
+      effect: NoSchedule
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app: web</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Два механизма из четырёх, и логика у них противоположная. Допуск не притягивает под к помеченному узлу, он лишь снимает запрет: под с этим допуском <em>может</em> попасть на узлы для пакетной нагрузки, но может и не попасть. Ограничение распределения, наоборот, требует: разница в числе подов между зонами не больше одного, а если это требование не выполнить - под остаётся в ожидании. Поменяйте последнюю строку на «можно разместить» и получите мягкое пожелание вместо гарантии разнесения по зонам.</div>
+
+
+    <h2 id="requests-limits">3 · Запросы и лимиты: это разные вещи <a class="anchor-link" href="#requests-limits">#</a></h2>
+    <p>Запрос и лимит выглядят как нижняя и верхняя граница одного и того же, но живут в разных механизмах и даже у разных компонентов.</p>
+    <p><strong>Запрос - это планирование.</strong> Его читает планировщик, складывая запросы подов на узле и сравнивая с доступным для подов объёмом. Запрос гарантирует вашему поду, что эти ресурсы на узле зарезервированы под него. Он ничего не ограничивает: под может потреблять больше запрошенного, если на узле есть свободное.</p>
+    <p><strong>Лимит - это исполнение.</strong> Его применяет узел средствами операционной системы, и планировщик про него не думает. Лимит ничего не резервирует и не гарантирует: он только обрезает потребление сверху.</p>
+    <p>Доступный для подов объём узла меньше его физического: часть зарезервирована под служебные процессы кластера, часть - под процессы самой системы, часть оставлена как порог для вытеснения. Поэтому на узле с восемью гигабайтами памяти вы не разместите подов на восемь гигабайтов запросов, и это не ошибка подсчёта.</p>
+    <div class="box">
+      <svg viewBox="0 0 320 210" width="100%" style="max-width:320px;height:auto;display:block;margin:0 auto" role="img" aria-label="Ёмкость узла делится на зарезервированное и доступное подам. Вместимость считается по сумме запросов размещённых подов, фактическое потребление планировщик не смотрит">
+        <text x="2" y="14" fill="currentColor" font-size="12" opacity="0.75">ёмкость узла</text>
+        <g stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.05">
+          <rect x="2" y="22" width="128" height="52" rx="6"/>
+          <rect x="136" y="22" width="182" height="52" rx="6"/>
+        </g>
+        <g fill="currentColor" font-size="12">
+          <text x="10" y="42">зарезервировано</text>
+          <text x="144" y="42">доступно подам</text>
+        </g>
+        <g fill="currentColor" font-size="12" opacity="0.75">
+          <text x="10" y="60">кластер, система</text>
+          <text x="144" y="60">порог вытеснения вычтен</text>
+        </g>
+        <text x="2" y="96" fill="currentColor" font-size="12" opacity="0.75">сумма запросов размещённых подов</text>
+        <g stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" fill="none" opacity="0.5">
+          <rect x="136" y="104" width="182" height="24" rx="4"/>
+          <rect x="136" y="160" width="182" height="24" rx="4"/>
+        </g>
+        <rect x="136" y="104" width="120" height="24" rx="4" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.14"/>
+        <text x="144" y="121" fill="currentColor" font-size="12">вместимость</text>
+        <text x="2" y="152" fill="currentColor" font-size="12" opacity="0.75">фактическое потребление</text>
+        <rect x="136" y="160" width="64" height="24" rx="4" stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.05"/>
+        <text x="2" y="202" fill="currentColor" font-size="12" opacity="0.75">планировщик его не смотрит</text>
+      </svg>
+      <p class="dim">Схема 5. Две полосы объясняют оба частых состояния кластера: узел почти пуст по потреблению и полон по запросам - новый под не разместится; узел полон по потреблению и свободен по запросам - поды тормозят, а планировщик продолжает присылать новые.</p>
+    </div>
+
+    <p>Единицы стоит знать точно, потому что на них ошибаются при переносе значений между системами. Процессор измеряется в ядрах, и суффикс <code>m</code> означает тысячную долю ядра: <code>100m</code> - это десятая часть ядра. Память измеряется в байтах с суффиксами двух семейств: <code>Mi</code> и <code>Gi</code> - двоичные, то есть 1Mi равен 1048576 байтам, а <code>M</code> и <code>G</code> - десятичные, и 1M равен 1000000 байтам. Разница в пять процентов на гигабайте выглядит мелочью ровно до момента, когда она становится разницей между работой и убийством процесса по памяти.</p>
+<pre data-run="syntax"><code>resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 256Mi</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Фрагмент одного контейнера, и в нём сознательно нет лимита процессора. По памяти запрос равен лимиту: память не сжимаема, и превышение всё равно закончится убийством процесса, поэтому гарантия и потолок здесь совпадают. По процессору задан только запрос: он резервирует десятую часть ядра и участвует в планировании, а отсутствие лимита означает, что под не будет искусственно тормозиться, когда на узле есть свободное время. Обратите внимание: такой под попадёт в класс «гибкий», а не «гарантированный», потому что равенство требуется по обоим ресурсам.</div>
+
+
+    <h2 id="qos">4 · Три класса обслуживания <a class="anchor-link" href="#qos">#</a></h2>
+    <p>Класс обслуживания пода вы не задаёте: кластер выводит его из того, как вы заполнили запросы и лимиты, и затем использует при нехватке ресурсов на узле.</p>
+    <ul>
+      <li><strong>Гарантированный</strong> - у каждого контейнера пода запрос и лимит заданы и равны, и по процессору, и по памяти. Такой под труднее всего выселить.</li>
+      <li><strong>Гибкий</strong> - запросы заданы, но не равны лимитам или заданы не везде. Самый частый класс в жизни.</li>
+      <li><strong>По возможности</strong> - ни запросов, ни лимитов. Под размещается куда угодно, не получает никаких гарантий и уходит первым.</li>
+    </ul>
+    <p>Практический смысл в порядке выселения: при нехватке памяти на узле первыми уходят поды без запросов, затем те, кто превысил свои запросы, и только в конце - гарантированные. Отсюда простое правило: под без запросов - это под, который однажды исчезнет без видимой причины, и причина будет в чужой нагрузке. Для чего-либо важного запросы обязательны, даже если вы не уверены в числах: заниженный запрос всё равно лучше отсутствующего.</p>
+
+    <h2 id="throttle-oom">5 · Что лимит делает физически <a class="anchor-link" href="#throttle-oom">#</a></h2>
+    <p>Два ресурса ведут себя принципиально по-разному, и это важнейшая практическая разница в этой главе.</p>
+    <p><strong>Процессор сжимаем.</strong> Лимит превращается в квоту планировщика ядра на короткий период. Контейнер, который пытается потреблять больше, не убивается: его притормаживают, то есть не дают процессорного времени до конца периода. Снаружи это видно не как ошибка, а как выросшая задержка ответов, и именно поэтому слишком низкий лимит процессора - одна из самых неприятных причин медленного сервиса: приложение здорово, узел не загружен, показатели ошибок чисты, а запросы идут втрое дольше. Ищется это по счётчику торможения контейнера, и это тот показатель, который стоит вывести на панель заранее.</p>
+    <p><strong>Память не сжимаема.</strong> Отдать её назад нельзя, поэтому превышение лимита памяти заканчивается убийством процесса ядром. Контейнер получает статус убитого по памяти и код выхода 137, после чего перезапускается по политике пода, и при устойчивой нехватке вы видите цикл падений. Отсюда правило: лимит памяти - это заявление «если процесс займёт больше, его надо убить», а не пожелание потреблять скромнее.</p>
+    <p>Из этой асимметрии следует распространённая рекомендация: по памяти запрос и лимит делать равными, а лимит процессора задавать осторожно или не задавать совсем там, где важна задержка, ограничивая нагрузку запросами и количеством реплик. Это не догма, но понимать, чем вы платите в каждом случае, обязательно.</p>
+
+    <h2 id="eviction">6 · Давление на узле и вытеснение <a class="anchor-link" href="#eviction">#</a></h2>
+    <p>Кроме лимитов отдельного контейнера есть здоровье узла в целом. Агент узла следит за остатком памяти, местом на диске под данные и образы и, когда остаток опускается ниже порога, объявляет давление: помечает узел, перестаёт принимать новые поды и начинает выселять уже работающие в порядке классов обслуживания. Выселенный под не перезапускается на месте - он удаляется, а его контроллер создаёт новый, который планировщик размещает заново, возможно на другом узле.</p>
+    <p>Поэтому выселение и убийство по памяти - разные события с разными причинами, хотя оба про память. Первое - это узлу стало тесно, и пострадал тот, кто хуже всех защищён запросами. Второе - это ваш контейнер превысил свой лимит. В первом случае правят запросы и вместимость кластера, во втором - лимит или само приложение.</p>
+    <p>Давление по диску стоит упомянуть отдельно, потому что оно удивляет чаще: заполнение диска узла образами и журналами выселяет поды, которые к этому диску не имеют никакого отношения. Уборка неиспользуемых образов и ограничение размера журналов - это не гигиена, а защита от отказов, не связанных с вашим кодом.</p>
+
+    <h2 id="maintenance">7 · Обслуживание узла без простоя <a class="anchor-link" href="#maintenance">#</a></h2>
+    <p>Узлы приходится выводить из работы: обновление ядра, замена, перенос, обновление самого кластера. Делается это в два шага, и у каждого своя роль.</p>
+    <p><strong>Запрет размещения</strong> помечает узел как непригодный для новых подов, не трогая работающие. Это мгновенная и обратимая операция, и именно её делают первой, чтобы узел не получил новую нагрузку, пока вы готовите его разгрузку.</p>
+    <p><strong>Разгрузка</strong> выселяет с узла поды, после чего их контроллеры создают замену на других узлах. Поды набора демонов остаются: они по смыслу привязаны к узлу. Поды без контроллера не вернутся нигде, и разгрузка прямо об этом предупреждает - под, созданный вручную, при обслуживании узла просто исчезает.</p>
+    <p>Разгрузка идёт не удалением, а через механизм вытеснения, и в этом вся соль: вытеснение подчиняется <strong>бюджету недоступности</strong>. Бюджет - это отдельный объект, в котором вы для набора подов заявляете, сколько их должно оставаться доступными или сколько разрешено потерять одновременно. Если очередное выселение нарушит бюджет, оно будет отклонено, и разгрузка остановится и будет ждать. Так кластер не даёт вам вынуть кворум базы данных вместе с узлом, причём не вашей дисциплиной, а механически.</p>
+    <p>У бюджета есть обратная сторона, на которую наступают регулярно. Бюджет, требующий сохранять все реплики, или бюджет при одной реплике делает разгрузку узла невозможной: автоматика обслуживания узлов встаёт и ждёт человека, иногда неделями. Поэтому бюджет пишут согласованно с числом реплик, а нагрузке, которая обязана выживать обслуживание узлов, реплик нужно больше одной.</p>
+<pre data-run="syntax"><code>apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: web
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: web</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Объект из восьми строк останавливает разгрузку узла. При трёх репликах он разрешает выселить одну за раз, и обслуживание узлов пойдёт по очереди вместо того, чтобы снести сервис целиком. Теперь посчитайте границу: при двух репликах этот же бюджет разрешает ноль выселений, и разгрузка узла встанет навсегда, ожидая человека. Бюджет пишут не «на всякий случай», а числом, согласованным с числом реплик.</div>
+
+    <p>Последнее средство на этом слое - приоритет. Класс приоритета позволяет сказать, что одни поды важнее других, и тогда при нехватке ресурсов планировщик может вытеснить менее важный под, чтобы разместить более важный. Это сильный инструмент: заданный без разбора, он превращает нехватку ресурсов в случайные исчезновения, а заданный осмысленно - гарантирует, что при тесноте в кластере падает пакетная обработка, а не приём платежей.</p>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <ol>
+        <li><strong>Понимание вместимости.</strong> Кластер считает вместимость по запросам, а не по загрузке, и вы умеете объяснить, почему под не размещается на пустом узле.</li>
+        <li><strong>Разделение запроса и лимита.</strong> Запрос - планирование и гарантия, лимит - исполнение и обрезание; по памяти их обычно уравнивают, по процессору лимит задают с осторожностью.</li>
+        <li><strong>Чтение двух отказов.</strong> Код выхода 137 и убийство по памяти - это ваш лимит; выселение по давлению - это теснота на узле и слабые запросы.</li>
+        <li><strong>Процедура обслуживания узла.</strong> Запрет размещения, затем разгрузка, бюджет недоступности согласован с числом реплик, и ни одного важного пода без контроллера.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="06.html">Сеть, сервисы и обнаружение</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="04.html">Контроллеры рабочих нагрузок</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

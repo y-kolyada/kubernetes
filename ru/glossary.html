@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Словарь понятий · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Сорок два понятия курса с разбором механизма и цены ошибки: что это, как работает и что сломается, если понять неверно.">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/glossary.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/glossary.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/glossary.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/glossary.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/glossary.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Словарь понятий">
+<meta property="og:description" content="Сорок два понятия курса с разбором механизма и цены ошибки: что это, как работает и что сломается, если понять неверно.">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/glossary.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"DefinedTermSet","name":"Словарь понятий","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html","inLanguage":"ru","hasDefinedTerm":[{"@type":"DefinedTerm","name":"Контур сверки (Reconcile loop)","description":"Непрерывное сведение фактического состояния кластера к желаемому, описанному в объектах.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-reconcile"},{"@type":"DefinedTerm","name":"Управляющий слой (Control plane)","description":"Часть кластера, которая хранит желаемое состояние и принимает решения, но не запускает контейнеры.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-control-plane"},{"@type":"DefinedTerm","name":"API-сервер","description":"Единственная точка входа в кластер: принимает запросы, проверяет права и допуск, пишет объекты в хранилище.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-apiserver"},{"@type":"DefinedTerm","name":"etcd","description":"Распределённое хранилище, в котором лежит желаемое состояние всего кластера.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-etcd"},{"@type":"DefinedTerm","name":"Планировщик (Scheduler)","description":"Компонент, выбирающий узел для нового пода в две фазы: отсев непригодных и оценка оставшихся.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-scheduler"},{"@type":"DefinedTerm","name":"Агент узла (kubelet)","description":"Компонент узла, который создаёт поды по назначению и непрерывно пишет их фактическое состояние обратно в API.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-kubelet"},{"@type":"DefinedTerm","name":"Манифест","description":"Текстовое описание желаемого состояния объекта, которое применяется к кластеру и хранится в репозитории.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-manifest"},{"@type":"DefinedTerm","name":"spec и status","description":"Два поля объекта: желаемое состояние, которое задаёте вы, и фактическое, которое дописывает кластер.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-spec-status"},{"@type":"DefinedTerm","name":"Метка и селектор","description":"Произвольные пары ключ-значение на объекте и выражение, по которому другие объекты его находят.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-label-selector"},{"@type":"DefinedTerm","name":"Пространство имён (Namespace)","description":"Область внутри кластера, в которой уникальны имена и действуют права, квоты и политики.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-namespace"},{"@type":"DefinedTerm","name":"Под (Pod)","description":"Наименьшая единица размещения: один или несколько контейнеров Под (Pod) × Наименьшая единица размещения: один или несколько контейнеров с общим сетевым пространством имён и общими томами. В словарь понятий с общим сетевым пространством имён и общими томами.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-pod"},{"@type":"DefinedTerm","name":"Инициализирующий и сопроводительный контейнер","description":"Контейнеры пода, которые запускаются до основных: первый обязан завершиться, второй работает всё время жизни пода.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-init-sidecar"},{"@type":"DefinedTerm","name":"Пробы готовности, живости и стартовая","description":"Три проверки контейнера, отвечающие за разные решения: трафик, перезапуск и отсрочка на старте.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-probe"},{"@type":"DefinedTerm","name":"Деплоймент (Deployment)","description":"Контроллер, который держит заданное число копий шаблона пода и управляет сменой версий.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-deployment"},{"@type":"DefinedTerm","name":"Набор реплик (ReplicaSet)","description":"Объект, удерживающий заданное число копий одного шаблона пода.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-replicaset"},{"@type":"DefinedTerm","name":"Набор состояний (StatefulSet)","description":"Контроллер для нагрузок, которым нужны постоянное имя и собственный диск у каждой реплики.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-statefulset"},{"@type":"DefinedTerm","name":"Набор демонов (DaemonSet)","description":"Контроллер, который держит по одному поду на каждом подходящем узле и сам ставит под на новый узел.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-daemonset"},{"@type":"DefinedTerm","name":"Задача (Job) и расписание (CronJob)","description":"Контроллеры для работы с завершением: разовой и повторяющейся по расписанию.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-job"},{"@type":"DefinedTerm","name":"Сервис (Service)","description":"Устойчивое имя и адрес для набора подов, найденных по селектору.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-service"},{"@type":"DefinedTerm","name":"Срез адресатов (EndpointSlice)","description":"Список адресов подов сервиса, который ведёт контроллер и в который попадают только готовые поды.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-endpointslice"},{"@type":"DefinedTerm","name":"Служба имён кластера","description":"Внутренний DNS, превращающий имя сервиса в его адрес.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-dns"},{"@type":"DefinedTerm","name":"Вход снаружи (Ingress, Gateway API)","description":"Слой маршрутизации внешнего трафика по именам и путям поверх одного входа в кластер.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-ingress"},{"@type":"DefinedTerm","name":"Сетевая политика (NetworkPolicy)","description":"Объект, описывающий, какой трафик разрешён к подам и от них.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-netpol"},{"@type":"DefinedTerm","name":"Набор настроек (ConfigMap)","description":"Объект с парами ключ-значение, подключаемый к контейнеру переменными среды или файлом.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-configmap"},{"@type":"DefinedTerm","name":"Секрет (Secret)","description":"Объект для чувствительных значений, подключаемый так же, как набор настроек.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-secret"},{"@type":"DefinedTerm","name":"Заявка и носитель (PVC и PV)","description":"Пара объектов: запрос приложения на диск и сам диск, созданный драйвером.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-pv-pvc"},{"@type":"DefinedTerm","name":"Класс хранения (StorageClass)","description":"Описание того, какой диск и как создавать по заявке.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-storageclass"},{"@type":"DefinedTerm","name":"Запросы и лимиты","description":"Два разных обещания: сколько ресурса поду гарантируют и сколько он не может превысить.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-requests-limits"},{"@type":"DefinedTerm","name":"Класс обслуживания (QoS)","description":"Категория пода, выводимая из его запросов и лимитов, а не задаваемая полем.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-qos"},{"@type":"DefinedTerm","name":"Вытеснение (Eviction)","description":"Удаление подов с узла, когда ресурсов не хватает, или при обслуживании.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-eviction"},{"@type":"DefinedTerm","name":"Отталкивающая метка и разрешение","description":"Пара механизмов, которой узел отказывает подам, а под получает право на нём размещаться.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-taint-toleration"},{"@type":"DefinedTerm","name":"Ограничение разброса (Topology Spread)","description":"Правило, требующее, чтобы поды были распределены между зонами или узлами равномерно.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-topology-spread"},{"@type":"DefinedTerm","name":"Горизонтальный автомасштабатор (HPA)","description":"Контроллер, меняющий число реплик по метрике.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-hpa"},{"@type":"DefinedTerm","name":"Бюджет недоступности (PodDisruptionBudget)","description":"Правило, ограничивающее число одновременно убираемых подов при плановых работах.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-pdb"},{"@type":"DefinedTerm","name":"Права доступа (RBAC)","description":"Модель прав, в которой роль описывает набор глаголов, а привязка - область их действия.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-rbac"},{"@type":"DefinedTerm","name":"Служебная учётная запись (ServiceAccount)","description":"Удостоверение, с которым под обращается к API кластера.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-serviceaccount"},{"@type":"DefinedTerm","name":"Контроль допуска (Admission)","description":"Шаг обработки запроса после аутентификации и прав, на котором объект можно изменить или отклонить.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-admission"},{"@type":"DefinedTerm","name":"Стандарт безопасности подов (Pod Security Admission)","description":"Встроенная проверка параметров пода по трём уровням строгости, включаемая метками пространства имён.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-psa"},{"@type":"DefinedTerm","name":"Квота и диапазон ограничений","description":"Пара объектов: предел потребления пространства имён и значения по умолчанию для тех, кто их не указал.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-quota"},{"@type":"DefinedTerm","name":"Свой тип объекта (CRD) и оператор","description":"Расширение API собственным видом объекта вместе с контроллером, который сводит для него желаемое с фактическим.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-crd"},{"@type":"DefinedTerm","name":"Интерфейсы рантайма, сети и хранения (CRI, CNI, CSI)","description":"Три стандартных стыка, через которые кластер подключает чужие реализации: запуск контейнеров, сеть и диски.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-interfaces"},{"@type":"DefinedTerm","name":"Внешний вход (OIDC)","description":"Протокол, по которому кластер доверяет внешнему провайдеру удостоверений вместо собственных сертификатов.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-oidc"},{"@type":"DefinedTerm","name":"Радиус отказа","description":"Круг того, что перестаёт работать при конкретном отказе.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-blast-radius"},{"@type":"DefinedTerm","name":"Увод узла (drain) и обновление","description":"Плановое освобождение узла от подов и смена версии кластера.","url":"https://y-kolyada.github.io/kubernetes/ru/glossary.html#term-drain"}]}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/glossary.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="glossary.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/glossary.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/glossary.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="glossary.html" aria-current="page"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Словарь понятий</h1>
+    <p class="page-size" data-words="2604">Слов: 2604</p>
+    <p class="lead">Сорок два понятия курса с разбором механизма и цены ошибки: что это, как работает и что сломается, если понять неверно.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>Словарь курса устроен не как список определений. У каждой статьи две части: первая отвечает «что это» одним предложением, вторая - «что произойдёт, если понять неверно». Вторая часть и есть предмет: определение запоминается за минуту, а цена ошибки объясняет, почему термин вообще существует.</p>
+      <p>Каждое понятие названо там, где оно впервые встречается в курсе, и из любой главы в словарь ведёт карточка термина. Обратный путь - строка «Где встретилось впервые» в конце статьи.</p>
+    </div>
+
+    <div class="glossary-term" id="term-reconcile">
+      <h2>
+        <span class="glossary-title">Контур сверки (Reconcile loop)</span>
+        <code class="glossary-object">непрерывно · все контроллеры</code>
+        <a class="anchor-link" href="#term-reconcile">#</a>
+      </h2>
+      <p class="glossary-lead">Непрерывное сведение фактического состояния кластера к желаемому, описанному в объектах.</p>
+      <p>Ни один компонент не вызывает другой: каждый смотрит в API и действует на разницу. Отсюда устойчивость к перезапускам и отсюда же главное правило разбора - причина молчания лежит в объекте, а не в журнале компонента.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="01.html#reconcile">Желаемое состояние и контур сверки · Контур сверки</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-control-plane">
+      <h2>
+        <span class="glossary-title">Управляющий слой (Control plane)</span>
+        <code class="glossary-object">API-сервер · etcd · планировщик · контроллеры</code>
+        <a class="anchor-link" href="#term-control-plane">#</a>
+      </h2>
+      <p class="glossary-lead">Часть кластера, которая хранит желаемое состояние и принимает решения, но не запускает контейнеры.</p>
+      <p>При его отказе трафик к работающим подам идёт, а кластер застывает: нет размещения, масштабирования, раскаток и перезапусков на другом узле. Опасность в том, что застывший кластер выглядит живым до первой аварии на узле.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="01.html#control-plane">Желаемое состояние и контур сверки · Путь изменения</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-apiserver">
+      <h2>
+        <span class="glossary-title">API-сервер</span>
+        <code class="glossary-object">kube-apiserver · единственная дверь</code>
+        <a class="anchor-link" href="#term-apiserver">#</a>
+      </h2>
+      <p class="glossary-lead">Единственная точка входа в кластер: принимает запросы, проверяет права и допуск, пишет объекты в хранилище.</p>
+      <p>Каждый запрос проходит аутентификацию, авторизацию и контроль допуска заново - ничего не кешируется. Поэтому отказ допуска и отказ прав различимы по тексту ошибки, и чинить нужно именно тот шаг, который остановил запрос.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="08.html#pipeline">Доступ · Путь запроса</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-etcd">
+      <h2>
+        <span class="glossary-title">etcd</span>
+        <code class="glossary-object">хранилище · кворум 2n+1</code>
+        <a class="anchor-link" href="#term-etcd">#</a>
+      </h2>
+      <p class="glossary-lead">Распределённое хранилище, в котором лежит желаемое состояние всего кластера.</p>
+      <p>Переживает отказ меньшинства: три члена терпят один отказ, пять - два, чётное число живучести не добавляет. Снимок хранилища - единственный путь назад после необратимого обновления управляющего слоя.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="01.html#etcd">Желаемое состояние и контур сверки · Хранилище</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-scheduler">
+      <h2>
+        <span class="glossary-title">Планировщик (Scheduler)</span>
+        <code class="glossary-object">две фазы · решение один раз</code>
+        <a class="anchor-link" href="#term-scheduler">#</a>
+      </h2>
+      <p class="glossary-lead">Компонент, выбирающий узел для нового пода в две фазы: отсев непригодных и оценка оставшихся.</p>
+      <p>Решение принимается один раз и записывается в объект; после этого под не переезжает сам. Вместимость считается по сумме <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">запросов</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Запросы и лимиты</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Два разных обещания: сколько ресурса поду гарантируют и сколько он не может превысить.</span><span class="term-links"><a href="glossary.html#term-requests-limits">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> размещённых подов, фактическое потребление в этой арифметике не участвует.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="05.html#two-phases">Планировщик, ресурсы и вытеснение · Две фазы</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-kubelet">
+      <h2>
+        <span class="glossary-title">Агент узла (kubelet)</span>
+        <code class="glossary-object">на каждом узле · пишет status</code>
+        <a class="anchor-link" href="#term-kubelet">#</a>
+      </h2>
+      <p class="glossary-lead">Компонент узла, который создаёт поды по назначению и непрерывно пишет их фактическое состояние обратно в API.</p>
+      <p>Поэтому <code>kubectl get pods</code> показывает не живой опрос узлов, а последнее, что агенты успели записать. При недоступном узле его поды какое-то время остаются в состоянии <code>Running</code>: опровержения никто не прислал.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="01.html#kubelet">Желаемое состояние и контур сверки · Агент узла</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-manifest">
+      <h2>
+        <span class="glossary-title">Манифест</span>
+        <code class="glossary-object">YAML · данные, не команда</code>
+        <a class="anchor-link" href="#term-manifest">#</a>
+      </h2>
+      <p class="glossary-lead">Текстовое описание желаемого состояния объекта, которое применяется к кластеру и хранится в репозитории.</p>
+      <p>Манифест ничего не делает сам: действие возникает, когда контроллер видит разницу. Поэтому рабочий порядок - сгенерировать, прочитать, положить в репозиторий, применить, а правка объекта в кластере остаётся диагностикой.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="02.html#anatomy">Объект, схема и API · Анатомия объекта</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-spec-status">
+      <h2>
+        <span class="glossary-title">spec и status</span>
+        <code class="glossary-object">вы пишете spec · кластер пишет status</code>
+        <a class="anchor-link" href="#term-spec-status">#</a>
+      </h2>
+      <p class="glossary-lead">Два поля объекта: желаемое состояние, которое задаёте вы, и фактическое, которое дописывает кластер.</p>
+      <p>Граница ответственности проходит по полям, а не по объектам: ваш <code>apply</code> не затирает то, что кластер написал о реальности. Разбор почти любой неисправности начинается с чтения <code>status</code> целиком.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="02.html#anatomy">Объект, схема и API · Анатомия объекта</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-label-selector">
+      <h2>
+        <span class="glossary-title">Метка и селектор</span>
+        <code class="glossary-object">labels · matchLabels</code>
+        <a class="anchor-link" href="#term-label-selector">#</a>
+      </h2>
+      <p class="glossary-lead">Произвольные пары ключ-значение на объекте и выражение, по которому другие объекты его находят.</p>
+      <p>Связь между деплойментом и подами, между сервисом и подами держится только на <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">метк</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Метка и селектор</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Произвольные пары ключ-значение на объекте и выражение, по которому другие объекты его находят.</span><span class="term-links"><a href="glossary.html#term-label-selector">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>ах. Селектор деплоймента неизменяем после создания, а разошедшиеся метки дают класс ошибок «всё применилось, ничего не работает».</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="02.html#labels">Объект, схема и API · Метки</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-namespace">
+      <h2>
+        <span class="glossary-title">Пространство имён (Namespace)</span>
+        <code class="glossary-object">граница имён, прав, квот</code>
+        <a class="anchor-link" href="#term-namespace">#</a>
+      </h2>
+      <p class="glossary-lead">Область внутри кластера, в которой уникальны имена и действуют права, квоты и политики.</p>
+      <p>Это не граница сети без политик и не граница ядра: поды разных команд делят ядро узла. Разделение мягкое - защищает от случайного соседа, а не от враждебного, и обещать бизнесу обратное нельзя.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="12.html#tenants">Примеры · IGL · Разделение арендаторов</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-pod">
+      <h2>
+        <span class="glossary-title">Под (Pod)</span>
+        <code class="glossary-object">kind: Pod · v1</code>
+        <a class="anchor-link" href="#term-pod">#</a>
+      </h2>
+      <p class="glossary-lead">Наименьшая единица размещения: один или несколько <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">контейнеров</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Под (Pod)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Наименьшая единица размещения: один или несколько контейнеров с общим сетевым пространством имён и общими томами.</span><span class="term-links"><a href="glossary.html#term-pod">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> с общим сетевым пространством имён и общими томами.</p>
+      <p>Контейнеры пода видят друг друга по <code>127.0.0.1</code> и не могут слушать один порт. Перезапуск контейнера не создаёт новый под; при потере узла под не переезжает, а пересоздаётся контроллером под новым именем.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="03.html#what-is-pod">Под: единица запуска · Что такое под</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-init-sidecar">
+      <h2>
+        <span class="glossary-title">Инициализирующий и сопроводительный контейнер</span>
+        <code class="glossary-object">initContainers · restartPolicy: Always</code>
+        <a class="anchor-link" href="#term-init-sidecar">#</a>
+      </h2>
+      <p class="glossary-lead">Контейнеры пода, которые запускаются до основных: первый обязан завершиться, второй работает всё время жизни пода.</p>
+      <p>Порядок запуска строгий, и застрявший инициализирующий контейнер держит весь под. Сопроводительный технически оформлен как инициализирующий с политикой перезапуска и останавливается после основных.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="03.html#init-sidecar">Под: единица запуска · Порядок запуска</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-probe">
+      <h2>
+        <span class="glossary-title">Пробы готовности, живости и стартовая</span>
+        <code class="glossary-object">readinessProbe · livenessProbe · startupProbe</code>
+        <a class="anchor-link" href="#term-probe">#</a>
+      </h2>
+      <p class="glossary-lead">Три проверки контейнера, отвечающие за разные решения: трафик, перезапуск и отсрочка на старте.</p>
+      <p>Готовность управляет членством в срезе адресатов и не перезапускает; живость перезапускает. Повешенная на тот же путь живость убивает занятое приложение вместо того, чтобы вывести его из балансировки.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="03.html#probes">Под: единица запуска · Пробы</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-deployment">
+      <h2>
+        <span class="glossary-title">Деплоймент (Deployment)</span>
+        <code class="glossary-object">kind: Deployment · apps/v1</code>
+        <a class="anchor-link" href="#term-deployment">#</a>
+      </h2>
+      <p class="glossary-lead">Контроллер, который держит заданное число копий шаблона пода и управляет сменой версий.</p>
+      <p>На каждую версию шаблона он создаёт свой набор реплик и перегоняет счётчики. Старый набор с нулём реплик остаётся историей, и именно поэтому откат мгновенный: образ уже на узлах, объект уже существует.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="04.html#deployment">Контроллеры рабочих нагрузок · Деплоймент</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-replicaset">
+      <h2>
+        <span class="glossary-title">Набор реплик (ReplicaSet)</span>
+        <code class="glossary-object">промежуточный объект · история отката</code>
+        <a class="anchor-link" href="#term-replicaset">#</a>
+      </h2>
+      <p class="glossary-lead">Объект, удерживающий заданное число копий одного шаблона пода.</p>
+      <p>Его редко создают руками: он появляется как часть деплоймента. Глубина отката ограничена полем <code>revisionHistoryLimit</code>, и значение «один» означает, что откатываться дальше одного шага будет некуда.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="04.html#rollout">Контроллеры рабочих нагрузок · Ход раскатки</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-statefulset">
+      <h2>
+        <span class="glossary-title">Набор состояний (StatefulSet)</span>
+        <code class="glossary-object">устойчивые имена · диск на реплику</code>
+        <a class="anchor-link" href="#term-statefulset">#</a>
+      </h2>
+      <p class="glossary-lead">Контроллер для нагрузок, которым нужны постоянное имя и собственный диск у каждой реплики.</p>
+      <p>Шаблон заявок создаёт отдельный том на реплику, и при уменьшении числа реплик заявки намеренно не удаляются. Раскатка идёт по одному поду и по порядку, поэтому застрявшая реплика останавливает весь набор.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="04.html#statefulset">Контроллеры рабочих нагрузок · Набор состояний</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-daemonset">
+      <h2>
+        <span class="glossary-title">Набор демонов (DaemonSet)</span>
+        <code class="glossary-object">по поду на узел</code>
+        <a class="anchor-link" href="#term-daemonset">#</a>
+      </h2>
+      <p class="glossary-lead">Контроллер, который держит по одному поду на каждом подходящем узле и сам ставит под на новый узел.</p>
+      <p>Так живут сборщики журналов, агенты сети и мониторинга. При уводе узла такие поды не переезжают, поэтому команда увода требует явного флага, чтобы их не ждать.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="04.html#daemonset">Контроллеры рабочих нагрузок · Агент на узле</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-job">
+      <h2>
+        <span class="glossary-title">Задача (Job) и расписание (CronJob)</span>
+        <code class="glossary-object">completions · parallelism · concurrencyPolicy</code>
+        <a class="anchor-link" href="#term-job">#</a>
+      </h2>
+      <p class="glossary-lead">Контроллеры для работы с завершением: разовой и повторяющейся по расписанию.</p>
+      <p>Число завершений и степень параллельности задают очередь: десять задач в три потока. Без явной политики совмещения запуски по расписанию начинают накладываться друг на друга.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="04.html#jobs">Контроллеры рабочих нагрузок · Задачи</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-service">
+      <h2>
+        <span class="glossary-title">Сервис (Service)</span>
+        <code class="glossary-object">kind: Service · port и targetPort</code>
+        <a class="anchor-link" href="#term-service">#</a>
+      </h2>
+      <p class="glossary-lead">Устойчивое имя и адрес для набора подов, найденных по селектору.</p>
+      <p>Адрес <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">сервиса</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Сервис (Service)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Устойчивое имя и адрес для набора подов, найденных по селектору.</span><span class="term-links"><a href="glossary.html#term-service">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> не принадлежит интерфейсу - это запись в таблице трансляции на узле, и пропинговать его нельзя. Поле <code>port</code> - порт сервиса, <code>targetPort</code> - порт контейнера, и их путаница даёт «сервис есть, ответа нет».</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="06.html#service">Сеть, сервисы и обнаружение · Сервисы</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-endpointslice">
+      <h2>
+        <span class="glossary-title">Срез адресатов (EndpointSlice)</span>
+        <code class="glossary-object">адреса только готовых подов</code>
+        <a class="anchor-link" href="#term-endpointslice">#</a>
+      </h2>
+      <p class="glossary-lead">Список адресов подов сервиса, который ведёт контроллер и в который попадают только готовые поды.</p>
+      <p>Это связующее звено между пробой готовности и трафиком. Пустой срез при работающих подах означает непрошедшую пробу, а не поломку сети.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="06.html#endpoints">Сеть, сервисы и обнаружение · Срез адресатов</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-dns">
+      <h2>
+        <span class="glossary-title">Служба имён кластера</span>
+        <code class="glossary-object">DNS кластера · сервис.пространство.svc.cluster.local</code>
+        <a class="anchor-link" href="#term-dns">#</a>
+      </h2>
+      <p class="glossary-lead">Внутренний DNS, превращающий имя сервиса в его адрес.</p>
+      <p>Настройка <code>ndots</code> заставляет короткие имена перебирать домены поиска, из-за чего одно обращение превращается в несколько запросов. Закрытие исходящего трафика политикой ломает разрешение имён первым делом.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="06.html#dns">Сеть, сервисы и обнаружение · Имена</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-ingress">
+      <h2>
+        <span class="glossary-title">Вход снаружи (Ingress, Gateway API)</span>
+        <code class="glossary-object">правила маршрутизации · отдельный контроллер</code>
+        <a class="anchor-link" href="#term-ingress">#</a>
+      </h2>
+      <p class="glossary-lead">Слой маршрутизации внешнего трафика по именам и путям поверх одного входа в кластер.</p>
+      <p>Сам объект ничего не делает: правила исполняет отдельный контроллер. Gateway API разделяет роли владельца кластера и владельца приложения, чего у Ingress нет, а расширения у каждого контроллера свои.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="06.html#ingress">Сеть, сервисы и обнаружение · Вход снаружи</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-netpol">
+      <h2>
+        <span class="glossary-title">Сетевая политика (NetworkPolicy)</span>
+        <code class="glossary-object">запрет по умолчанию · правила складываются</code>
+        <a class="anchor-link" href="#term-netpol">#</a>
+      </h2>
+      <p class="glossary-lead">Объект, описывающий, какой трафик разрешён к подам и от них.</p>
+      <p>Правила «запретить» в нём нет: запрет возникает, как только под выбран хотя бы одной политикой. Без поддержки сетевого модуля объект принимается и молча игнорируется, поэтому запрет проверяют соединением, а не чтением.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="06.html#netpol">Сеть, сервисы и обнаружение · Сетевые политики</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-configmap">
+      <h2>
+        <span class="glossary-title">Набор настроек (ConfigMap)</span>
+        <code class="glossary-object">envFrom · том</code>
+        <a class="anchor-link" href="#term-configmap">#</a>
+      </h2>
+      <p class="glossary-lead">Объект с парами ключ-значение, подключаемый к контейнеру переменными среды или файлом.</p>
+      <p>Переменные читаются один раз при старте: правка набора не меняет поведение, пока под не пересоздан. Том обновляется сам, с задержкой в десятки секунд, и это главный довод выбирать между ними осознанно.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="07.html#configmap-secret">Конфигурация, секреты и хранение · Набор настроек</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-secret">
+      <h2>
+        <span class="glossary-title">Секрет (Secret)</span>
+        <code class="glossary-object">base64 · не шифр</code>
+        <a class="anchor-link" href="#term-secret">#</a>
+      </h2>
+      <p class="glossary-lead">Объект для чувствительных значений, подключаемый так же, как набор настроек.</p>
+      <p>Кодировка base64 защитой не является: защиту дают шифрование хранилища кластера и права на чтение секретов пространства имён. Значение в переменной среды видно в описании пода, значение в томе - нет.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="07.html#what-is-secret">Конфигурация, секреты и хранение · Секрет</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-pv-pvc">
+      <h2>
+        <span class="glossary-title">Заявка и носитель (PVC и PV)</span>
+        <code class="glossary-object">заявка в пространстве имён · носитель в кластере</code>
+        <a class="anchor-link" href="#term-pv-pvc">#</a>
+      </h2>
+      <p class="glossary-lead">Пара объектов: запрос приложения на диск и сам диск, созданный драйвером.</p>
+      <p>Приложение не знает, какой диск ему достался, - оно называет класс и размер. Режим <code>ReadWriteOnce</code> означает один узел, а не один под, и это регулярный источник неверных ожиданий.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="07.html#volume-pvc-pv">Конфигурация, секреты и хранение · Заявка и носитель</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-storageclass">
+      <h2>
+        <span class="glossary-title">Класс хранения (StorageClass)</span>
+        <code class="glossary-object">рецепт диска · reclaimPolicy</code>
+        <a class="anchor-link" href="#term-storageclass">#</a>
+      </h2>
+      <p class="glossary-lead">Описание того, какой диск и как создавать по заявке.</p>
+      <p>Отложенная привязка тома откладывает создание диска до выбора узла - без неё под может оказаться в другой зоне, чем его диск. Политика высвобождения решает, переживут ли данные удаление заявки.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="07.html#storageclass">Конфигурация, секреты и хранение · Класс хранения</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-requests-limits">
+      <h2>
+        <span class="glossary-title">Запросы и лимиты</span>
+        <code class="glossary-object">requests · limits · CPU и память</code>
+        <a class="anchor-link" href="#term-requests-limits">#</a>
+      </h2>
+      <p class="glossary-lead">Два разных обещания: сколько ресурса поду гарантируют и сколько он не может превысить.</p>
+      <p>Запрос - валюта планировщика, лимит памяти - граница, за которой ядро убивает процесс. Лимит процессора не убивает, а тормозит, причём в момент роста нагрузки.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="05.html#requests-limits">Планировщик, ресурсы и вытеснение · Запросы и лимиты</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-qos">
+      <h2>
+        <span class="glossary-title">Класс обслуживания (QoS)</span>
+        <code class="glossary-object">QoS · Guaranteed · Burstable · BestEffort</code>
+        <a class="anchor-link" href="#term-qos">#</a>
+      </h2>
+      <p class="glossary-lead">Категория пода, выводимая из его запросов и лимитов, а не задаваемая полем.</p>
+      <p>Она определяет порядок вытеснения при нехватке памяти на узле: первыми уходят поды без запросов. Поэтому под без запросов для планировщика почти не существует и вылетает первым.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="05.html#qos">Планировщик, ресурсы и вытеснение · Классы обслуживания</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-eviction">
+      <h2>
+        <span class="glossary-title">Вытеснение (Eviction)</span>
+        <code class="glossary-object">OOM · порог узла · добровольное и нет</code>
+        <a class="anchor-link" href="#term-eviction">#</a>
+      </h2>
+      <p class="glossary-lead">Удаление подов с узла, когда ресурсов не хватает, или при обслуживании.</p>
+      <p>Вытеснение из-за нехватки ресурсов бюджета недоступности не спрашивает. Добровольное - увод узла, обновление - спрашивает, и в этом вся разница между аварией и плановой работой.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="05.html#eviction">Планировщик, ресурсы и вытеснение · Вытеснение</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-taint-toleration">
+      <h2>
+        <span class="glossary-title">Отталкивающая метка и разрешение</span>
+        <code class="glossary-object">taint · toleration · NoSchedule</code>
+        <a class="anchor-link" href="#term-taint-toleration">#</a>
+      </h2>
+      <p class="glossary-lead">Пара механизмов, которой узел отказывает подам, а под получает право на нём размещаться.</p>
+      <p>Так выделяют узлы под команду или под ускорители. Эффект <code>NoExecute</code> выселяет уже работающие поды, и отсрочка перед выселением - то самое время, которое кластер даёт при отказе узла.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="05.html#placement">Планировщик, ресурсы и вытеснение · Размещение</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-topology-spread">
+      <h2>
+        <span class="glossary-title">Ограничение разброса (Topology Spread)</span>
+        <code class="glossary-object">maxSkew · topologyKey</code>
+        <a class="anchor-link" href="#term-topology-spread">#</a>
+      </h2>
+      <p class="glossary-lead">Правило, требующее, чтобы поды были распределены между зонами или узлами равномерно.</p>
+      <p>Жёсткий режим оставляет под в ожидании, если разместить его без нарушения негде; мягкий размещает куда влезет. Работает только при размещении: вернувшуюся зону никто не перебалансирует.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="11.html#zones">Примеры · Pro · Распределение по зонам</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-hpa">
+      <h2>
+        <span class="glossary-title">Горизонтальный автомасштабатор (HPA)</span>
+        <code class="glossary-object">проценты от запроса · окно стабилизации</code>
+        <a class="anchor-link" href="#term-hpa">#</a>
+      </h2>
+      <p class="glossary-lead">Контроллер, меняющий число реплик по метрике.</p>
+      <p>Загрузка считается в процентах от запроса, поэтому без запросов он не работает вовсе. Без окна стабилизации уменьшение вызывает качели, а поле <code>replicas</code> в манифесте начинает спорить с ним.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="11.html#hpa">Примеры · Pro · Автомасштабирование</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-pdb">
+      <h2>
+        <span class="glossary-title">Бюджет недоступности (PodDisruptionBudget)</span>
+        <code class="glossary-object">minAvailable · только добровольное</code>
+        <a class="anchor-link" href="#term-pdb">#</a>
+      </h2>
+      <p class="glossary-lead">Правило, ограничивающее число одновременно убираемых подов при плановых работах.</p>
+      <p>От аварии не спасает. Значение, равное числу реплик, превращает обслуживание в вечное ожидание; слишком свободное - теряет кворум в ту же минуту.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="11.html#pdb">Примеры · Pro · Бюджет недоступности</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-rbac">
+      <h2>
+        <span class="glossary-title">Права доступа (RBAC)</span>
+        <code class="glossary-object">Role · ClusterRole · привязка</code>
+        <a class="anchor-link" href="#term-rbac">#</a>
+      </h2>
+      <p class="glossary-lead">Модель прав, в которой роль описывает набор глаголов, а привязка - область их действия.</p>
+      <p>Правила «запретить» в модели нет: права только складываются, и отзыв делается удалением привязки. Кластерная роль, выданная обычной привязкой, действует только в своём пространстве имён.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="08.html#rbac">Доступ · Права</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-serviceaccount">
+      <h2>
+        <span class="glossary-title">Служебная учётная запись (ServiceAccount)</span>
+        <code class="glossary-object">у пода всегда есть</code>
+        <a class="anchor-link" href="#term-serviceaccount">#</a>
+      </h2>
+      <p class="glossary-lead">Удостоверение, с которым под обращается к API кластера.</p>
+      <p>Если её не назвать, под получит запись <code>default</code> своего пространства имён вместе с токеном. Право создавать поды в чужом пространстве имён равно праву читать его секреты - через чужую учётную запись.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="08.html#serviceaccount">Доступ · Служебные учётные записи</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-admission">
+      <h2>
+        <span class="glossary-title">Контроль допуска (Admission)</span>
+        <code class="glossary-object">изменяющий · проверяющий · CEL</code>
+        <a class="anchor-link" href="#term-admission">#</a>
+      </h2>
+      <p class="glossary-lead">Шаг обработки запроса после аутентификации и прав, на котором объект можно изменить или отклонить.</p>
+      <p>Встроенная политика считается самим API-сервером и не добавляет кластеру зависимости; внешний обработчик при политике отказа <code>Fail</code> останавливает приём изменений, когда недоступен.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="08.html#admission">Доступ · Контроль допуска</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-psa">
+      <h2>
+        <span class="glossary-title">Стандарт безопасности подов (Pod Security Admission)</span>
+        <code class="glossary-object">метки пространства имён · три режима</code>
+        <a class="anchor-link" href="#term-psa">#</a>
+      </h2>
+      <p class="glossary-lead">Встроенная проверка параметров пода по трём уровням строгости, включаемая метками пространства имён.</p>
+      <p>Вводится наблюдением: сначала аудит и предупреждение, потом запрет. Версию стандарта закрепляют, иначе очередное обновление кластера само ужесточит правило и остановит раскатки.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="12.html#psa">Примеры · IGL · Стандарт безопасности</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-quota">
+      <h2>
+        <span class="glossary-title">Квота и диапазон ограничений</span>
+        <code class="glossary-object">ResourceQuota · LimitRange</code>
+        <a class="anchor-link" href="#term-quota">#</a>
+      </h2>
+      <p class="glossary-lead">Пара объектов: предел потребления пространства имён и значения по умолчанию для тех, кто их не указал.</p>
+      <p>Вводить их нужно вместе: квота на запросы отвергает контейнер без запросов, и без диапазона это ломает следующую раскатку каждой команды, забывшей их проставить.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="12.html#quota">Примеры · IGL · Квоты</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-crd">
+      <h2>
+        <span class="glossary-title">Свой тип объекта (CRD) и оператор</span>
+        <code class="glossary-object">определение типа · контроллер</code>
+        <a class="anchor-link" href="#term-crd">#</a>
+      </h2>
+      <p class="glossary-lead">Расширение API собственным видом объекта вместе с контроллером, который сводит для него желаемое с фактическим.</p>
+      <p>Определение типа живёт на уровне кластера и действует на всех, поэтому неудачная схема или сломанный контроллер затрагивают весь кластер, а не одно пространство имён.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="02.html#crd">Объект, схема и API · Свои типы</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-interfaces">
+      <h2>
+        <span class="glossary-title">Интерфейсы рантайма, сети и хранения (CRI, CNI, CSI)</span>
+        <code class="glossary-object">CRI · CNI · CSI</code>
+        <a class="anchor-link" href="#term-interfaces">#</a>
+      </h2>
+      <p class="glossary-lead">Три стандартных стыка, через которые кластер подключает чужие реализации: запуск контейнеров, сеть и диски.</p>
+      <p>Kubernetes намеренно не реализует эти три вещи сам. <strong>CRI</strong> (Container Runtime Interface) - интерфейс рантайма: агент узла говорит с containerd или CRI-O одинаково. <strong>CNI</strong> (Container Network Interface) - интерфейс сети: модуль выдаёт поду адрес и исполняет сетевые политики, и именно от него зависит, работает политика или молча игнорируется. <strong>CSI</strong> (Container Storage Interface) - интерфейс хранения: драйвер создаёт, подключает и расширяет диски по заявке. Практический вывод: выбор модуля сети и драйвера хранения - решение уровня кластера, и оно определяет, какие обещания кластер реально исполняет.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="navigator.html#lens-ecosystem">Навигатор · Связи в экосистеме</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-oidc">
+      <h2>
+        <span class="glossary-title">Внешний вход (OIDC)</span>
+        <code class="glossary-object">OpenID Connect · группы и срок</code>
+        <a class="anchor-link" href="#term-oidc">#</a>
+      </h2>
+      <p class="glossary-lead">Протокол, по которому кластер доверяет внешнему провайдеру удостоверений вместо собственных сертификатов.</p>
+      <p>Кластер не ведёт реестр людей: он видит имя и группы, пришедшие с токеном. <strong>OIDC</strong> (OpenID Connect) даёт то, чего нет у клиентского сертификата - централизованный отзыв доступа и короткий срок жизни токена. Поэтому людей пускают через внешний вход, а сертификаты оставляют служебным компонентам.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="08.html#authn">Доступ · Аутентификация</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-blast-radius">
+      <h2>
+        <span class="glossary-title">Радиус отказа</span>
+        <code class="glossary-object">что застывает · что продолжает</code>
+        <a class="anchor-link" href="#term-blast-radius">#</a>
+      </h2>
+      <p class="glossary-lead">Круг того, что перестаёт работать при конкретном отказе.</p>
+      <p>Радиус зоны определяется самым неразмноженным элементом, а не числом реплик приложения, и он шире кластера: в тот же API ходят конвейер, панели и автомасштабатор узлов.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="12.html#blast">Примеры · IGL · Радиус отказа</a></div>
+    </div>
+
+    <div class="glossary-term" id="term-drain">
+      <h2>
+        <span class="glossary-title">Увод узла (drain) и обновление</span>
+        <code class="glossary-object">kubeadm · порядок слоёв</code>
+        <a class="anchor-link" href="#term-drain">#</a>
+      </h2>
+      <p class="glossary-lead">Плановое освобождение узла от подов и смена версии кластера.</p>
+      <p>Порядок обязателен: снимок хранилища, управляющий слой, затем узлы по одной минорной версии. Агент узла может отставать от API-сервера, но не опережать его ни на один выпуск.</p>
+      <div class="glossary-meta"><strong>Где встретилось впервые:</strong> <a href="12.html#upgrade">Примеры · IGL · Обслуживание узлов</a></div>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="navigator.html">Навигатор</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="15.html">Вопросы · IGL</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

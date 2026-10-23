@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Объект, схема и API · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Анатомия объекта Kubernetes: apiVersion, kind, metadata, spec и status, группы и версии ресурсов, пространства имён, метки Метка и селектор × Произвольные пары...">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/02.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/02.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/02.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/02.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/02.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Объект, схема и API">
+<meta property="og:description" content="Анатомия объекта Kubernetes: apiVersion, kind, metadata, spec и status, группы и версии ресурсов, пространства имён, метки Метка и селектор × Произвольные пары...">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/02.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Объект, схема и API","description":"Анатомия объекта Kubernetes: apiVersion, kind, metadata, spec и status, группы и версии ресурсов, пространства имён, метки Метка и селектор × Произвольные пары...","url":"https://y-kolyada.github.io/kubernetes/ru/02.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/"}}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/02.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="02.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/02.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/02.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html" aria-current="page"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Объект, схема и API</h1>
+    <p class="page-size" data-words="1833">Слов: 1833</p>
+    <p class="lead">Анатомия объекта Kubernetes: apiVersion, kind, metadata, spec и status, группы и версии ресурсов, пространства имён, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">метки</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Метка и селектор</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Произвольные пары ключ-значение на объекте и выражение, по которому другие объекты его находят.</span><span class="term-links"><a href="glossary.html#term-label-selector">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> и селекторы, владение объектами и расширение схемы.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>В Kubernetes нет отдельных сущностей «деплоймент», «сервис» и «секрет», которые инструмент умеет обрабатывать по-особому. Есть один тип данных - объект API, - и все ресурсы устроены по одной схеме из пяти полей. Поведение каждого вида задаёт не сам объект, а контроллер, который за ним следит. Поэтому научиться читать объект достаточно один раз: дальше новый, впервые увиденный вид ресурса вы разберёте тем же приёмом, включая те, которых в Kubernetes изначально нет и которые добавила в ваш кластер сторонняя система.</p>
+    </div>
+
+    <h2 id="anatomy">1 · Пять полей любого объекта <a class="anchor-link" href="#anatomy">#</a></h2>
+    <p>Любой <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">манифест</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Манифест</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Текстовое описание желаемого состояния объекта, которое применяется к кластеру и хранится в репозитории.</span><span class="term-links"><a href="glossary.html#term-manifest">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, который вы напишете или прочитаете, состоит из одних и тех же верхних полей.</p>
+    <ul>
+      <li><code>apiVersion</code> - к какой группе и версии API относится объект. Это адрес схемы, по которому API-сервер понимает, как объект разбирать и кому его показывать.</li>
+      <li><code>kind</code> - вид объекта: <code>Pod</code>, <code>Deployment</code>, <code>Service</code>, <code>ConfigMap</code>. Вместе с <code>apiVersion</code> он однозначно определяет тип.</li>
+      <li><code>metadata</code> - всё, что говорит, какой это конкретно объект, а не какой он тип: имя, пространство имён, метки, аннотации, а также поля, которые заполняет кластер сам.</li>
+      <li><code>spec</code> - <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">желаемое состояние</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">spec и status</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Два поля объекта: желаемое состояние, которое задаёте вы, и фактическое, которое дописывает кластер.</span><span class="term-links"><a href="glossary.html#term-spec-status">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>. Это единственное место, которое пишете вы.</li>
+      <li><code>status</code> - фактическое состояние. Его пишет кластер, и в вашем манифесте его быть не должно.</li>
+    </ul>
+<pre data-run="syntax"><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+  namespace: shop
+  labels:
+    app: web
+spec:
+  containers:
+    - name: web
+      image: nginx:1.27-alpine
+      ports:
+        - containerPort: 8080</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Четыре поля из пяти, и пятого здесь нет: <code>status</code> в манифесте не пишут, его допишет кластер. Запомните эту форму - дальше вы увидите её у деплоймента, у сервиса, у заявки на хранение и у объекта того вида, которого в Kubernetes нет и который добавила сторонняя система. Меняется только содержимое <code>spec</code>.</div>
+
+    <p>Разделение <code>spec</code> и <code>status</code> - это та самая граница, на которой держится контур сверки. Причём граница защищена технически: у большинства ресурсов состояние вынесено в отдельный подресурс, то есть обновляется отдельным запросом и отдельным правом. Поэтому контроллер, которому разрешено писать состояние, не может через тот же доступ переписать ваше желаемое, а ваш <code>apply</code> не затрёт то, что кластер дописал о реальности.</p>
+    <p>В <code>metadata</code> кроме ваших полей живут служебные: <code>uid</code> - неизменный идентификатор именно этого объекта, <code>resourceVersion</code> - версия для проверки одновременных записей, <code>generation</code> - счётчик ваших изменений, <code>creationTimestamp</code> - время создания. Имена подчиняются правилам доменных имён: строчные буквы, цифры, дефис и точка, не длиннее 253 знаков. Это не каприз: имя объекта попадает в DNS кластера и в имена ресурсов рантайма, и правило взято оттуда.</p>
+    <div class="box">
+      <svg viewBox="0 0 320 282" width="100%" style="max-width:320px;height:auto;display:block;margin:0 auto" role="img" aria-label="Анатомия объекта API: apiVersion и kind, metadata, spec пишете вы; status пишут контроллер и агент узла">
+        <defs>
+          <marker id="arr02" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <rect x="2" y="4" width="316" height="272" rx="10" stroke="currentColor" stroke-width="1.2" stroke-dasharray="5 4" fill="none"/>
+        <text x="12" y="20" fill="currentColor" font-size="12" opacity="0.75">объект API</text>
+        <text x="12" y="38" fill="currentColor" font-size="12" opacity="0.75">пишете вы</text>
+        <g stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.05">
+          <rect x="12" y="44" width="296" height="44" rx="6"/>
+          <rect x="12" y="94" width="296" height="44" rx="6"/>
+          <rect x="12" y="144" width="296" height="44" rx="6"/>
+          <rect x="12" y="214" width="296" height="44" rx="6"/>
+        </g>
+        <text x="12" y="208" fill="currentColor" font-size="12" opacity="0.75">пишут контроллер и агент узла</text>
+        <g fill="currentColor" font-size="13">
+          <text x="24" y="64">apiVersion + kind</text>
+          <text x="24" y="114">metadata</text>
+          <text x="24" y="164">spec</text>
+          <text x="24" y="234">status</text>
+        </g>
+        <g fill="currentColor" font-size="12" opacity="0.75">
+          <text x="24" y="80">группа, версия, вид</text>
+          <text x="24" y="130">имя, метки, аннотации</text>
+          <text x="24" y="180">желаемое состояние</text>
+          <text x="24" y="250">фактическое состояние</text>
+        </g>
+      </svg>
+      <p class="dim">Схема 2. Граница ответственности проходит по полям, а не по объектам: три поля ваши, четвёртое кластера. Поэтому ваш <code>apply</code> не затирает то, что кластер дописал о реальности.</p>
+    </div>
+
+
+    <h2 id="gvk">2 · Группа, версия, вид: как кластер понимает, что вы прислали <a class="anchor-link" href="#gvk">#</a></h2>
+    <p>Схема API разбита на группы. Самые старые ресурсы - поды, сервисы, конфигурационные объекты, секреты, пространства имён - живут в группе без имени, и поэтому у них <code>apiVersion: v1</code>. Остальные лежат в именованных группах, и тогда поле выглядит как <code>группа/версия</code>: <code>apps/v1</code> для деплойментов и наборов состояний, <code>batch/v1</code> для задач, <code>networking.k8s.io/v1</code> для входа и сетевых политик, <code>rbac.authorization.k8s.io/v1</code> для ролей.</p>
+    <p>Группы введены, чтобы схему можно было развивать по частям. Новый набор ресурсов добавляется своей группой и не задевает остальные, а версия внутри группы показывает зрелость: <code>v1alpha1</code> может измениться или исчезнуть, <code>v1beta1</code> обычно доживает до стабильной с переименованиями полей, <code>v1</code> даёт обещание совместимости. Когда вы читаете чужой манифест, версия в первой строке говорит о нём не меньше, чем вид: <code>autoscaling/v2</code> и <code>autoscaling/v1</code> - это два разных набора возможностей у одного и того же вида.</p>
+    <p>Один объект может быть доступен сразу в нескольких версиях: API-сервер хранит его в одной внутренней форме и преобразует в запрошенную на входе и на выходе. Отсюда практическое правило при обновлении кластера: исчезновение версии API ломает не ваши данные, а ваши манифесты и инструменты, которые эту версию запрашивают. Поэтому отказ от устаревших версий делается до обновления, а не после.</p>
+
+    <h2 id="scope">3 · Пространство имён и кластерная область <a class="anchor-link" href="#scope">#</a></h2>
+    <p>Часть видов существует внутри пространства имён, часть - на уровне всего кластера. Поды, сервисы, деплойменты, секреты, заявки на хранение - в пространстве имён. Узлы, носители хранения, классы хранения, кластерные роли и сами пространства имён - кластерные: у них нет и не может быть пространства.</p>
+    <p>Пространство имён - это не изоляция, а область имён и точка приложения правил. Внутри него имя объекта уникально, на него удобно выдавать права, вешать квоту ресурсов и ограничения по умолчанию. Но сетевой доступ между пространствами по умолчанию открыт, а узлы и их ресурсы общие: под из одного пространства спокойно обращается к сервису в другом и соседствует с ним на одном узле. Изоляция строится отдельно - сетевыми политиками, квотами и правами, - и именно поэтому разделение арендаторов в главе 12 это полноценная задача, а не одна команда.</p>
+
+    <h2 id="labels">4 · Метки и селекторы: как объекты находят друг друга <a class="anchor-link" href="#labels">#</a></h2>
+    <p>Между объектами в Kubernetes почти нет прямых ссылок по имени. Связи строятся через метки: один объект несёт набор пар «ключ - значение», другой объявляет селектор, и кластер сам поддерживает множество совпадающих. Сервис не знает имён своих подов: он знает селектор, и множество адресатов меняется само, когда поды появляются и исчезают. Набор реплик не ведёт список созданных подов: он считает те, что подходят под его селектор.</p>
+    <p>Из этого следует и сила, и главная ловушка. Сила - в том, что связь переживает пересоздание объектов и не требует обновления ссылок. Ловушка - в том, что селектор ничего не знает о ваших намерениях: он захватывает всё подходящее. Два деплоймента с пересекающимися метками подов начинают считать чужие поды своими и мешать друг другу, причём выглядит это как случайные перезапуски. По той же причине селектор деплоймента неизменяем после создания: поменять его означало бы мгновенно переопределить, какими подами объект владеет, поэтому вместо правки требуется новый объект.</p>
+    <p>Селекторы бывают двух видов. Простое равенство выбирает по совпадению значений. Множественная форма позволяет условия вида «ключ входит в список значений», «ключ существует», «ключ отсутствует». Этого достаточно, чтобы выражать отбор по окружению, версии, команде и роли, и ровно поэтому метки принято проектировать заранее, а не добавлять, когда понадобились.</p>
+<pre data-run="syntax"><code>apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  selector:
+    app: web
+  ports:
+    - port: 80
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27-alpine</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Имя пода не упомянуто ни разу. Сервис знает метку <code>app: web</code>, деплоймент ставит её на создаваемые поды, и множество за сервисом поддерживается кластером само. Второй деплоймент с той же меткой встанет в это же множество, и сервис начнёт отдавать трафик в оба - ровно так пересекающиеся селекторы и дают «случайные» ответы от версии, которую вы не раскатывали.</div>
+
+
+    <h2 id="annotations">5 · Аннотации: место для того, что не для отбора <a class="anchor-link" href="#annotations">#</a></h2>
+    <p>Аннотации выглядят как метки, но предназначены для другого. По ним нельзя искать и отбирать, зато в них можно положить длинное и неструктурированное: контрольную сумму конфигурации, чтобы раскатка перезапустила поды при её изменении, подсказки контроллеру входа, сведения о сборке, настройки сторонних систем. Инструменты пользуются ими активно, и собственная предыдущая конфигурация, с которой <code>apply</code> сравнивает ваш манифест, тоже лежит в аннотации.</p>
+    <p>Правило простое: если значение нужно для отбора, это метка; если это данные для человека или инструмента, это аннотация. Метки держите короткими и предсказуемыми, потому что они участвуют в индексах и ограничены 63 знаками в значении; в аннотации кладите остальное.</p>
+
+    <h2 id="ownership">6 · Владение, каскадное удаление и застрявшее Terminating <a class="anchor-link" href="#ownership">#</a></h2>
+    <p>Объекты, созданные контроллерами, помнят, кто их создал: в <code>metadata.ownerReferences</code> стоит ссылка на владельца. Это не украшение, а механизм уборки: отдельный сборщик мусора следит за объектами, чей владелец исчез, и удаляет их. Поэтому удаление деплоймента уносит наборы реплик, а те уносят поды, и вам не приходится чистить за ними руками.</p>
+    <p>Удалять можно тремя способами, и разница видна в работе. При удалении в фоне владелец исчезает сразу, а потомки убираются следом. При удалении на переднем плане владелец остаётся в состоянии удаления, пока живы потомки, и только потом исчезает сам - так удобнее, когда важен порядок. Третий способ оставляет потомков без владельца: тогда поды переживают удаление деплоймента, что иногда нужно и чаще оказывается неожиданностью.</p>
+    <p>Отдельно стоит знать про финализаторы. Это список в <code>metadata</code>, и пока он не пуст, объект нельзя удалить: API-сервер только ставит отметку о времени удаления и ждёт, пока ответственный контроллер сделает свою часть работы и уберёт свою запись из списка. Отсюда знаменитое пространство имён, вечно висящее в состоянии <code>Terminating</code>: его финализатор ждёт контроллера, которого в кластере больше нет. Это не зависание кластера и не повод для перезапуска компонентов, а ровно одна строка в объекте, у которой нет исполнителя.</p>
+<pre data-run="syntax"><code>metadata:
+  name: web-7d9f8b-4qx2k
+  ownerReferences:
+    - apiVersion: apps/v1
+      kind: ReplicaSet
+      name: web-7d9f8b
+      controller: true
+  finalizers:
+    - example.com/cleanup</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Фрагмент <code>metadata</code>, а не целый объект. Первая половина объясняет уборку: исчез набор реплик - сборщик мусора удалит этот под. Вторая объясняет застрявшее удаление: пока в списке стоит хотя бы одна строка, объект не исчезнет, сколько бы раз вы ни повторили удаление. Если контроллера, который её снимает, в кластере нет, строку снимает человек - и это единственный случай, когда правка объекта руками здесь уместна.</div>
+
+
+    <h2 id="crd">7 · Расширение схемы: когда нужного вида в Kubernetes нет <a class="anchor-link" href="#crd">#</a></h2>
+    <p>Схему API можно расширить <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">своим видом объекта</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Свой тип объекта (CRD) и оператор</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Расширение API собственным видом объекта вместе с контроллером, который сводит для него желаемое с фактическим.</span><span class="term-links"><a href="glossary.html#term-crd">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>. Определение собственного ресурса описывает новый <code>kind</code>, его группу, версии и схему полей; после его установки API-сервер начинает обслуживать новый вид наравне со встроенными - с теми же правами, теми же метками, той же проверкой схемы и тем же разделением желаемого и фактического.</p>
+    <p>Важно, что само определение не добавляет поведения. Созданный вами объект нового вида просто лежит в хранилище, пока в кластере нет контроллера, который за ним следит и делает сверку. Связка «собственный вид плюс свой контроллер» и называется оператором, и это основной способ научить Kubernetes управлять тем, о чём он ничего не знает: базой данных, очередью, выдачей сертификатов. Для вас как инженера это означает две вещи. Первая: встретив в кластере незнакомый вид объекта, вы разберёте его тем же приёмом, что встроенный, потому что схема у него та же. Вторая: если объект нового вида ничего не делает, ищите не ошибку в манифесте, а контроллер, которого может просто не быть.</p>
+    <p>Манифесты редко пишут руками целиком: шаблонизаторы вроде Helm и наложение правок вроде Kustomize генерируют их из общего описания. На итог это не влияет: в кластер уходят те же объекты из тех же пяти полей, и всё, что вы знаете про объект, применимо к результату любого генератора. Поэтому разбор чужого чарта всегда начинается одинаково - посмотреть, какие объекты он на самом деле создаёт.</p>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <ol>
+        <li><strong>Приём чтения любого манифеста.</strong> Пять полей, граница между желаемым и фактическим, и понимание, что поведение задаёт контроллер, а не сам объект.</li>
+        <li><strong>Чтение первой строки.</strong> По <code>apiVersion</code> вы называете группу, зрелость версии и риск при обновлении кластера.</li>
+        <li><strong>Дисциплина меток.</strong> Метки для отбора, аннотации для данных, и понимание, почему пересекающиеся селекторы дают случайные перезапуски.</li>
+        <li><strong>Диагностика удаления.</strong> Объект в состоянии <code>Terminating</code> разбирается через владение и финализаторы, а не через перезапуск компонентов.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="03.html">Под: единица запуска</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="01.html">Желаемое состояние и контур сверки</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

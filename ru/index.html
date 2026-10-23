@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Практический справочник-ассессмент по Kubernetes для инженера · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Практический справочник-ассессмент по Kubernetes для инженера: от контура сверки и анатомии объекта API до сети, хранения, RBAC, разбора отказов и 150...">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/index.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/index.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/index.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/index.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/index.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Практический справочник-ассессмент по Kubernetes для инженера">
+<meta property="og:description" content="Практический справочник-ассессмент по Kubernetes для инженера: от контура сверки и анатомии объекта API до сети, хранения, RBAC, разбора отказов и 150...">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/index.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/","inLanguage":"ru","description":"Практический справочник-ассессмент по Kubernetes для инженера: от контура сверки и анатомии объекта API до сети, хранения, RBAC, разбора отказов и 150..."}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/index.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="index.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/index.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/index.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Практический справочник-ассессмент по Kubernetes для инженера</h1>
+    <p class="page-size" data-words="2131">Слов: 2131</p>
+    <p class="lead">Практический справочник-ассессмент по Kubernetes для инженера: от контура сверки и анатомии объекта API до сети, хранения, RBAC, разбора отказов и 150 квалификационных вопросов.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль сайта <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>Большинство инженеров работают с Kubernetes как с усложнённым способом запустить контейнер. Вы берёте манифест из внутренней вики, правите имя образа, выполняете <code>kubectl apply</code> и ждёте. Под не <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">под</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Под (Pod)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Наименьшая единица размещения: один или несколько контейнеровПод (Pod)&times;Наименьшая единица размещения: один или несколько контейнеров с общим сетевым пространством имён и общими томами.В словарь понятий  с общим сетевым пространством имён и общими томами.</span><span class="term-links"><a href="glossary.html#term-pod">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>нимается, вы удаляете его и создаёте заново, добавляете реплику, перезапускаете <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">деплоймент</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Деплоймент (Deployment)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Контроллер, который держит заданное число копий шаблона пода и управляет сменой версий.</span><span class="term-links"><a href="glossary.html#term-deployment">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, увеличиваете лимит памяти вдвое. Иногда помогает. Когда не помогает, начинается то, что инженеры называют «кубер глючит»: случайные правки YAML по образцу чужого ответа на форуме, пока что-нибудь не заработает. Через полгода у команды накапливается десяток манифестов, которые никто не решается тронуть, потому что непонятно, какая строка в них была нужна, а какая попала случайно и теперь удерживает продакшн.</p>
+      <p>Причина не в сложности инструмента, а в отсутствии модели его работы. Kubernetes не запускает ваш контейнер. Он хранит описание желаемого состояния и непрерывно сводит с ним состояние фактическое. Когда вы выполняете <code>apply</code>, вы не отдаёте команду на запуск: вы записываете в хранилище кластера объект, который говорит «пусть будет три реплики такого вида». Дальше работает набор независимых контроллеров, и каждый из них делает одно и то же: сравнивает желаемое с фактическим и совершает минимальное действие, сокращающее разницу. Контроллер деплоймента создаёт набор реплик, тот создаёт объекты подов (Pod), планировщик приписывает каждому поду узел, агент узла получает это назначение и поднимает контейнеры, после чего пишет в объект фактический статус. Ни один из них не знает про остальных и не вызывает их напрямую: они общаются только через объекты в API.</p>
+      <p>Из этой модели следуют все практические выводы курса. Декларативность означает, что удалённый вами под вернётся: контроллер увидит нехватку и восстановит её, и бороться надо с описанием, а не с подом. Отказ всегда локализуется до одного вставшего контура: под в <code>Pending</code> означает, что планировщик не нашёл узла, <code>ImagePullBackOff</code> - что агент узла не смог получить образ, под в <code>Running</code> без трафика - что <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">проба готовности</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Пробы готовности, живости и стартовая</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Три проверки контейнера, отвечающие за разные решения: трафик, перезапуск и отсрочка на старте.</span><span class="term-links"><a href="glossary.html#term-probe">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> не дала включить его в срез адресатов <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">сервис</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Сервис (Service)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Устойчивое имя и адрес для набора подов, найденных по селектору.</span><span class="term-links"><a href="glossary.html#term-service">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>а. Диагностика перестаёт быть угадыванием и становится последовательностью вопросов: какой контур встал и что помешало ему закрыть разницу. Этот справочник учит задавать их в правильном порядке.</p>
+    </div>
+
+    <h2 id="whats-here">Что на этом сайте есть <a class="anchor-link" href="#whats-here">#</a></h2>
+    <p>Материал охватывает путь инженера от первого манифеста до ответственности за кластер, в котором работают чужие команды: девять глав разбора механики, три главы боевых сценариев по ступеням зрелости и три банка квалификационных вопросов. Разбор идёт сверху вниз по слоям - от контура сверки к объекту, от объекта к поду, от пода к узлу, затем сеть, диск, границы доступа и, наконец, отказы. Каждая глава опирается на предыдущую и не требует знаний из последующих.</p>
+
+    <h3>Контур сверки и объекты (главы 01-02)</h3>
+    <ul>
+      <li><strong>01 · Желаемое состояние и контур сверки.</strong> Из чего состоит управляющий слой: API-сервер как единственная точка входа, etcd как единственное хранилище желаемого состояния, набор контроллеров и планировщик. Что такое цикл сверки и почему кластер сходится к состоянию, а не выполняет шаги. Роль etcd на практике: что физически означает его резервная копия, что теряется при его потере и почему управляющий слой без него превращается в набор узлов, доживающих с последним известным назначением.</li>
+      <li><strong>02 · Объект, схема и API.</strong> Анатомия объекта: <code>apiVersion</code>, <code>kind</code>, <code>metadata</code>, <code>spec</code> и <code>status</code>, и почему первые четыре пишете вы, а пятое пишет кластер. Группы, версии и виды ресурсов, пространства имён против кластерной области, метки и селекторы как механизм связывания объектов, аннотации как место для данных инструментов, ссылки владения и каскадное удаление, расширение схемы через собственные определения ресурсов.</li>
+    </ul>
+
+    <h3>Под и контроллеры (главы 03-04)</h3>
+    <ul>
+      <li><strong>03 · Под: единица запуска.</strong> Что физически представляет собой под: общее сетевое пространство имён и один адрес на всю группу контейнеров, общие тома, контейнеры, работающие рядом и видящие друг друга по <code>localhost</code>. Инициализирующие контейнеры и их строгий порядок, контейнеры-сопроводители и их жизненный цикл, образ и рантайм через интерфейс контейнеров. Фазы жизни пода, политика перезапуска, экспоненциальная задержка и три пробы: startup, readiness и liveness, у каждой своё решение и своя цена ошибки.</li>
+      <li><strong>04 · Контроллеры рабочих нагрузок.</strong> Деплоймент над набором реплик и зачем нужен промежуточный объект, устойчивая личность и порядок у набора состояний, агент на каждом узле, задача до завершения и её расписание, автомасштабирование как ещё один контроллер. Стратегии обновления, ход и откат раскатки, ревизии, и главное: контроллер - это тот же цикл сверки на уровень выше, поэтому его отказ диагностируется теми же вопросами.</li>
+    </ul>
+
+    <h3>Узел, сеть и хранение (главы 05-07)</h3>
+    <ul>
+      <li><strong>05 · Планировщик, ресурсы и вытеснение.</strong> Как выбирается узел: фаза отсеивания и фаза оценки, селектор узла, сходство и анти-сходство, пометки узла и допуски к ним, распределение по зонам отказа. Запросы против лимитов и в чём между ними физическая разница, три класса обслуживания, что лимит CPU делает с задержкой через торможение и что лимит памяти делает с процессом через OOM. Давление на узле, вытеснение, обслуживание узла без простоя через <code>cordon</code> и <code>drain</code>, бюджет недоступности.</li>
+      <li><strong>06 · Сеть, сервисы и обнаружение.</strong> Модель сети кластера и роль сетевого модуля, сервис как устойчивый адрес над меняющимся множеством подов, типы сервисов и что каждый требует от инфраструктуры, срезы адресатов и их связь с готовностью, правила на узле, DNS внутри кластера и его формат имён, вход снаружи через Ingress и Gateway API, сетевые политики как запрет по умолчанию.</li>
+      <li><strong>07 · Конфигурация, секреты и хранение.</strong> Конфигурационный объект и секрет: монтирование томом против переменных среды и почему первое обновляется, а второе нет. Что на самом деле означает слово «секрет» в хранилище кластера и что требуется, чтобы оно стало правдой. Том, заявка на хранение и сам носитель, класс хранения и динамическое выделение, интерфейс драйверов, момент создания диска и почему он важен в кластере на несколько зон, режимы доступа и чего они не обещают, политика освобождения и как ею теряют данные.</li>
+    </ul>
+
+    <h3>Границы доступа и отказы (главы 08-09)</h3>
+    <ul>
+      <li><strong>08 · Доступ: аутентификация, RBAC и допуск.</strong> Путь запроса через API-сервер по шагам: аутентификация сертификатом, токеном служебной учётной записи или через внешнего поставщика, авторизация ролями и привязками с проверкой через <code>auth can-i</code>, затем контроль допуска - изменяющие и проверяющие обработчики, встроенные стандарты безопасности подов, контекст безопасности контейнера и что именно он выключает.</li>
+      <li><strong>09 · Почему под не работает.</strong> Инженерный путь от «не работает» к причине. <code>Pending</code> без подходящего узла, <code>ImagePullBackOff</code>, <code>CrashLoopBackOff</code> и чтение кода выхода, <code>OOMKilled</code>, вытесненный под, под в <code>Running</code> без трафика из-за пробы готовности, зависшее удаление из-за финализатора. События как основной источник, журнал предыдущего запуска, и правило, с которого начинается разбор: сначала назвать, какой контур сверки встал.</li>
+    </ul>
+
+    <h3>Практические сценарии и банки вопросов (главы 10-15)</h3>
+    <p><strong>Боевые сценарии по ступеням зрелости.</strong> Каждая практическая глава содержит шесть-семь проверенных сценариев в строгой триаде «Задача - Код - Почему так»:</p>
+    <ul>
+      <li><strong>10 · Примеры · Noob</strong> - фундамент: первый деплоймент и сервис к нему, проба готовности, запросы и лимиты, конфигурация в переменные среды, откат неудачной раскатки, чтение журнала упавшего контейнера и пространство имён, из-за которого список подов выглядит пустым.</li>
+      <li><strong>11 · Примеры · Pro</strong> - командный продакшн: набор состояний с диском, бюджет недоступности, автомасштабирование по метрике, сетевая политика с запретом по умолчанию, служебная учётная запись с минимальными правами, корректное завершение через <code>preStop</code> и распределение по зонам.</li>
+      <li><strong>12 · Примеры · IGL</strong> - уровень платформы: разделение арендаторов по пространствам имён, квоты и ограничения по умолчанию, стандарт безопасности подов на весь кластер, политика допуска как код, обслуживание и обновление узлов без простоя, защита управляющего слоя и радиус отказа, посчитанный до аварии.</li>
+    </ul>
+    <p><strong>Банки квалификационных вопросов.</strong> Три банка по пятьдесят вопросов с развёрнутым инженерным разбором, сгруппированных по десяткам:</p>
+    <ul>
+      <li><strong>13 · Вопросы · Noob</strong> - объект и его поля, под и контейнеры, пробы и перезапуски, деплоймент и сервис, базовая диагностика.</li>
+      <li><strong>14 · Вопросы · Pro</strong> - контроллеры и раскатка, планировщик и сходство, ресурсы и классы обслуживания, сеть и DNS, хранение и секреты.</li>
+      <li><strong>15 · Вопросы · IGL</strong> - права и допуск, безопасность рабочих нагрузок, многопользовательский кластер и квоты, отказы и их радиус, эксплуатация и обновление кластера.</li>
+    </ul>
+    <p><strong>Сквозные инструменты курса.</strong> Инженерный навигатор синтезирует предмет через девять канонических линз: Компоненты, Код и скрипты, Сила и преимущества, Слабости и границы, Связи в экосистеме, В контексте AI, В контексте облака, Практики DevOps и Практики SRE, со ссылками в главы. Словарь понятий собирает механизмы и сокращения, введённые навигатором и главами, с объяснением физики происходящего и цены ошибки в продакшне.</p>
+
+    <h2 id="levels">Три ступени зрелости, и зачем они разделены <a class="anchor-link" href="#levels">#</a></h2>
+    <p>Ценность инженера в эксплуатации кластеров измеряется не числом запомненных ключей <code>kubectl</code>, а тем, какой радиус последствий он держит в голове, когда правит одну строку манифеста. Одну и ту же задачу решают по-разному в зависимости от квалификации, и разница не в аккуратности, а в размере картины.</p>
+    <ul>
+      <li><strong>Noob (начинающий).</strong> Инженер решает задачу одного сервиса: поднять, открыть порт, посмотреть журнал. Цель ступени - снять магию и страх перед командной строкой, научиться читать объект как документ и понимать, что происходит между <code>apply</code> и работающим подом.</li>
+      <li><strong>Pro (профессионал).</strong> Инженер отвечает за надёжность сервисов продуктовой команды. Цель ступени - отсутствие тихих отказов: корректные пробы, честные запросы ресурсов, предсказуемая раскатка и откат, бюджет недоступности, работа в общем кластере без ущерба соседям.</li>
+      <li><strong>IGL (In-Game Leader, внутриигровой лидер).</strong> Системный лидер платформы, который видит всё поле: он задаёт правила, по которым играют остальные команды, и отвечает за результат. Инженерия - командная игра: IGL проектирует изоляцию арендаторов, пределы ресурсов, стандарты безопасности и порядок обновления так, чтобы ошибка одной команды не выходила за её границы, а отказ узла или зоны не превращался в отказ продукта.</li>
+    </ul>
+
+    <div class="box">
+      <h3>Практический пример: как меняется ответ с ростом ступени</h3>
+      <p><strong>Вопрос с технического ассессмента:</strong> «Как выкатить новую версию сервиса в Kubernetes так, чтобы читатели не увидели ошибок?»</p>
+      <p><strong>Ответ уровня Noob.</strong> «Правим тег образа в манифесте деплоймента, выполняем <code>kubectl apply -f deploy.yaml</code>, смотрим <code>kubectl get pods</code>. Когда все поды в <code>Running</code>, версия выкачена. Если что-то пошло не так, правим тег обратно и применяем снова».</p>
+      <p><strong>Ответ уровня Pro.</strong> «<code>Running</code> не означает готовность обслуживать: под попадает в срез адресатов сервиса только после успешной пробы готовности, поэтому у контейнера должны быть настроены проба готовности на реальную проверку зависимостей и отдельная стартовая проба для медленного старта. Раскатка идёт стратегией <code>RollingUpdate</code> с <code>maxUnavailable: 0</code>, чтобы мощность не падала, ход проверяется <code>kubectl rollout status</code> с таймаутом, а откат делается <code>kubectl rollout undo</code> на предыдущую ревизию. Старые поды должны уходить корректно: обработка сигнала завершения в приложении, <code>terminationGracePeriodSeconds</code> с запасом и хук <code>preStop</code>, чтобы под успел выйти из балансировки прежде, чем закроет соединения. Бюджет недоступности защищает кворум при одновременном обслуживании узлов».</p>
+      <p><strong>Ответ уровня IGL.</strong> «Выкатка - это свойство платформы, а не действие инженера. 1) Контракт готовности: стандарт на пробы и корректное завершение проверяется политикой допуска, манифест без них в кластер не попадает. 2) Инвариант мощности: <code>maxUnavailable: 0</code>, распределение реплик по зонам отказа и бюджет недоступности, согласованный с числом реплик, иначе обслуживание узлов упрётся в него или снесёт сервис. 3) Наблюдаемость раскатки: автоматизация ждёт не появления подов, а схождения состояния и показателей ошибок, и сама откатывается по порогу. 4) Радиус последствий: квота и пределы пространства имён не дают новой версии вытеснить соседей, а приоритет и упреждение заданы так, чтобы при нехватке ресурсов падало наименее важное, а не случайное. 5) Обратимость: ревизии хранятся, схема базы меняется совместимо вперёд и назад, чтобы откат кода не требовал откат данных. Моя задача - чтобы ответ уровня Pro был в этом кластере достижим по умолчанию, а не подвигом дежурного».</p>
+    </div>
+
+    <h2 id="features">Как устроен этот справочник <a class="anchor-link" href="#features">#</a></h2>
+    <p>Сайт сделан по канонам простой веб-архитектуры: обычный HTML и CSS, минимум вручную написанного JavaScript, ни одного внешнего сервиса и ни одной сборки. Он открывается прямо из файловой системы и работает так же быстро на телефоне в метро, как на рабочей машине.</p>
+    <ul>
+      <li><strong>Мгновенный локальный поиск.</strong> Строка в шапке находит объекты, поля, команды и квалификационные вопросы без обращения к серверу; индекс подгружается только при первом запросе.</li>
+      <li><strong>Контекстные термины.</strong> Ключевые понятия подчёркнуты пунктиром: нажатие показывает определение и ссылку в словарь, не унося вас со страницы.</li>
+      <li><strong>Четыре языка.</strong> Страницы рассчитаны на чтение на русском, английском, украинском и немецком с сохранением текущего раздела при переключении.</li>
+      <li><strong>Эргономика чтения.</strong> Светлая и тёмная темы, три размера шрифта, выбор запоминается в браузере.</li>
+      <li><strong>Копирование манифестов.</strong> У каждого примера есть кнопка копирования: конфигурацию не надо перенабирать руками.</li>
+      <li><strong>Машинная проверка утверждений.</strong> Факты о полях объектов и поведении инструментов, опубликованные здесь, объявлены вместе с командой, которая их доказывает, и эти команды запускаются проверкой сайта. Утверждение без команды на страницу не попадает.</li>
+    </ul>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <p>Время, потраченное на модель работы Kubernetes, возвращается скоростью разбора отказов и спокойствием на дежурстве. Прочитав справочник, вы получаете четыре осязаемых результата:</p>
+      <ol>
+        <li><strong>Рабочая модель контура сверки.</strong> Вы понимаете, что происходит между <code>apply</code> и работающим подом, и можете назвать по шагам, кто создал объект, кто выбрал узел и кто поднял контейнер.</li>
+        <li><strong>Навык локализации отказа.</strong> По состоянию пода и его событиям вы называете вставший контур и причину, вместо того чтобы перезапускать и надеяться.</li>
+        <li><strong>Манифест без лишних строк.</strong> Вы знаете, какое поле зачем стоит в вашем описании, и не боитесь удалить то, что попало туда случайно.</li>
+        <li><strong>Готовность к ассессменту.</strong> Сто пятьдесят проработанных вопросов от анатомии объекта до изоляции арендаторов и обновления кластера.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="01.html">Желаемое состояние и контур сверки</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

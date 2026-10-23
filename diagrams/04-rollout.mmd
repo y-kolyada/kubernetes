@@ -1,0 +1,8 @@
+%% ru/04.html - деплоймент, два набора реплик, ход раскатки
+flowchart TD
+    D["Deployment<br/>шаблон пода, стратегия"] --> RSNEW["ReplicaSet v2<br/>реплик: 3"]
+    D --> RSOLD["ReplicaSet v1<br/>реплик: 0, история отката"]
+    RSNEW --> P1["Pod v2"]
+    RSNEW --> P2["Pod v2"]
+    RSNEW --> P3["Pod v2"]
+    RSOLD -. "откат возвращает сюда" .-> D

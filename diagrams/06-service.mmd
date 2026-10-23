@@ -1,0 +1,6 @@
+%% ru/06.html - сервис, срез адресатов и готовность
+flowchart TD
+    SVC["Service web<br/>селектор app: web"] --> EPS["EndpointSlice<br/>адреса только готовых подов"]
+    EPS --> P1["Pod · готов"]
+    EPS --> P2["Pod · готов"]
+    EPS -. "не в срезе" .-x P3["Pod · не готов"]

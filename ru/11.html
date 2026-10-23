@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Примеры · Pro · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Семь задач, которые не возникают, пока приложение живёт одно на тестовом кластере: соседи, дежурный и выкатка в рабочий день.">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/11.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/11.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/11.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/11.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/11.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Примеры · Pro">
+<meta property="og:description" content="Семь задач, которые не возникают, пока приложение живёт одно на тестовом кластере: соседи, дежурный и выкатка в рабочий день.">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/11.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Примеры · Pro","description":"Семь задач, которые не возникают, пока приложение живёт одно на тестовом кластере: соседи, дежурный и выкатка в рабочий день.","url":"https://y-kolyada.github.io/kubernetes/ru/11.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/"}}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/11.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="11.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/11.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/11.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html" aria-current="page"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Примеры · Pro</h1>
+    <p class="page-size" data-words="1495">Слов: 1495</p>
+    <p class="lead">Семь задач, которые не возникают, пока приложение живёт одно на тестовом кластере: соседи, дежурный и выкатка в рабочий день.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>Разница между уровнями Noob и Pro не в сложности синтаксиса, а в том, кто ещё живёт рядом. В главе 10 приложение было одно: его выкатывали, настраивали и чинили. Здесь у него появляются соседи по узлу, дежурный, который уводит узел в обслуживание, пиковая нагрузка в будний день и зона отказа, которая однажды пропадёт целиком.</p>
+      <p>Поэтому каждый сценарий ниже - это не «как настроить», а «чем вы платите». У <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">бюджета недоступности</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Бюджет недоступности (PodDisruptionBudget)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Правило, ограничивающее число одновременно убираемых подов при плановых работах.</span><span class="term-links"><a href="glossary.html#term-pdb">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> цена - застрявшее обслуживание, у <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">автомасштабирован</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Горизонтальный автомасштабатор (HPA)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Контроллер, меняющий число реплик по метрике.</span><span class="term-links"><a href="glossary.html#term-hpa">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>ия - качели, у сетевой политики - молча сломанный DNS. Инженер уровня Pro отличается тем, что называет эту цену до того, как её предъявит дежурный.</p>
+    </div>
+
+    <h2 id="stateful">1 · Набор состояний с диском <a class="anchor-link" href="#stateful">#</a></h2>
+    <p><strong>Задача:</strong> выкатить хранилище, у которого каждая реплика имеет собственный диск и устойчивое имя, переживающее перезапуск.</p>
+    <pre data-run="syntax"><code>apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: queue
+spec:
+  serviceName: queue
+  replicas: 3
+  selector:
+    matchLabels:
+      app: queue
+  template:
+    metadata:
+      labels:
+        app: queue
+    spec:
+      containers:
+      - name: queue
+        image: shop/queue:2.1.0
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/queue
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ReadWriteOnce]
+      resources:
+        requests:
+          storage: 20Gi</code></pre>
+    <div class="prints"><strong>Почему так:</strong> деплоймент с одной заявкой на том здесь не работает в принципе: все реплики смонтировали бы один и тот же диск, а <code>ReadWriteOnce</code> означает, что носитель подключается к одному узлу. Шаблон заявок решает это тем, что создаёт отдельную заявку на каждую реплику: <code>data-queue-0</code>, <code>data-queue-1</code>, <code>data-queue-2</code>. Имена подов тоже перестают быть случайными, и это главное в наборе состояний: <code>queue-1</code> после перезапуска остаётся <code>queue-1</code> и получает свой прежний диск, а служебный сервис из поля <code>serviceName</code> даёт каждому поду собственное имя в DNS. Цена такого удобства - две вещи, о которых узнают поздно. Первая: при уменьшении числа реплик заявки **не удаляются**, и это сделано нарочно, чтобы уменьшение счётчика не стирало данные; убирать их придётся руками. Вторая: раскатка идёт по одному поду и по порядку, поэтому застрявшая реплика останавливает обновление всего набора.</div>
+
+    <h2 id="pdb">2 · Бюджет недоступности <a class="anchor-link" href="#pdb">#</a></h2>
+    <p><strong>Задача:</strong> не дать плановому обслуживанию узлов увести в ноль то, что должно оставаться в строю.</p>
+    <pre data-run="syntax"><code>apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: api
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: api</code></pre>
+    <pre data-run="cmd"><code>kubectl drain node-3 --ignore-daemonsets --delete-emptydir-data
+kubectl get poddisruptionbudgets api</code></pre>
+    <div class="prints"><strong>Почему так:</strong> бюджет управляет только <strong>добровольными</strong> нарушениями - уводом узла в обслуживание, вытеснением через API, обновлением узлов. Упавший узел, убитый по памяти процесс и сгоревшая зона бюджета не спрашивают, и ждать от него защиты в этих случаях бессмысленно. При трёх репликах и <code>minAvailable: 2</code> кластер согласится убрать за раз ровно одну: команда увода узла не ошибается, она **ждёт**, пока освободится место в бюджете. Отсюда классическая ловушка дежурного: <code>minAvailable</code>, равный числу реплик, превращает обслуживание в вечное ожидание, и узел не уводится никогда. Обратная ошибка не лучше: бюджет, выставленный на единицу при трёх репликах, разрешает одновременно убрать двоих, и кворум теряется в ту же минуту. Поэтому бюджет пишется от свойства приложения, а не от красивого числа: сколько реплик обязаны работать, чтобы оно оставалось живым.</div>
+
+    <h2 id="hpa">3 · Автомасштабирование по метрике <a class="anchor-link" href="#hpa">#</a></h2>
+    <p><strong>Задача:</strong> держать задержку на дневном пике, не вызывая дежурного руками подкручивать число реплик.</p>
+    <pre data-run="syntax"><code>apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api
+  minReplicas: 3
+  maxReplicas: 12
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300</code></pre>
+    <div class="prints"><strong>Почему так:</strong> загрузка в 60 процентов считается **не от лимита и не от мощности узла, а от запроса**. Поэтому деплоймент без <code>requests.cpu</code> не масштабируется вовсе: автомасштабатор не от чего считать процент, и он честно пишет об этом в состоянии объекта. Второе число, <code>stabilizationWindowSeconds</code>, стоит здесь не для красоты: без окна стабилизации уменьшение идёт сразу за падением нагрузки, нагрузка возвращается, реплики поднимаются снова, и приложение начинает качаться с периодом в минуту, добавляя задержку вместо того, чтобы её снимать. Пять минут на уменьшение и мгновенное увеличение - разумная несимметричность: ошибиться в сторону лишней реплики дешевле. И последнее, на чём спотыкаются команды с хранением манифестов в репозитории: если в манифесте деплоймента остаётся поле <code>replicas</code>, автомасштабатор и система раскатки начинают переписывать его друг за другом по кругу. Поле из манифеста убирают.</div>
+
+    <h2 id="netpol">4 · Сетевая политика с запретом по умолчанию <a class="anchor-link" href="#netpol">#</a></h2>
+    <p><strong>Задача:</strong> закрыть пространство имён так, чтобы к базе ходило приложение, а не всё, что живёт в кластере.</p>
+    <pre data-run="syntax"><code>apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-from-api
+spec:
+  podSelector:
+    matchLabels:
+      app: db
+  policyTypes: [Ingress]
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: api
+    ports:
+    - protocol: TCP
+      port: 5432</code></pre>
+    <div class="prints"><strong>Почему так:</strong> правила «запретить» в этом объекте нет вообще. Запрет возникает иначе: как только хотя бы одна политика выбрала под, разрешено только то, что политики явно разрешают. Первый манифест с пустым селектором выбирает **все** поды пространства имён и не разрешает ничего - это и есть запрет по умолчанию. Второй возвращает ровно одну дорогу. Дальше три места, где это ломается на практике. <code>policyTypes</code> перечисляет направления: здесь закрыт только вход, и поды по-прежнему могут ходить наружу. Если закрыть и выход, первым делом отвалится DNS, потому что разрешение имён - это тоже сетевое обращение, и его приходится разрешать отдельно. И самое опасное: если сетевой модуль кластера не умеет политики, объект будет **принят и молча проигнорирован**. Поэтому запрет по умолчанию проверяют не чтением манифеста, а попыткой соединиться.</div>
+
+    <h2 id="serviceaccount">5 · Служебная учётная запись с минимальными правами <a class="anchor-link" href="#serviceaccount">#</a></h2>
+    <p><strong>Задача:</strong> дать приложению читать свои настройки через API и ничего больше.</p>
+    <pre data-run="cmd"><code>kubectl create serviceaccount api --dry-run=client -o yaml &gt; sa.yaml
+kubectl create role config-reader --verb=get --verb=list --resource=configmaps --dry-run=client -o yaml &gt; role.yaml
+kubectl create rolebinding api-config --role=config-reader --serviceaccount=shop:api --dry-run=client -o yaml &gt; binding.yaml
+kubectl apply -f sa.yaml -f role.yaml -f binding.yaml</code></pre>
+    <pre data-run="syntax"><code>spec:
+  serviceAccountName: api
+  automountServiceAccountToken: true
+  containers:
+  - name: api
+    image: shop/api:3.2.0</code></pre>
+    <div class="prints"><strong>Почему так:</strong> учётная запись у пода есть всегда. Если её не назвать, под получит запись <code>default</code> своего пространства имён, и токен будет лежать в контейнере независимо от того, нужен он приложению или нет. Поэтому у приложения, которое ходит в API, должна быть своя запись, а у того, которое не ходит, - выключенное поле <code>automountServiceAccountToken</code>. Роль здесь namespace-уровня, и это осознанный выбор: она действует только в своём пространстве имён, тогда как её кластерная родственница - во всём кластере сразу, включая чужие пространства. Глаголы складываются и никогда не вычитаются: правила «запретить» в модели прав нет, есть только отсутствие разрешения. Отсюда главная ошибка спешки - привязать приложение к готовой кластерной роли «посмотреть всё», чтобы заработало сегодня. Она даёт чтение секретов соседей, и обратно её снимают уже после разбора инцидента.</div>
+
+    <h2 id="prestop">6 · Корректное завершение через preStop <a class="anchor-link" href="#prestop">#</a></h2>
+    <p><strong>Задача:</strong> не терять запросы читателей в момент обычной дневной раскатки.</p>
+    <pre data-run="syntax"><code>spec:
+  terminationGracePeriodSeconds: 45
+  containers:
+  - name: api
+    image: shop/api:3.2.0
+    lifecycle:
+      preStop:
+        exec:
+          command: ["sleep", "10"]
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      periodSeconds: 5</code></pre>
+    <div class="prints"><strong>Почему так:</strong> когда под удаляют, происходят **две независимые вещи одновременно**: его адрес начинают убирать из срезов адресатов и ему посылают сигнал завершения. Вторая происходит мгновенно, первая - нет: сведения должны дойти до каждого узла и до входного балансировщика. В этот промежуток приложение уже знает, что умирает, а трафик к нему всё ещё идёт, и именно здесь теряются запросы при совершенно штатной раскатке. Пауза в обработчике <code>preStop</code> ничего не чинит в приложении - она даёт флоту время перестать слать. Дальше арифметика: срок на завершение обязан быть больше паузы плюс времени, которое приложению нужно дослужить открытые запросы, иначе по его истечении процесс убивают жёстко и незавершённые запросы теряются всё равно. И последнее условие, без которого остальное бесполезно: приложение должно само обрабатывать сигнал завершения и переставать принимать новые соединения, а не падать по нему.</div>
+
+    <h2 id="zones">7 · Распределение по зонам <a class="anchor-link" href="#zones">#</a></h2>
+    <p><strong>Задача:</strong> пережить потерю зоны целиком, а не обнаружить, что все три реплики стояли в ней.</p>
+    <pre data-run="syntax"><code>spec:
+  topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: DoNotSchedule
+    labelSelector:
+      matchLabels:
+        app: api</code></pre>
+    <div class="prints"><strong>Почему так:</strong> планировщик по умолчанию не обязан разносить реплики: он ищет узел, на котором под поместится, и три реплики вполне могут оказаться в одной зоне совершенно законно. Ограничение <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">разброс</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Ограничение разброса (Topology Spread)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Правило, требующее, чтобы поды были распределены между зонами или узлами равномерно.</span><span class="term-links"><a href="glossary.html#term-topology-spread">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>а говорит прямо: разница в числе подов между зонами не больше единицы. Решающее слово здесь - <code>whenUnsatisfiable</code>. <code>DoNotSchedule</code> делает правило жёстким, и под останется в ожидании, если разместить его без нарушения разброса негде; <code>ScheduleAnyway</code> превращает правило в пожелание, и под разместится, куда влезет. Выбор между ними - это выбор между «лучше не выкатимся» и «лучше выкатимся как попало», и его делают заранее, а не в час ночи. Два следствия, которые стоит знать до первой аварии. Ограничение работает **только в момент размещения**: когда упавшая зона вернётся, уже работающие поды никто не перераспределит. И оно обязано дружить с бюджетом недоступности: жёсткий разброс плюс тесный бюджет - это узел, который не уводится, потому что поду некуда переехать.</div>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <ul>
+        <li>Хранилище с диском на каждую реплику и знание, что заявки переживают уменьшение счётчика.</li>
+        <li>Бюджет недоступности, написанный от свойства приложения, и понимание, что он не спасает от аварии.</li>
+        <li>Автомасштабирование, считающее проценты от запроса, с окном стабилизации против качелей.</li>
+        <li>Запрет по умолчанию в пространстве имён и привычка проверять его соединением, а не чтением.</li>
+        <li>Учётная запись с двумя глаголами вместо кластерной роли «посмотреть всё».</li>
+        <li>Раскатка без потерянных запросов: пауза перед завершением и срок, который её покрывает.</li>
+        <li>Разброс по зонам с осознанным выбором между «не выкатимся» и «выкатимся как попало».</li>
+      </ul>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="12.html">Примеры · IGL</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="10.html">Примеры · Noob</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

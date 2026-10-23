@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Почему под не работает · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Инженерный разбор отказа: правило вставшего контура, шесть узнаваемых состояний пода с их настоящими причинами, зависшее удаление и порядок осмотра.">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/09.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/09.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/09.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/09.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/09.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Почему под не работает">
+<meta property="og:description" content="Инженерный разбор отказа: правило вставшего контура, шесть узнаваемых состояний пода с их настоящими причинами, зависшее удаление и порядок осмотра.">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/09.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Почему под не работает","description":"Инженерный разбор отказа: правило вставшего контура, шесть узнаваемых состояний пода с их настоящими причинами, зависшее удаление и порядок осмотра.","url":"https://y-kolyada.github.io/kubernetes/ru/09.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/"}}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/09.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="09.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/09.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/09.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html" aria-current="page"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Почему под не работает</h1>
+    <p class="page-size" data-words="1416">Слов: 1416</p>
+    <p class="lead">Инженерный разбор отказа: правило вставшего контура, шесть узнаваемых состояний пода с их настоящими причинами, зависшее удаление и порядок осмотра.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>«Не работает» - это не диагноз, а жалоба. Диагноз в Kubernetes всегда имеет одну и ту же форму: такой-то контур сверки не смог закрыть разницу вот по такой причине. Контуров немного, и каждый отказывает узнаваемо. Поэтому разбор здесь не искусство и не опыт, а короткое дерево решений: посмотреть состояние, назвать вставший контур, пойти в то единственное место, где он объясняет свой отказ. Перезапуск пода в этом дереве не встречается ни разу: он уничтожает улики и возвращает вас в начало.</p>
+    </div>
+
+    <h2 id="rule">1 · Правило разбора: сначала назовите контур <a class="anchor-link" href="#rule">#</a></h2>
+    <p>Вспомните цепочку из главы 01: вы записали желаемое, контроллер создал под, планировщик выбрал узел, агент узла поднял контейнеры и написал обратно фактическое состояние. Любой отказ - это остановка в одном из звеньев, и состояние пода прямо говорит, в каком.</p>
+    <p>Поэтому первое действие - не чтение журналов приложения. Журнал бесполезен, если контейнер ещё не стартовал, и обманчив, если дело не в приложении. Первое действие - посмотреть состояние пода и его события, то есть <code>kubectl describe pod</code>: события это то место, где каждый контур объясняет, что ему помешало, человеческим языком и с указанием виновника.</p>
+    <p>И второе правило того же рода: смотрите не на фазу, а на состояние контейнеров. Фаза - короткая сводка, и она одинакова для очень разных бед, о чём говорилось в главе 03.</p>
+
+    <div class="box">
+      <svg viewBox="0 0 320 340" width="100%" style="max-width:320px;height:auto;display:block;margin:0 auto" role="img" aria-label="Соответствие состояния пода вставшему контуру: Pending это планировщик, ImagePullBackOff это агент узла и реестр образов, CrashLoopBackOff это приложение, OOMKilled это лимит памяти, Evicted это теснота на узле, Running без трафика это проба готовности, Terminating это финализатор">
+        <defs>
+          <marker id="arr09" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <text x="2" y="12" fill="currentColor" font-size="12" opacity="0.7">что видно и какой контур встал</text>
+        <g stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.05">
+          <rect x="2" y="20" width="316" height="40" rx="5"/>
+          <rect x="2" y="66" width="316" height="40" rx="5"/>
+          <rect x="2" y="112" width="316" height="40" rx="5"/>
+          <rect x="2" y="158" width="316" height="40" rx="5"/>
+          <rect x="2" y="204" width="316" height="40" rx="5"/>
+          <rect x="2" y="250" width="316" height="40" rx="5"/>
+          <rect x="2" y="296" width="316" height="40" rx="5"/>
+        </g>
+        <g fill="currentColor" font-size="13">
+          <text x="12" y="38">Pending</text>
+          <text x="12" y="84">ImagePullBackOff</text>
+          <text x="12" y="130">CrashLoopBackOff</text>
+          <text x="12" y="176">OOMKilled</text>
+          <text x="12" y="222">Evicted</text>
+          <text x="12" y="268">Running, трафика нет</text>
+          <text x="12" y="314">Terminating навсегда</text>
+        </g>
+        <g stroke="currentColor" stroke-width="1.2" fill="none">
+          <path d="M12 51 H 22" marker-end="url(#arr09)"/>
+          <path d="M12 97 H 22" marker-end="url(#arr09)"/>
+          <path d="M12 143 H 22" marker-end="url(#arr09)"/>
+          <path d="M12 189 H 22" marker-end="url(#arr09)"/>
+          <path d="M12 235 H 22" marker-end="url(#arr09)"/>
+          <path d="M12 281 H 22" marker-end="url(#arr09)"/>
+          <path d="M12 327 H 22" marker-end="url(#arr09)"/>
+        </g>
+        <g fill="currentColor" font-size="12" opacity="0.85">
+          <text x="30" y="55">планировщик: узла нет</text>
+          <text x="30" y="101">агент узла: образ</text>
+          <text x="30" y="147">приложение падает</text>
+          <text x="30" y="193">ваш лимит памяти</text>
+          <text x="30" y="239">теснота на узле</text>
+          <text x="30" y="285">проба готовности</text>
+          <text x="30" y="331">финализатор</text>
+        </g>
+      </svg>
+      <p class="dim">Схема 9. В каждой строке слева наблюдение, справа подозреваемый. Разбор начинается с этого перевода, и только потом идут подробности: до него любое действие наугад.</p>
+    </div>
+
+    <h2 id="pending">2 · Pending: планировщик не нашёл узла <a class="anchor-link" href="#pending">#</a></h2>
+    <p>Объект создан, узел не выбран. Планировщик при этом не молчит: событие содержит разбор по узлам, то есть сколько узлов отсеяно и почему. Причины из главы 05 и перечислены там же: не хватает запрошенных ресурсов, не подходят метки узла, не снят допуск к пометке, нарушается правило анти-сходства или распределения по зонам.</p>
+<pre data-run="syntax"><code>status:
+  phase: Pending
+  conditions:
+    - type: PodScheduled
+      status: "False"
+      reason: Unschedulable</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Форма полей, а не снимок кластера. Фаза говорит только «ожидание» и одинакова для пода, которому не нашлось узла, и для пода, который тянет образ. Отвечает на вопрос условие: не выполнено именно размещение, и причина названа одним словом. Отсюда правило: диагноз читают из условий и событий, а фазу используют только как ярлык в списке.</div>
+
+    <p>Отдельная причина не из планировщика, но выглядящая так же: не привязан постоянный том. Если класс хранения создаёт диск немедленно, а диск оказался в зоне, где для пода места нет, под останется в ожидании, и событие будет говорить про узлы (глава 07).</p>
+    <p>Чего делать не надо: добавлять реплики. Под не размещается не потому, что он один, и десять таких же просто встанут рядом в ожидании.</p>
+
+    <h2 id="imagepull">3 · ImagePullBackOff: образ не получен <a class="anchor-link" href="#imagepull">#</a></h2>
+    <p>Узел выбран, агент узла пытается получить образ и не может. Причин ровно четыре, и событие называет нужную почти всегда: опечатка в имени или теге, образа с таким тегом в реестре нет, реестр недоступен с узла, реестр требует учётных данных, которых у пода нет.</p>
+    <p>Последняя причина - самая частая в приватных реестрах и лечится не правкой пода, а секретом с учётными данными реестра, который подключают к поду или к его служебной учётной записи (главы 07 и 08). И обратите внимание на слово в конце состояния: кластер уже ждёт перед следующей попыткой, то есть пересоздание пода ничего не ускорит.</p>
+
+    <h2 id="crashloop">4 · CrashLoopBackOff: контейнер стартует и падает <a class="anchor-link" href="#crashloop">#</a></h2>
+    <p>Образ получен, процесс запускается и завершается, агент узла перезапускает его по политике и увеличивает паузу между попытками. Это единственное из состояний, где виновато, как правило, само приложение, и единственное, где журнал действительно нужен. Причём журнал <strong>предыдущего</strong> запуска: текущий контейнер только что создан и ничего ещё не написал. Это ключ <code>--previous</code> у <code>kubectl logs</code>, и без него читают пустоту и делают неверные выводы.</p>
+    <p>Код выхода сужает поиск сразу. Ноль означает, что процесс завершился штатно, и для долгоживущей службы это обычно ошибка конфигурации: контейнер сделал работу и вышел, а политика перезапуска требует, чтобы он работал. Единица и прочие малые числа - это ошибка самого приложения. Код 137 означает убийство сигналом номер девять, и чаще всего за ним стоит превышение лимита памяти, о котором ниже. Код 143 - завершение по сигналу остановки, то есть под останавливали штатно.</p>
+    <p>Отдельный случай, который выглядит как падение приложения, но им не является: неверно настроенная проба живости. Она убивает здоровый контейнер по таймауту под нагрузкой или из-за недоступной зависимости, и в журнале приложения при этом нет ничего. Различается по событиям: там будет сказано, что проба не прошла (глава 03).</p>
+
+<pre data-run="syntax"><code>status:
+  containerStatuses:
+    - name: web
+      restartCount: 7
+      lastState:
+        terminated:
+          reason: OOMKilled
+          exitCode: 137
+      state:
+        waiting:
+          reason: CrashLoopBackOff</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Форма полей, а не снимок кластера: числа условные. Здесь видно сразу всё, что нужно для диагноза, и видно, что два поля говорят о разном. Текущее состояние - ожидание перед следующей попыткой; это следствие. Причина лежит в предыдущем состоянии: контейнер был убит по памяти с кодом 137. Вывод получается без единой догадки: дело не в коде приложения, а в лимите памяти или в её потреблении. Семь перезапусков - это только счётчик, он не причина и чинить его не нужно.</div>
+
+    <h2 id="oom-evicted">5 · OOMKilled и Evicted: две разные нехватки <a class="anchor-link" href="#oom-evicted">#</a></h2>
+    <p>Эти два состояния путают постоянно, а чинятся они в противоположных местах.</p>
+    <p><strong>Убийство по памяти</strong> означает, что ваш контейнер превысил свой лимит. Под остаётся на месте, контейнер перезапускается. Лечение: поднять лимит, если потребление законно, или найти утечку, если нет. Чужая нагрузка здесь ни при чём.</p>
+    <p><strong>Вытеснение</strong> означает, что на узле кончилась память или место на диске, и агент узла выселил поды в порядке классов обслуживания. Ваш под удалён, его создаёт заново контроллер, возможно на другом узле. Виноват не ваш лимит, а теснота: первыми уходят поды без запросов, затем превысившие свои запросы (глава 05). Лечение: честные запросы, вместимость кластера, уборка образов и ограничение журналов, если давление по диску.</p>
+    <p>Разделить их на практике просто: убийство по памяти видно в состоянии контейнера, вытеснение - в самом поде и в его событиях, с упоминанием давления на узле.</p>
+
+    <h2 id="no-traffic">6 · Running есть, трафика нет <a class="anchor-link" href="#no-traffic">#</a></h2>
+    <p>Самое коварное из состояний, потому что внешне всё в порядке. Под работает, перезапусков нет, журнал чистый, а запросы до него не доходят или часть из них получает ошибку.</p>
+    <p>Порядок проверки здесь обратный привычному: не от сети к поду, а от пода к сети. Сначала готовность: прошла ли проба, стоит ли в условиях пода готовность. Не прошла - под не в срезе адресатов, и дальше смотреть нечего (глава 06). Прошла - смотрим селектор сервиса и метки пода: совпадают ли они вообще, не захватывает ли селектор лишнего. Потом порты: порт сервиса против порта контейнера - перепутанные местами дают соединение, которое устанавливается и молчит. И только в конце сетевые политики: включённый запрет по умолчанию без разрешения для DNS даёт ровно такую картину.</p>
+
+    <h2 id="terminating">7 · Terminating, который не кончается <a class="anchor-link" href="#terminating">#</a></h2>
+    <p>Объект помечен на удаление и не исчезает. Повторное удаление не помогает, и это правильно: причина не в команде. Варианта два, и оба описаны раньше. Либо в объекте стоит финализатор, а контроллера, который должен его снять, в кластере нет или он не работает (глава 02). Либо процесс в контейнере не обрабатывает сигнал завершения, и кластер честно ждёт отведённый срок, прежде чем убить его принудительно (глава 03).</p>
+    <p>Разница видна по времени: во втором случае под исчезнет сам по истечении срока ожидания, в первом не исчезнет никогда. Снимать финализатор руками можно, но это последнее действие, а не первое: сначала надо понять, какую уборку он ждал, иначе вы оставите за собой диск, запись или правило, которые уже никто не удалит.</p>
+
+    <h2 id="order">8 · Порядок осмотра <a class="anchor-link" href="#order">#</a></h2>
+    <ol>
+      <li><strong>Состояние и события пода.</strong> Здесь находится ответ в восьми случаях из десяти, и здесь же называется вставший контур.</li>
+      <li><strong>Состояния контейнеров, а не фаза.</strong> Текущее и предыдущее: причина обычно в предыдущем.</li>
+      <li><strong>Журнал предыдущего запуска</strong> - только если контур указал на приложение.</li>
+      <li><strong>Дошло ли ваше изменение.</strong> Сравнение счётчика изменений с увиденным контроллером из главы 01 отвечает на это раньше, чем вы начнёте искать несуществующую ошибку.</li>
+      <li><strong>Права</strong> - вопросом <code>auth can-i</code>, а не рассуждением (глава 08).</li>
+    </ol>
+    <p>И правило, которым стоит закончить: <strong>не перезапускайте под, пока не назвали контур.</strong> Перезапуск уничтожает предыдущее состояние контейнера, уносит журнал прошлого запуска и обнуляет улики. Отказ, который «иногда проходит сам», после перезапуска вернётся ночью, и смотреть будет уже нечего.</p>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <ol>
+        <li><strong>Перевод наблюдения в подозреваемого.</strong> Семь состояний и семь контуров: вы называете виновное звено прежде, чем что-либо трогать.</li>
+        <li><strong>Чтение кодов выхода.</strong> Ноль у долгоживущей службы - конфигурация, 137 - память, 143 - штатная остановка, и причина лежит в предыдущем состоянии контейнера.</li>
+        <li><strong>Разделение двух нехваток.</strong> Убийство по памяти чинится вашим лимитом, вытеснение - запросами и вместимостью кластера.</li>
+        <li><strong>Дисциплина улик.</strong> Сначала состояние и события, журнал предыдущего запуска вторым, перезапуск - никогда до диагноза.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="10.html">Примеры · Noob</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="08.html">Доступ: аутентификация, RBAC и допуск</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

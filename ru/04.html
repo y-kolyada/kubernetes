@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Контроллеры рабочих нагрузок · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Контроллеры рабочих нагрузок: деплоймент над набором реплик, стратегии раскатки и откат, набор состояний Набор состояний (StatefulSet) × Контроллер для...">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/04.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/04.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/04.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/04.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/04.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Контроллеры рабочих нагрузок">
+<meta property="og:description" content="Контроллеры рабочих нагрузок: деплоймент над набором реплик, стратегии раскатки и откат, набор состояний Набор состояний (StatefulSet) × Контроллер для...">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/04.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Контроллеры рабочих нагрузок","description":"Контроллеры рабочих нагрузок: деплоймент над набором реплик, стратегии раскатки и откат, набор состояний Набор состояний (StatefulSet) × Контроллер для...","url":"https://y-kolyada.github.io/kubernetes/ru/04.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/"}}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/04.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="04.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/04.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/04.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html" aria-current="page"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Контроллеры рабочих нагрузок</h1>
+    <p class="page-size" data-words="1528">Слов: 1528</p>
+    <p class="lead">Контроллеры рабочих нагрузок: деплоймент над набором реплик, стратегии раскатки и откат, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">набор состояний</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Набор состояний (StatefulSet)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Контроллер для нагрузок, которым нужны постоянное имя и собственный диск у каждой реплики.</span><span class="term-links"><a href="glossary.html#term-statefulset">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">агент на каждом узле</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Набор демонов (DaemonSet)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Контроллер, который держит по одному поду на каждом подходящем узле и сам ставит под на новый узел.</span><span class="term-links"><a href="glossary.html#term-daemonset">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, задачи по расписанию и автомасштабирование.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>Контроллер рабочей нагрузки - это тот же цикл сверки, что в главе 01, только его желаемое состояние выражено не в одном поде, а в правиле: «пусть всегда работает столько-то таких подов», «пусть на каждом узле будет по одному», «пусть эта работа однажды завершится успехом». Поэтому у всех контроллеров одна и та же механика отказа и одна и та же техника разбора, а отличаются они ответом на единственный вопрос: что считать правильным множеством подов. Выбор контроллера - это выбор этого ответа, и ошибка в нём не лечится настройками.</p>
+    </div>
+
+    <h2 id="deployment">1 · Деплоймент над набором реплик: зачем промежуточный объект <a class="anchor-link" href="#deployment">#</a></h2>
+    <p><span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">Деплоймент</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Деплоймент (Deployment)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Контроллер, который держит заданное число копий шаблона пода и управляет сменой версий.</span><span class="term-links"><a href="glossary.html#term-deployment">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> не создаёт поды. Он создаёт <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">набор реплик</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Набор реплик (ReplicaSet)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Объект, удерживающий заданное число копий одного шаблона пода.</span><span class="term-links"><a href="glossary.html#term-replicaset">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, а тот создаёт поды. Промежуточный объект кажется лишним, пока не посмотреть на обновление: при каждом изменении шаблона пода деплоймент создаёт <em>новый</em> набор реплик под новый шаблон и начинает увеличивать его, одновременно уменьшая старый. Старый набор не удаляется, а остаётся с нулём реплик, и это ваша история версий: откат - это не перезапуск и не повторное применение прошлого манифеста, а возврат к уже существующему набору.</p>
+    <p>Число хранимых наборов ограничено и по умолчанию равно десяти. Это и есть глубина, на которую вы можете откатиться; всё, что старше, убрано. Поэтому «откатимся на версию, которая работала в прошлом месяце» - обычно невыполнимое обещание, и настоящая страховка не в истории кластера, а в источнике ваших описаний.</p>
+    <div class="box">
+      <svg viewBox="0 0 320 210" width="100%" style="max-width:320px;height:auto;display:block;margin:0 auto" role="img" aria-label="Деплоймент создаёт новый набор реплик под новый шаблон пода и уменьшает старый; старый набор с нулём реплик остаётся историей для отката">
+        <defs>
+          <marker id="arr04" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <g stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.05">
+          <rect x="70" y="4" width="180" height="44" rx="8"/>
+          <rect x="6" y="78" width="148" height="48" rx="8"/>
+          <rect x="166" y="78" width="148" height="48" rx="8"/>
+          <rect x="6" y="170" width="44" height="36" rx="5"/>
+          <rect x="58" y="170" width="44" height="36" rx="5"/>
+          <rect x="110" y="170" width="44" height="36" rx="5"/>
+        </g>
+        <g fill="currentColor" font-size="13">
+          <text x="82" y="24">Deployment</text>
+          <text x="16" y="98">ReplicaSet v2</text>
+          <text x="176" y="98">ReplicaSet v1</text>
+        </g>
+        <g fill="currentColor" font-size="12">
+          <text x="16" y="193">Pod</text>
+          <text x="68" y="193">Pod</text>
+          <text x="120" y="193">Pod</text>
+        </g>
+        <g fill="currentColor" font-size="12" opacity="0.75">
+          <text x="82" y="40">шаблон пода, стратегия</text>
+          <text x="16" y="114">реплик: 3, текущий</text>
+          <text x="176" y="114">реплик: 0, откат</text>
+        </g>
+        <g stroke="currentColor" stroke-width="1.2" fill="none">
+          <path d="M140 48 V 62 H 80 V 76" marker-end="url(#arr04)"/>
+          <path d="M180 48 V 62 H 240 V 76" marker-end="url(#arr04)"/>
+          <path d="M80 126 V 156 H 28 V 168" marker-end="url(#arr04)"/>
+          <path d="M80 156 V 168" marker-end="url(#arr04)"/>
+          <path d="M80 156 H 132 V 168" marker-end="url(#arr04)"/>
+          <path d="M314 78 V 26 H 252" stroke-dasharray="4 3" marker-end="url(#arr04)"/>
+        </g>
+        <text x="283" y="16" fill="currentColor" font-size="12" opacity="0.75" text-anchor="middle">откат</text>
+      </svg>
+      <p class="dim">Схема 4. Промежуточный объект и есть механизм отката: старый набор не удаляется, а остаётся с нулём реплик. Откат не пересобирает прошлую версию, а возвращает кластер к уже существующему набору.</p>
+    </div>
+
+
+    <h2 id="rollout">2 · Раскатка: чем вы управляете и как её читать <a class="anchor-link" href="#rollout">#</a></h2>
+    <p>У деплоймента две стратегии. Пересоздание останавливает все старые поды и только потом поднимает новые: простой гарантирован, зато две версии никогда не работают одновременно - иногда это требование совместимости, а не недостаток. Постепенная замена - значение по умолчанию, и у неё два параметра: сколько подов разрешено добавить сверх желаемого числа и сколько разрешено недодать. Второй параметр и есть то, чем обеспечивают выкатку без потери мощности: ноль означает, что мощность не упадёт ниже заданной ни на мгновение, а новые поды появятся сверх неё.</p>
+    <p>Шаг раскатки делается не по появлению пода, а по его готовности, то есть по пробе готовности из главы 03. Из этого следуют два практических вывода. Первый: без осмысленной пробы готовности постепенная раскатка теряет смысл - кластер считает подом, готовым принять трафик, любой запущенный процесс, и заменяет рабочую версию на неработающую с полной уверенностью. Второй: поле минимального времени готовности, обязывающее под продержаться заданное число секунд, прежде чем считаться успешным, - дешёвая страховка от версии, которая падает через десять секунд после старта.</p>
+    <p>У раскатки есть срок. Если за отведённое время, по умолчанию десять минут, прогресса не было, деплоймент помечает состояние как превышение срока продвижения. Важно, что при этом он <strong>не откатывается сам</strong>: кластер остановился в смешанном состоянии и ждёт вас. Поэтому автоматика выкатки обязана проверять ход раскатки и выполнять откат на предыдущую ревизию сама, а не считать успехом возврат команды применения.</p>
+<pre data-run="syntax"><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 3
+  minReadySeconds: 15
+  progressDeadlineSeconds: 300
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Четыре числа решают, как пройдёт выкатка. Ноль недоступных означает, что мощность не упадёт ни на мгновение, а новый под появится сверх заданных трёх. Пятнадцать секунд готовности - страховка от версии, которая падает через десять секунд после старта: до них под успехом не считается. Пять минут - срок, после которого раскатка помечается как не продвинувшаяся, и дальше кластер ждёт человека: сам он не откатывается. Десять ревизий - глубина, на которую вообще возможен откат.</div>
+
+
+    <h2 id="statefulset">3 · Набор состояний: устойчивая личность и порядок <a class="anchor-link" href="#statefulset">#</a></h2>
+    <p>Деплоймент считает свои поды взаимозаменяемыми: имена случайны, порядок не важен, любой можно заменить любым. Для базы данных, очереди или любой системы с кворумом это неверно, и поэтому существует набор состояний. Он даёт три вещи, которых нет у деплоймента.</p>
+    <ul>
+      <li><strong>Устойчивое имя.</strong> Поды нумеруются от нуля и сохраняют номер при пересоздании. Вместе со служебным сервисом без адреса это даёт каждому поду постоянное DNS-имя, по которому к нему можно обратиться поимённо: именно так участники кластера базы находят друг друга.</li>
+      <li><strong>Устойчивый диск.</strong> Заявка на хранение создаётся по шаблону отдельно для каждого пода и переживает его пересоздание: под с номером два, поднявшись заново, получит именно свой диск. И отдельно запомните: при уменьшении числа реплик заявки по умолчанию <em>не удаляются</em>. Это защита от потери данных, и это же источник неожиданных счетов за диски, которых никто не ждал.</li>
+      <li><strong>Порядок.</strong> Создание идёт от нуля вверх, по одному поду, с ожиданием готовности предыдущего; удаление - в обратную сторону. Обновление тоже идёт от старшего номера вниз, и его можно остановить на заданном номере, превратив раскатку в проверку на части участников.</li>
+    </ul>
+    <p>Порядок стоит дорого: один неготовый под останавливает всю очередь, и это по замыслу. Набор состояний - не «деплоймент с диском», а инструмент для систем, где имя и очерёдность имеют значение; если вашему приложению они не нужны, выбирайте деплоймент.</p>
+<pre data-run="syntax"><code>spec:
+  serviceName: db
+  podManagementPolicy: OrderedReady
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 2
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: fast
+        resources:
+          requests:
+            storage: 20Gi</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Фрагмент <code>spec</code> набора состояний, и в нём нет ничего похожего на деплоймент. Служебный сервис даёт подам постоянные имена. Шаблон заявки создаёт отдельный диск на каждый под, и этот диск переживает пересоздание пода; при уменьшении числа реплик заявки остаются, их удаляет человек. Граница обновления, равная двум, обновит только поды с номерами 2 и выше - так раскатку проверяют на части участников, не трогая остальных.</div>
+
+
+    <h2 id="daemonset">4 · Агент на каждом узле <a class="anchor-link" href="#daemonset">#</a></h2>
+    <p>Набор демонов выражает желаемое состояние иначе: не «столько-то подов», а «по одному поду на каждом подходящем узле». Число реплик у него задать нельзя, потому что его задаёт состав кластера: добавился узел - появился под, узел ушёл - под исчез вместе с ним. Так запускают то, что обслуживает сам узел: сборщик журналов, экспортёр показателей, сетевой модуль, драйвер хранения.</p>
+    <p>Две особенности отличают его от остальных. Во-первых, он обычно должен работать и на тех узлах, которые помечены как нежелательные для обычной нагрузки, а значит, несёт допуски к их пометкам - подробнее в главе 05. Во-вторых, его обновление задевает узлы по очереди, и параметр допустимой недоступности здесь означает число узлов, остающихся без агента одновременно: для сборщика журналов это пропущенные записи, для сетевого модуля - куда серьёзнее.</p>
+
+    <h2 id="jobs">5 · Задача и расписание <a class="anchor-link" href="#jobs">#</a></h2>
+    <p>Задача описывает работу, которая должна однажды завершиться успехом. Её желаемое состояние - не «пусть работает», а «пусть будет выполнено столько-то успешных завершений», и степень параллельности задаётся отдельно. Это естественная форма для миграции схемы, пересчёта, разовой обработки.</p>
+    <p>Три её поля определяют поведение при отказах, и каждое ловит свою ошибку. Предел числа повторов ограничивает попытки: без него упавшая <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">задача</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Задача (Job) и расписание (CronJob)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Контроллеры для работы с завершением: разовой и повторяющейся по расписанию.</span><span class="term-links"><a href="glossary.html#term-job">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> повторяется, пока кто-нибудь не заметит. Предельное время активности обрывает работу, которая не падает, но и не кончается. Время жизни после завершения убирает завершённые объекты: без него в кластере копятся сотни завершённых подов, и первым это замечает тот, кто пытается понять, что происходит в пространстве имён.</p>
+    <p>Задача по расписанию - это контроллер, который в нужный момент создаёт задачу. Отсюда всё её поведение: расписание в привычном формате, политика одновременности, решающая, что делать, если предыдущий запуск ещё идёт, и предельная задержка старта, после которой пропущенный запуск считается пропущенным, а не выполняется с опозданием. И ещё одно, что регулярно удивляет: ограничения на историю успешных и неудачных запусков тоже задаются здесь, и именно они определяют, останется ли у вас журнал вчерашнего ночного отказа.</p>
+
+    <h2 id="hpa">6 · Автомасштабирование как ещё один контроллер <a class="anchor-link" href="#hpa">#</a></h2>
+    <p>Горизонтальное автомасштабирование не встроено в деплоймент: это отдельный объект и отдельный контроллер, который периодически смотрит на показатели и записывает новое число реплик в ваш деплоймент через его подресурс масштаба. Поэтому он работает с любым контроллером, умеющим масштабироваться, и поэтому же требует источника показателей в кластере: без него он не ошибается, а просто ничего не делает.</p>
+    <p>Два следствия стоит знать заранее. Первое: если число реплик указано в вашем манифесте и этот манифест применяется автоматикой, вы получите перетягивание - автомасштабирование поднимает реплики, применение возвращает заявленное значение. Поле числа реплик в описаниях масштабируемой нагрузки просто не указывают, оставляя его контроллеру. Второе: масштабирование лечит нехватку мощности и не лечит ничего другого. Поды, падающие по ошибке в коде или не проходящие пробу готовности, при росте числа реплик дадут больше падающих подов, и единственным результатом будет исчерпание ресурсов узлов.</p>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <ol>
+        <li><strong>Критерий выбора контроллера.</strong> Нужны ли вашей нагрузке имя и очерёдность, должна ли она быть на каждом узле, обязана ли однажды завершиться.</li>
+        <li><strong>Раскатка без потери мощности.</strong> Нулевая допустимая недоступность, осмысленная проба готовности и минимальное время готовности как страховка от версии, падающей через десять секунд.</li>
+        <li><strong>Понимание отката.</strong> Откат - это возврат к сохранённому набору реплик, глубина истории ограничена, и при превышении срока раскатки кластер ждёт вас, а не откатывается сам.</li>
+        <li><strong>Правило автомасштабирования.</strong> Число реплик не указывают в описании масштабируемой нагрузки, и масштабирование не лечит отказ, а умножает его.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="05.html">Планировщик, ресурсы и вытеснение</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="03.html">Под: единица запуска</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

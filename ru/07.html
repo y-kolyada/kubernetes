@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Конфигурация, секреты и хранение · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Конфигурационный объект и секрет Секрет (Secret) × Объект для чувствительных значений, подключаемый так же, как набор настроек.">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/07.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/07.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/07.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/07.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/07.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Конфигурация, секреты и хранение">
+<meta property="og:description" content="Конфигурационный объект и секрет Секрет (Secret) × Объект для чувствительных значений, подключаемый так же, как набор настроек.">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/07.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Конфигурация, секреты и хранение","description":"Конфигурационный объект и секрет Секрет (Secret) × Объект для чувствительных значений, подключаемый так же, как набор настроек.","url":"https://y-kolyada.github.io/kubernetes/ru/07.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/"}}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/07.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="07.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/07.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/07.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html" aria-current="page"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Конфигурация, секреты и хранение</h1>
+    <p class="page-size" data-words="1608">Слов: 1608</p>
+    <p class="lead">Конфигурационный объект и <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">секрет</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Секрет (Secret)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Объект для чувствительных значений, подключаемый так же, как набор настроек.</span><span class="term-links"><a href="glossary.html#term-secret">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, монтирование томом против переменных среды, том, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">заявка</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Заявка и носитель (PVC и PV)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Пара объектов: запрос приложения на диск и сам диск, созданный драйвером.</span><span class="term-links"><a href="glossary.html#term-pv-pvc">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> и носитель, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">класс хранения</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Класс хранения (StorageClass)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Описание того, какой диск и как создавать по заявке.</span><span class="term-links"><a href="glossary.html#term-storageclass">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, режимы доступа и политика освобождения.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>Под по своей природе одноразовый: его пересоздают при любом изменении, и всё, что он записал внутрь контейнера, исчезает вместе с ним. Поэтому и <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">настройки</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Набор настроек (ConfigMap)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Объект с парами ключ-значение, подключаемый к контейнеру переменными среды или файлом.</span><span class="term-links"><a href="glossary.html#term-configmap">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, и данные выносят наружу, в отдельные объекты, и подключают к поду. Дальше начинаются подробности, каждая из которых однажды стоит кому-то вечера: обновляется ли подключённое без перезапуска, что в этом кластере означает слово «секрет», кто и когда создаёт диск под заявку, и какая строка в описании решает, переживут ли данные удаление заявки. Эта глава про них.</p>
+    </div>
+
+    <h2 id="configmap-secret">1 · Конфигурационный объект и секрет <a class="anchor-link" href="#configmap-secret">#</a></h2>
+    <p>Оба объекта устроены одинаково: набор пар «ключ - значение», ограниченный примерно мегабайтом, живущий в пространстве имён. Конфигурационный объект хранит значения открыто, секрет - в кодировке, и это единственное техническое различие между ними в базовой установке кластера.</p>
+    <p>Различие при этом не бессмысленное. Секрет - это отдельный вид объекта, а значит, отдельная строка в правах: роли можно разрешить читать конфигурацию и запретить читать секреты (глава 08). Секрет не попадает в вывод обычных команд наравне с остальным, у него есть типы, которые понимают другие части кластера: учётные данные для реестра образов, пара ключ-сертификат для входа. Поэтому держать пароль в конфигурационном объекте неправильно не потому, что «там не зашифровано», а потому, что он выпадает из всех механизмов, построенных вокруг секретов.</p>
+
+    <h2 id="mount-vs-env">2 · Монтирование томом против переменных среды <a class="anchor-link" href="#mount-vs-env">#</a></h2>
+    <p>Подключить и то и другое к поду можно двумя способами, и выбор между ними определяет, что произойдёт при изменении настройки.</p>
+    <p><strong>Переменные среды - это снимок на момент запуска.</strong> Значения подставляются, когда контейнер стартует, и больше не меняются никогда. Вы поправили конфигурационный объект, применили, увидели изменение в кластере - а приложение работает со старым значением и будет работать с ним до пересоздания пода. Это не дефект, это свойство переменных среды в операционной системе.</p>
+    <p><strong>Монтирование томом - это файлы, которые обновляются.</strong> Агент узла периодически сверяет содержимое и подменяет файлы в смонтированном каталоге. Задержка измеряется десятками секунд, и приложение должно уметь перечитать файл само: подмена файла не посылает процессу никакого сигнала.</p>
+    <p>Есть исключение, на котором спотыкаются регулярно: монтирование одного ключа в отдельный файл по точному пути <strong>не обновляется</strong>. Такой файл подставляется один раз при старте, и ведёт себя как переменная среды, хотя выглядит как том.</p>
+    <p>Практический вывод: если настройка должна подхватываться на лету - том и перечитывание в приложении. Если приложение читает настройки только при старте, честнее сделать изменение видимым: добавить в описание пода аннотацию с контрольной суммой конфигурации, и тогда правка настройки сама меняет шаблон пода и запускает нормальную раскатку со всеми её гарантиями из главы 04.</p>
+
+<pre data-run="syntax"><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-config
+data:
+  LOG_LEVEL: info
+  app.yaml: |
+    timeout: 5s
+    retries: 3
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+  annotations:
+    checksum/config: "9f2a1c7d"
+spec:
+  containers:
+    - name: web
+      image: nginx:1.27-alpine
+      envFrom:
+        - configMapRef:
+            name: web-config
+      volumeMounts:
+        - name: config
+          mountPath: /etc/app
+  volumes:
+    - name: config
+      configMap:
+        name: web-config</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Один и тот же объект подключён обоими способами сразу, и ведут они себя по-разному. Ключ <code>LOG_LEVEL</code> станет переменной среды и замёрзнет на значении момента запуска. Файл <code>app.yaml</code> появится в каталоге <code>/etc/app</code> и будет обновляться при правке объекта - если приложение умеет перечитывать. Аннотация с контрольной суммой нужна для третьего случая: меняя её вместе с настройкой, вы меняете шаблон пода, и кластер делает честную раскатку вместо тихого расхождения.</div>
+
+    <h2 id="what-is-secret">3 · Что слово «секрет» значит на самом деле <a class="anchor-link" href="#what-is-secret">#</a></h2>
+    <p>Содержимое секрета записано в кодировке, которая не является шифрованием: она разворачивается обратно одной командой и защищает только от случайного взгляда в терминал. В хранилище кластера секрет по умолчанию лежит открыто, и об этом уже говорилось в главе 01, когда речь шла о снимке etcd: снимок хранилища равноценен содержимому всех секретов кластера.</p>
+    <p>Чтобы слово «секрет» стало правдой, нужны три вещи, и ни одна не включается сама.</p>
+    <ol>
+      <li><strong>Шифрование в хранилище.</strong> Настраивается на API-сервере, ключом управляет администратор кластера или внешняя служба управления ключами. Без этого секрет защищён ровно настолько, насколько защищён доступ к диску с etcd.</li>
+      <li><strong>Права.</strong> Разрешение читать секреты в пространстве имён - это разрешение читать <em>все</em> секреты в нём. Разделение делается не настройкой секрета, а разделением пространств имён и точными ролями из главы 08.</li>
+      <li><strong>Понимание, кто ещё видит значение.</strong> Секрет, подключённый переменной среды, виден в описании процесса и часто попадает в журналы и отчёты об ошибках. Том в этом смысле безопаснее переменной.</li>
+    </ol>
+    <p>Если этих условий обеспечить нельзя, честный ответ - хранить значения во внешнем хранилище и подключать их драйвером, а в кластере держать только ссылку. Это нормальная архитектура, а не признание поражения.</p>
+
+    <h2 id="volume-pvc-pv">4 · Том, заявка и носитель <a class="anchor-link" href="#volume-pvc-pv">#</a></h2>
+    <p>Слово «том» в Kubernetes означает всё, что подключается в файловую систему контейнера, и у этого слова несколько очень разных значений. Пустой каталог живёт столько же, сколько под, и годится под кеш и обмен между контейнерами одного пода. Каталог самого узла даёт доступ к файловой системе машины и в прикладных описаниях не должен появляться вовсе: он привязывает под к узлу и открывает дорогу к выходу за границы контейнера. Конфигурационный объект и секрет - тома, как показано выше. И, наконец, постоянный том - единственный, который переживает и под, и узел.</p>
+    <p>Постоянное хранение разведено на три объекта намеренно.</p>
+    <ul>
+      <li><strong>Заявка</strong> живёт в пространстве имён и принадлежит приложению. В ней написано, чего вы хотите: сколько места, какой режим доступа, какой класс.</li>
+      <li><strong>Носитель</strong> живёт на уровне кластера и представляет настоящий диск. Он принадлежит инфраструктуре.</li>
+      <li><strong>Класс хранения</strong> - это рецепт: кто и как создаёт носитель, когда появляется заявка.</li>
+    </ul>
+    <p>Разделение означает, что приложение не знает, какой диск ему достался, а инфраструктура не знает, какое приложение его просило. Связь устанавливается кластером и называется привязкой; с этого момента заявка и носитель женаты и друг без друга не используются.</p>
+
+    <div class="box">
+      <svg viewBox="0 0 320 258" width="100%" style="max-width:320px;height:auto;display:block;margin:0 auto" role="img" aria-label="Под ссылается на заявку, заявка на носитель, носитель создаётся драйвером по рецепту класса хранения; приложение не знает, какой диск ему достался">
+        <defs>
+          <marker id="arr07" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <g stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.05">
+          <rect x="2" y="4" width="316" height="46" rx="8"/>
+          <rect x="2" y="74" width="316" height="46" rx="8"/>
+          <rect x="2" y="144" width="316" height="46" rx="8"/>
+          <rect x="2" y="214" width="316" height="40" rx="8"/>
+        </g>
+        <g fill="currentColor" font-size="13">
+          <text x="12" y="24">Pod</text>
+          <text x="12" y="94">PersistentVolumeClaim</text>
+          <text x="12" y="164">PersistentVolume</text>
+          <text x="12" y="238">StorageClass и драйвер CSI</text>
+        </g>
+        <g fill="currentColor" font-size="12" opacity="0.75">
+          <text x="12" y="40">просит том по имени заявки</text>
+          <text x="12" y="110">в пространстве имён, ваш</text>
+          <text x="12" y="180">на уровне кластера, инфраструктуры</text>
+        </g>
+        <g stroke="currentColor" stroke-width="1.2" fill="none">
+          <path d="M160 50 V 70" marker-end="url(#arr07)"/>
+          <path d="M160 120 V 140" marker-end="url(#arr07)"/>
+          <path d="M160 210 V 194" marker-end="url(#arr07)"/>
+        </g>
+        <text x="170" y="206" fill="currentColor" font-size="12" opacity="0.75">создаёт по заявке</text>
+      </svg>
+      <p class="dim">Схема 7. Стрелка снизу вверх не случайна: носитель не выбирают, его создаёт драйвер по рецепту класса, когда появилась заявка. Приложение называет класс и размер, а не диск.</p>
+    </div>
+
+    <h2 id="storageclass">5 · Класс хранения и когда создаётся диск <a class="anchor-link" href="#storageclass">#</a></h2>
+    <p>Класс хранения определяет, какой драйвер вызвать и с какими параметрами: тип диска, скорость, шифрование. В кластере обычно есть класс по умолчанию, и заявка без явного указания класса получает его - отсюда частое удивление «почему базе достался медленный диск».</p>
+    <p>Второе поле класса важнее первого и почти всегда остаётся незамеченным: момент привязки. Можно создавать диск сразу при появлении заявки, а можно дождаться первого пода, который её использует. Разница видна в кластере, растянутом на зоны отказа: диск принадлежит зоне, и созданный заранее диск может оказаться в зоне, где для пода не нашлось места. Тогда под остаётся в ожидании навсегда, причём событие будет говорить про узлы, а причина будет в диске, созданном раньше времени. Ожидание первого потребителя эту ловушку снимает: планировщик сначала выбирает узел, потом в его зоне появляется диск.</p>
+
+    <h2 id="access-modes">6 · Режимы доступа и чего они не обещают <a class="anchor-link" href="#access-modes">#</a></h2>
+    <p>Режим доступа заявки описывает, как носитель можно подключать. Самый частый означает подключение для чтения и записи <strong>одним узлом</strong> - и это именно узел, а не под: два пода на одном узле такой диск разделят, а на разных узлах - нет. Есть режим только для чтения многими узлами, есть чтение и запись многими узлами, есть отдельный режим для одного пода.</p>
+    <p>Главное, чего режим не обещает: он ничего не говорит о том, выдержит ли сама файловая система одновременную запись. Режим - это контракт подключения, а не блокировка. Два пода, пишущие в один диск, подключённый для многих узлов, испортят данные ровно так же, как два процесса на одной машине, и Kubernetes в этом не участвует.</p>
+
+    <h2 id="reclaim">7 · Политика освобождения, или как теряют данные <a class="anchor-link" href="#reclaim">#</a></h2>
+    <p>Когда заявку удаляют, с носителем происходит то, что написано в его политике освобождения. Политика удаления уничтожает и носитель, и данные. Политика сохранения оставляет носитель жить, он переходит в состояние освобождённого и больше никем не используется, пока администратор не разберётся с ним руками.</p>
+    <p>Для динамически созданных носителей политика по умолчанию - <strong>удаление</strong>. Это значит, что команда, удаляющая пространство имён или манифест приложения, удаляет заявку, а вместе с ней диск с данными. Для кеша это правильно; для базы данных это авария, у которой есть только одно лечение - резервная копия, сделанная заранее.</p>
+    <p>Поэтому для чего угодно с данными правило простое: класс хранения с политикой сохранения, явно, а не по умолчанию, и отдельная проверенная резервная копия. Напомню и про набор состояний из главы 04: его заявки при уменьшении числа реплик не удаляются - это защита, которая работает только до момента, когда кто-то удалит их руками «для порядка».</p>
+
+<pre data-run="syntax"><code>apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-data
+  namespace: shop
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: fast-retain
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-retain
+provisioner: ebs.csi.aws.com
+parameters:
+  type: gp3
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Заявка говорит «чего хочу», класс - «как это сделать». Четыре нижние строки класса и есть то, за что потом благодарят. Сохранение означает, что удаление заявки не уничтожит диск. Разрешение расширения означает, что двадцать гигабайтов можно будет превратить в сорок без переезда; без этой строки размер нельзя менять вообще. Ожидание первого потребителя означает, что диск появится в той зоне, где планировщик нашёл узел, а не в соседней.</div>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <ol>
+        <li><strong>Правило подключения настроек.</strong> Переменная среды - это снимок на момент старта, том обновляется, монтирование одного ключа по точному пути не обновляется.</li>
+        <li><strong>Трезвое отношение к секрету.</strong> Кодировка это не шифрование; слово становится правдой при шифровании хранилища, точных правах и понимании, где ещё видно значение.</li>
+        <li><strong>Три объекта хранения и их владельцы.</strong> Заявка ваша, носитель инфраструктуры, класс - рецепт; приложение называет класс и размер, а не диск.</li>
+        <li><strong>Две строки, которые спасают данные.</strong> Политика сохранения вместо удаления по умолчанию и ожидание первого потребителя вместо немедленного создания диска.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="08.html">Доступ: аутентификация, RBAC и допуск</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="06.html">Сеть, сервисы и обнаружение</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

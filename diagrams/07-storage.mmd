@@ -1,0 +1,5 @@
+%% ru/07.html - под, заявка, носитель и класс хранения
+flowchart TD
+    POD["Pod<br/>просит том по имени заявки"] --> PVC["PersistentVolumeClaim<br/>в пространстве имён, ваш"]
+    PVC --> PV["PersistentVolume<br/>на уровне кластера, инфраструктуры"]
+    SC["StorageClass и драйвер CSI"] -- "создаёт по заявке" --> PV

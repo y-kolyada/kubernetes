@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Примеры · Noob · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Шесть задач, с которых начинается работа с кластером: выкатить, пустить трафик, поделить ресурсы, вынести настройку, откатиться и прочитать журнал.">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/10.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/10.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/10.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/10.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/10.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Примеры · Noob">
+<meta property="og:description" content="Шесть задач, с которых начинается работа с кластером: выкатить, пустить трафик, поделить ресурсы, вынести настройку, откатиться и прочитать журнал.">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/10.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Примеры · Noob","description":"Шесть задач, с которых начинается работа с кластером: выкатить, пустить трафик, поделить ресурсы, вынести настройку, откатиться и прочитать журнал.","url":"https://y-kolyada.github.io/kubernetes/ru/10.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/"}}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/10.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="10.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/10.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/10.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html" aria-current="page"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Примеры · Noob</h1>
+    <p class="page-size" data-words="1504">Слов: 1504</p>
+    <p class="lead">Шесть задач, с которых начинается работа с кластером: выкатить, пустить трафик, поделить ресурсы, вынести настройку, откатиться и прочитать журнал.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>Почти всё, что делает инженер в кластере в первый месяц, - это шесть операций из этой главы. Они выглядят как шесть разных команд, но держатся на одном механизме: вы меняете желаемое состояние, а контроллеры подгоняют под него фактическое. Поэтому здесь нет ни одной команды, которая «делает» что-то напрямую: каждая либо пишет объект, либо показывает, что контроллеры успели с ним сделать.</p>
+      <p>Манифесты в этой главе не выдуманы руками: они напечатаны самим <code>kubectl</code> в режиме <code>--dry-run=client</code> и затем сокращены до смысла. Команды проверены машиной: у каждого флага на этой странице есть запись в справке клиента. Вывода живого кластера здесь нет ни строкой - на машине, где собран сайт, кластера нет, и выдавать придуманный вывод за снимок было бы обманом.</p>
+    </div>
+
+    <h2 id="first-deploy">1 · Первый деплоймент и сервис к нему <a class="anchor-link" href="#first-deploy">#</a></h2>
+    <p><strong>Задача:</strong> выкатить веб-приложение в три реплики и дать ему устойчивый адрес внутри кластера, по которому его найдут соседи.</p>
+    <pre data-run="cmd"><code>kubectl create deployment web --image=nginx:1.27-alpine --replicas=3 --dry-run=client -o yaml &gt; web.yaml
+kubectl apply -f web.yaml
+kubectl expose deployment web --port=80 --target-port=80 --dry-run=client -o yaml &gt; svc.yaml
+kubectl apply -f svc.yaml
+kubectl get deployment web -o wide</code></pre>
+    <p>Первая команда ничего не меняет в кластере: она печатает манифест и кладёт его в файл. Вот что в нём существенно, остальное сокращено:</p>
+    <pre data-run="syntax"><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.27-alpine</code></pre>
+    <div class="prints"><strong>Почему так:</strong> генератор и файл - это не формальность. Команда без <code>--dry-run=client</code> создала бы объект сразу, и в репозитории не осталось бы ничего: кластер знал бы о вашем приложении больше, чем ваш гит. Поэтому рабочий порядок всегда один: сгенерировали, прочитали, положили в репозиторий, применили. В самом манифесте важны три места. <code>selector.matchLabels</code> - это не украшение, а единственная связь между деплойментом и подами: он владеет ровно теми подами, у которых есть метка <code>app: web</code>, и поле это неизменяемое после создания. <code>template.metadata.labels</code> обязаны совпадать с селектором, иначе деплоймент создаст поды, которых сам же не увидит, и будет создавать их бесконечно. А сервис не знает про деплоймент вообще ничего: он ищет поды по своему селектору, и именно поэтому его можно направить на поды двух разных деплойментов сразу или не попасть ни в один, если метки разошлись.</div>
+
+    <h2 id="readiness">2 · Проба готовности <a class="anchor-link" href="#readiness">#</a></h2>
+    <p><strong>Задача:</strong> не пускать трафик в под, который запустился, но ещё не прогрелся, и убрать его из обслуживания, когда он перестал отвечать.</p>
+    <pre data-run="syntax"><code>spec:
+  containers:
+  - name: web
+    image: shop/web:1.4.2
+    ports:
+    - containerPort: 8080
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      failureThreshold: 3</code></pre>
+    <pre data-run="cmd"><code>kubectl get endpointslices -l kubernetes.io/service-name=web
+kubectl get pods -l app=web -o wide</code></pre>
+    <div class="prints"><strong>Почему так:</strong> проба готовности не перезапускает контейнер - она отвечает на один вопрос: записывать ли адрес этого пода в срез адресатов сервиса. Три неудачи подряд при <code>periodSeconds: 5</code> - и через пятнадцать секунд адрес исчезает из среза, трафик идёт к остальным, а контейнер продолжает жить. Перезапускает другая проба, <code>livenessProbe</code>, и путать их дорого: liveness, повешенная на тот же <code>/healthz</code>, будет убивать контейнер каждый раз, когда он занят, а не сломан. Отсюда практическое правило: готовность отвечает «я могу принять запрос прямо сейчас», живость - «меня уже не починить, перезапусти». И если под в состоянии <code>Running</code>, а трафика нет, смотреть нужно не на сеть, а на пробу: почти всегда адрес просто не попал в срез.</div>
+
+    <h2 id="resources">3 · Запросы и лимиты <a class="anchor-link" href="#resources">#</a></h2>
+    <p><strong>Задача:</strong> дать поду гарантию места на узле и не дать ему съесть узел целиком.</p>
+    <pre data-run="syntax"><code>spec:
+  containers:
+  - name: web
+    image: shop/web:1.4.2
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 256Mi</code></pre>
+    <div class="prints"><strong>Почему так:</strong> запрос и лимит отвечают за разное. <strong>Запрос</strong> - это валюта планировщика: он складывает запросы всех подов на узле и сравнивает с тем, что узел отдаёт подам; фактическое потребление в этой арифметике не участвует вовсе. <strong>Лимит памяти</strong> - это граница, за которой ядро убивает процесс, и под получает <code>OOMKilled</code>: памяти нельзя «чуть-чуть не хватить», её либо хватает, либо процесс умирает. Лимита процессора здесь намеренно нет, и это осознанный выбор: процессор - ресурс сжимаемый, и лимит не убивает контейнер, а тормозит его, причём тормозит ровно в тот момент, когда нагрузка выросла. Для веб-приложения с коротким запросом это обычно хуже, чем позволить ему взять свободные такты. И ещё одно следствие, о котором узнают поздно: пода без запросов для планировщика почти не существует, он получает класс <code>BestEffort</code> и вылетает первым, когда на узле становится тесно.</div>
+
+    <h2 id="config-env">4 · Конфигурация в переменные среды <a class="anchor-link" href="#config-env">#</a></h2>
+    <p><strong>Задача:</strong> вынести настройку из образа, чтобы одна и та же сборка шла в тест и в продакшн.</p>
+    <pre data-run="cmd"><code>kubectl create configmap web-config --from-literal=LOG_LEVEL=info --from-literal=TIMEOUT=30s --dry-run=client -o yaml &gt; config.yaml
+kubectl apply -f config.yaml
+kubectl rollout restart deployment web</code></pre>
+    <pre data-run="syntax"><code>spec:
+  containers:
+  - name: web
+    image: shop/web:1.4.2
+    envFrom:
+    - configMapRef:
+        name: web-config
+    env:
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: web-secrets
+          key: password</code></pre>
+    <div class="prints"><strong>Почему так:</strong> <code>envFrom</code> втягивает все ключи набора настроек сразу, <code>env</code> с <code>valueFrom</code> берёт один ключ и позволяет переименовать его внутри контейнера - для секрета это обычно и нужно. Но главное здесь не синтаксис, а момент чтения: переменные среды читаются один раз, когда контейнер стартует. Вы можете поправить <code>ConfigMap</code> и увидеть новое значение в <code>kubectl get configmap</code>, а приложение будет работать со старым, пока под не пересоздадут. Именно поэтому в конце стоит <code>rollout restart</code>: он не меняет образ, а проставляет в шаблон пода новую аннотацию с временем, чем и запускает обычную раскатку. Набор настроек, подключённый томом, обновляется иначе - файл в контейнере меняется сам, с задержкой в десятки секунд, - и это вторая причина выбирать между переменными и томом осознанно, а не по привычке.</div>
+
+    <h2 id="rollback">5 · Откат неудачной раскатки <a class="anchor-link" href="#rollback">#</a></h2>
+    <p><strong>Задача:</strong> вернуть предыдущую рабочую версию за минуту, не собирая её заново.</p>
+    <pre data-run="cmd"><code>kubectl rollout status deployment/web --timeout=60s
+kubectl rollout history deployment/web
+kubectl rollout undo deployment/web --to-revision=2
+kubectl get replicasets -l app=web</code></pre>
+    <div class="prints"><strong>Почему так:</strong> откат работает потому, что старая версия никуда не делась. Деплоймент не меняет поды - он создаёт под каждый новый шаблон пода свой набор реплик и перегоняет счётчики: новый растёт, старый уменьшается до нуля. Набор с нулём реплик остаётся лежать как история, и <code>undo</code> просто возвращает счётчики обратно. Отсюда три практических следствия. Первое: откат мгновенный, потому что образ уже на узлах, а объект уже существует. Второе: глубина отката ограничена полем <code>revisionHistoryLimit</code>, по умолчанию это десять наборов, и если вы его урезали до одного, откатываться будет некуда. Третье, самое неприятное: откат возвращает шаблон пода, но не возвращает то, что живёт отдельно от него - миграцию базы, изменившийся набор настроек, новый формат данных в очереди. Поэтому <code>rollout status</code> с таймаутом стоит первым: он честно отвечает, встала раскатка или идёт, и даёт повод остановиться до того, как откатывать станет нечего.</div>
+
+    <h2 id="logs">6 · Чтение журнала упавшего контейнера <a class="anchor-link" href="#logs">#</a></h2>
+    <p><strong>Задача:</strong> понять, почему под в состоянии <code>CrashLoopBackOff</code>, если прямо сейчас в нём не работает ни один процесс.</p>
+    <pre data-run="cmd"><code>kubectl logs deployment/web --tail=50
+kubectl logs web-7d9f8c5b6-xk2mn --previous --tail=50
+kubectl describe pod web-7d9f8c5b6-xk2mn
+kubectl get pod web-7d9f8c5b6-xk2mn -o jsonpath={.status.containerStatuses[0].lastState.terminated.exitCode}</code></pre>
+    <div class="prints"><strong>Почему так:</strong> обычный <code>logs</code> показывает журнал живого контейнера, а у падающего пода живого контейнера нет: вы увидите пустоту или первые секунды новой попытки. Флаг <code>--previous</code> читает журнал предыдущего, уже умершего запуска - в девяти случаях из десяти ответ лежит именно там. Если и там пусто, значит процесс не успел ничего написать, и спрашивать надо не журнал, а объект: <code>describe</code> покажет события и код выхода, а <code>jsonpath</code> достанет этот код одним числом. Код стоит читать как подсказку: <code>137</code> - процесс убит сигналом, почти всегда лимитом памяти; <code>1</code> - приложение вышло само, и причина в его собственном журнале; <code>0</code> при перезапуске - контейнер честно завершился, а политика требует, чтобы он работал всегда. И помните, что события живут в кластере около часа: на вопрос «почему это упало вчера» объект уже не ответит, ответит только журнал, который кто-то успел собрать наружу.</div>
+
+    <h2 id="namespace">7 · Пространство имён и контекст <a class="anchor-link" href="#namespace">#</a></h2>
+    <p><strong>Задача:</strong> разобраться, почему <code>kubectl get pods</code> показывает пустоту, хотя приложение точно выкачено.</p>
+    <pre data-run="cmd"><code>kubectl config current-context
+kubectl config set-context --current --namespace=shop
+kubectl get pods
+kubectl get pods --all-namespaces -l app=web</code></pre>
+    <div class="prints"><strong>Почему так:</strong> пространство имён - часть имени объекта, а не фильтр отображения. Под <code>web</code> в <code>shop</code> и под <code>web</code> в <code>staging</code> - два разных объекта, и это нормально: имя уникально внутри пространства, а не во всём кластере. Клиент всегда работает в одном пространстве по умолчанию, и берёт он его из текущего контекста в <code>kubeconfig</code>; пока вы его не меняли, это <code>default</code>, где у вас, скорее всего, ничего нет. Отсюда три привычки, которые экономят недели. Первая: прежде чем удивляться, посмотрите контекст - он отвечает не только за пространство, но и за кластер, и перепутать тестовый с рабочим легче, чем кажется. Вторая: в скриптах и в документации пишите <code>-n</code> явно, потому что чужой контекст вам неизвестен. Третья: помните, что права обычно выданы на пространство, и «ничего не видно» иногда означает не пустоту, а отказ в доступе, который <code>kubectl</code> показывает отдельной строкой.</div>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <ul>
+        <li>Два файла в репозитории - <code>web.yaml</code> и <code>svc.yaml</code>, - напечатанные инструментом, а не набранные руками.</li>
+        <li>Готовность, описанная пробой, и понимание, что она управляет членством в срезе адресатов, а не перезапуском.</li>
+        <li>Запросы и лимиты, расставленные по разным причинам: запрос ради планировщика, лимит памяти ради узла.</li>
+        <li>Настройка, вынесенная из образа, и знание, что без <code>rollout restart</code> приложение её не увидит.</li>
+        <li>Откат в одну команду и понимание его границы: шаблон пода вернётся, миграция базы - нет.</li>
+        <li>Порядок разбора падения: <code>--previous</code>, затем события, затем код выхода.</li>
+        <li>Привычка называть пространство имён явно и сверять контекст до того, как удивляться пустому списку.</li>
+      </ul>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="11.html">Примеры · Pro</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="09.html">Почему под не работает</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

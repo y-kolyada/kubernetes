@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Желаемое состояние и контур сверки · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Управляющий слой Управляющий слой (Control plane) × Часть кластера, которая хранит желаемое состояние и принимает решения, но не запускает контейнеры.">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/01.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/01.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/01.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/01.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/01.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Желаемое состояние и контур сверки">
+<meta property="og:description" content="Управляющий слой Управляющий слой (Control plane) × Часть кластера, которая хранит желаемое состояние и принимает решения, но не запускает контейнеры.">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/01.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Желаемое состояние и контур сверки","description":"Управляющий слой Управляющий слой (Control plane) × Часть кластера, которая хранит желаемое состояние и принимает решения, но не запускает контейнеры.","url":"https://y-kolyada.github.io/kubernetes/ru/01.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/"}}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/01.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="01.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/01.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/01.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html" aria-current="page"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Желаемое состояние и контур сверки</h1>
+    <p class="page-size" data-words="1880">Слов: 1880</p>
+    <p class="lead"><span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">Управляющий слой</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Управляющий слой (Control plane)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Часть кластера, которая хранит желаемое состояние и принимает решения, но не запускает контейнеры.</span><span class="term-links"><a href="glossary.html#term-control-plane">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> Kubernetes: <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">API-сервер</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">API-сервер</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Единственная точка входа в кластер: принимает запросы, проверяет права и допуск, пишет объекты в хранилище.</span><span class="term-links"><a href="glossary.html#term-apiserver">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, etcd, контроллеры и планировщик, цикл сверки желаемого состояния с фактическим и почему кластер сходится к состоянию, а не выполняет шаги.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>Kubernetes не выполняет ваши команды. Он хранит описание того, как должно быть, и непрерывно сокращает разницу между этим описанием и тем, как есть сейчас. Всё остальное в этом справочнике - подробности того, кто именно сокращает какую разницу. Если вы держите в голове эту одну мысль, поведение кластера перестаёт быть загадочным: под, который вернулся после удаления, сервис, который сам нашёл новые адреса, узел, с которого всё уехало после пометки, - это не магия и не автоматика «на всякий случай», а один и тот же механизм, работающий в разных местах.</p>
+    </div>
+
+    <h2 id="apply">1 · Что происходит, когда вы применяете манифест <a class="anchor-link" href="#apply">#</a></h2>
+    <p>Вы выполняете <code>kubectl apply -f deploy.yaml</code> и видите строку <code>deployment.apps/web configured</code>. Легко прочитать её как «изменения применены к работающему приложению». Но произошло другое: клиент отправил HTTP-запрос к API-серверу, тот проверил вашу личность и права, проверил объект на соответствие схеме, пропустил его через цепочку обработчиков допуска и записал результат в <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">хранилище</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">etcd</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Распределённое хранилище, в котором лежит желаемое состояние всего кластера.</span><span class="term-links"><a href="glossary.html#term-etcd">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>. На этом ваш запрос закончился. Ни один контейнер в этот момент не был создан, остановлен или перезапущен.</p>
+<pre data-run="syntax"><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27-alpine</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Здесь нет ни одной команды. Весь документ - описание того, как должно быть: три реплики, такой образ, такие метки. Слова «запусти», «перезапусти», «дождись» в нём отсутствуют, и это не упущение автора, а свойство модели. Этот же документ вы примените повторно без вреда, потому что применить описание дважды - то же, что применить его один раз.</div>
+
+    <p>Строка <code>configured</code> означает ровно одно: описание в кластере теперь совпадает с тем, что вы прислали. Совпадает ли с описанием реальность, в ответе не сказано, и узнать это можно только отдельно - посмотрев на фактическое состояние того же объекта. Это разделение не формальность, а источник большинства недоразумений в работе. Команда вернула успех, а приложение не обновилось: с точки зрения Kubernetes оба факта верны одновременно, потому что вы меняли описание, а разницу закрывает кто-то другой и не мгновенно.</p>
+    <p>Полезное следствие вы можете проверить прямо в объекте. Каждое ваше изменение увеличивает счётчик <code>metadata.generation</code>, а контроллер, обработав изменение, записывает увиденный номер в <code>status.observedGeneration</code>. Когда второе отстаёт от первого, ваше изменение ещё не дошло до исполнителя, и искать причину надо в контроллере, а не в подах. Когда они равны, а поведение не изменилось, описание дошло, и дело в самом описании.</p>
+<pre data-run="syntax"><code>metadata:
+  generation: 7
+status:
+  observedGeneration: 6</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Форма полей, а не снимок кластера: числа условные. Вы изменили объект семь раз, контроллер обработал шесть. Пока второе число отстаёт от первого, ваше последнее изменение до исполнителя не дошло, и смотреть надо на контроллер. Когда числа сравнялись, а поведение не изменилось, описание дошло целиком - и причина в самом описании.</div>
+
+
+    <h2 id="control-plane">2 · Управляющий слой: кто за что отвечает <a class="anchor-link" href="#control-plane">#</a></h2>
+    <p>Управляющий слой - это не монолит, а четыре роли, каждая со своей единственной обязанностью.</p>
+    <ul>
+      <li><strong>API-сервер</strong> - единственная дверь в кластер. Через него идут все: вы, контроллеры, планировщик, агенты узлов, панели мониторинга. Он отвечает за аутентификацию, авторизацию, контроль допуска, проверку схемы и за запись в хранилище. Больше никто в хранилище не пишет и не читает его напрямую, и это ключевое архитектурное решение: один компонент держит все правила, а остальные обращаются к нему как к обычному HTTP-API.</li>
+      <li><strong>etcd</strong> - хранилище. Распределённое, с кворумом, хранит все объекты кластера как записи «ключ - значение». Его единственный клиент - API-сервер.</li>
+      <li><strong>Контроллеры</strong> - исполнители. Их десятки, и работают они как один набор процессов. Контроллер деплоймента создаёт и обновляет наборы реплик, контроллер набора реплик создаёт и удаляет поды, контроллер узлов отмечает узлы, перестающие отвечать, контроллер срезов адресатов поддерживает список адресов за сервисом, и так далее. Каждый смотрит на свой вид объектов и ничего не знает про остальных.</li>
+      <li><strong>Планировщик</strong> - распределитель. Он берёт поды, у которых ещё не выбран узел, и выбирает его. Больше он не делает ничего: он не запускает контейнеры и не следит за их состоянием.</li>
+    </ul>
+    <p>Разделение означает, что компоненты не вызывают друг друга. Контроллер деплоймента не просит планировщик найти узел и не просит <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">агент узла</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Агент узла (kubelet)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Компонент узла, который создаёт поды по назначению и непрерывно пишет их фактическое состояние обратно в API.</span><span class="term-links"><a href="glossary.html#term-kubelet">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> поднять контейнер. Он создаёт объект и на этом заканчивает работу. Планировщик увидит объект без узла, потому что следит за такими объектами. Агент узла увидит объект, назначенный на его узел, потому что следит за такими. Общение идёт только через объекты в API, а значит, добавить в кластер новое поведение можно, добавив ещё один контроллер, и ничего менять в существующих не придётся.</p>
+
+    <h2 id="reconcile">3 · Цикл сверки: одно сравнение, одно действие <a class="anchor-link" href="#reconcile">#</a></h2>
+    <p>Все контроллеры устроены одинаково. Контроллер подписывается у API-сервера на изменения интересующих его объектов и держит их свежую копию в памяти. На каждое событие он не выполняет «ответное действие», а делает полную сверку: читает желаемое состояние, читает фактическое, вычисляет разницу и совершает минимальное изменение, которое её сокращает. Затем всё повторяется.</p>
+    <p>Эта схема называется реакцией на состояние, а не на событие, и у неё есть важное практическое свойство: потерянное событие не ломает кластер. Если контроллер был недоступен минуту и пропустил десяток изменений, ему не нужно их «догонять» по порядку: он просто сверит текущее желаемое с текущим фактическим и закроет итоговую разницу одним или несколькими шагами. Система, которая реагировала бы на события, в этом случае рассыпалась бы, и ровно поэтому Kubernetes устроен иначе.</p>
+    <p>Разберём на деплойменте. Вы попросили три реплики, фактически работают две. Контроллер набора реплик видит разницу в одну единицу и создаёт один объект пода (Pod). Он не ждёт его запуска и не следит за ним: на следующем круге он снова сравнит желаемое с фактическим. Если под не поднялся, разница останется, и контроллер создаст ещё один. Если вы удалите под руками, разница появится снова, и под вернётся. Бороться с возвращающимся подом бессмысленно: удалять надо описание, а не его следствие.</p>
+    <p>Записи в объекты идут с проверкой версии. У каждого объекта есть <code>metadata.resourceVersion</code>, и запись с устаревшей версией отклоняется. Контроллеры при этом не теряют работу, а перечитывают объект и повторяют сверку. Поэтому два контроллера не могут незаметно затереть изменения друг друга, и поэтому же вы иногда видите в журналах конфликт версий как обычное, не тревожное событие.</p>
+
+    <h2 id="kubelet">4 · Агент узла: кто на самом деле поднимает контейнер <a class="anchor-link" href="#kubelet">#</a></h2>
+    <p>Пока под не получил узла, он существует только как запись в хранилище. Планировщик выбирает узел в две фазы - сначала отсеивает те, на которых под не поместится или которым он не подходит, затем оценивает оставшиеся и берёт лучший, - и записывает выбор в объект. С этого момента за под отвечает агент узла.</p>
+    <p>Агент узла следит за подами, назначенными на его узел. Получив новый, он обращается к рантайму контейнеров через стандартный интерфейс, создаёт для пода изолированную песочницу с общим сетевым пространством имён, затем по порядку запускает инициализирующие контейнеры и после них основные. Затем он начинает следить за ними: опрашивает пробы, перезапускает упавшие по политике перезапуска и, что для нас сейчас важнее всего, непрерывно записывает фактическое состояние обратно в объект пода через API-сервер.</p>
+    <p>Так замыкается контур. Желаемое состояние идёт сверху вниз: от вашего манифеста через контроллеры и планировщик к агенту узла. Фактическое состояние идёт снизу вверх: от рантайма через агент узла в поле <code>status</code> объекта. Когда вы смотрите <code>kubectl get pods</code>, вы читаете не живой опрос узлов, а последнее, что агенты успели записать. Отсюда понятно, почему при недоступном узле его поды какое-то время остаются в состоянии <code>Running</code>: никто не присылает опровержения, а решение считать узел потерянным принимает отдельный контроллер и не сразу.</p>
+    <div class="box">
+      <svg viewBox="0 0 320 330" width="100%" style="max-width:320px;height:auto;display:block;margin:0 auto" role="img" aria-label="Путь изменения сверху вниз: kubectl apply, API-сервер, etcd, контроллеры, планировщик, агент узла. Путь фактического состояния снизу вверх, от агента узла обратно в API-сервер">
+        <defs>
+          <marker id="arr01" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <g stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.05">
+          <rect x="2" y="4" width="252" height="32" rx="6"/>
+          <rect x="2" y="48" width="252" height="46" rx="6"/>
+          <rect x="2" y="106" width="252" height="46" rx="6"/>
+          <rect x="2" y="164" width="252" height="46" rx="6"/>
+          <rect x="2" y="222" width="252" height="46" rx="6"/>
+          <rect x="2" y="280" width="252" height="46" rx="6"/>
+        </g>
+        <g fill="currentColor" font-size="13">
+          <text x="12" y="25">kubectl apply -f deploy.yaml</text>
+          <text x="12" y="69">API-сервер</text>
+          <text x="12" y="127">etcd</text>
+          <text x="12" y="185">контроллеры</text>
+          <text x="12" y="243">планировщик</text>
+          <text x="12" y="301">агент узла</text>
+        </g>
+        <g fill="currentColor" font-size="12" opacity="0.75">
+          <text x="12" y="85">проверяет права, схему, допуск</text>
+          <text x="12" y="143">желаемое состояние кластера</text>
+          <text x="12" y="201">сверка желаемого с фактическим</text>
+          <text x="12" y="259">выбор узла, один раз</text>
+          <text x="12" y="317">песочница, контейнеры, status</text>
+        </g>
+        <g stroke="currentColor" stroke-width="1.2" fill="none">
+          <line x1="128" y1="36" x2="128" y2="44" marker-end="url(#arr01)"/>
+          <line x1="128" y1="94" x2="128" y2="102" marker-end="url(#arr01)"/>
+          <line x1="128" y1="152" x2="128" y2="160" marker-end="url(#arr01)"/>
+          <line x1="128" y1="210" x2="128" y2="218" marker-end="url(#arr01)"/>
+          <line x1="128" y1="268" x2="128" y2="276" marker-end="url(#arr01)"/>
+          <path d="M254 303 H 292 V 71 H 258" stroke-dasharray="4 3" marker-end="url(#arr01)"/>
+        </g>
+        <text x="308" y="187" fill="currentColor" font-size="12" opacity="0.75" text-anchor="middle" transform="rotate(-90 308 187)">фактическое состояние</text>
+      </svg>
+      <p class="dim">Схема 1. Желаемое состояние идёт сверху вниз, фактическое - снизу вверх. Ни один из этих компонентов не вызывает следующий: каждый следит за объектами в API и делает свою часть, когда видит разницу.</p>
+    </div>
+
+
+    <h2 id="etcd">5 · etcd: единственное место, где живёт желаемое состояние <a class="anchor-link" href="#etcd">#</a></h2>
+    <p>Весь кластер - это содержимое etcd. Деплойменты, поды, секреты, права, пространства имён, срезы адресатов: всё это записи в нём, и ничего из этого нет больше нигде. Манифесты в вашем репозитории - это источник, из которого состояние можно воссоздать, но не само состояние: там нет ни назначений подов на узлы, ни выданных сервисам адресов, ни того, что кластер дописал сам.</p>
+    <p>etcd держит согласованность через кворум: запись считается принятой, когда её подтвердило большинство участников. Из трёх участников кластер переживает потерю одного, из пяти - двух. Потеря большинства означает, что хранилище перестаёт принимать записи, а значит, управляющий слой перестаёт принимать любые изменения: применить манифест нельзя, но и кластер не разваливается.</p>
+    <p>Это главное, что стоит знать про отказ управляющего слоя: <strong>работающие поды продолжают работать</strong>. Агенты узлов держат контейнеры, правила маршрутизации на узлах остались на месте, трафик идёт. Перестаёт работать другое - всё, что требует сверки: упавший под не будет пересоздан, потерянный узел не будет разгружен, новая раскатка не начнётся, масштабирование не произойдёт. Кластер превращается в набор узлов, доживающих с последним известным назначением. Поэтому отказ управляющего слоя редко выглядит как мгновенная авария и часто обнаруживается по тому, что перестало лечиться само.</p>
+    <p>Из этого же следует смысл резервной копии. Снимок etcd - это снимок всего кластера, и восстановление из него возвращает кластер в состояние на момент снимка: объекты, которых тогда не было, исчезнут, а удалённые с тех пор вернутся. Снимок надо делать по расписанию, хранить вне кластера и, что пропускают чаще всего, проверять восстановлением: непроверенная резервная копия - это предположение, а не копия. И отдельно помните, что секреты в etcd по умолчанию не зашифрованы, то есть снимок хранилища равноценен содержимому всех секретов кластера, и обращаться с файлом снимка нужно как с ними.</p>
+
+    <h2 id="consequences">6 · Что эта модель даёт вам в работе <a class="anchor-link" href="#consequences">#</a></h2>
+    <p><span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">Модель контура сверки</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Контур сверки (Reconcile loop)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Непрерывное сведение фактического состояния кластера к желаемому, описанному в объектах.</span><span class="term-links"><a href="glossary.html#term-reconcile">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> сразу отвечает на несколько вопросов, которые иначе приходится заучивать по отдельности.</p>
+    <ol>
+      <li><strong>Повторное применение безопасно.</strong> Вы описываете состояние, а не шаги, поэтому применить тот же манифест дважды - то же самое, что применить его один раз. Это свойство описания, а не вежливость инструмента.</li>
+      <li><strong>Изменение надо искать в описании.</strong> Правка, сделанная на работающем объекте руками, будет затёрта следующей сверкой, если ваш источник описаний говорит иначе. Это не борьба инструментов, а работа механизма по назначению.</li>
+      <li><strong>Отказ всегда локализуется до одного контура.</strong> Под в состоянии ожидания - не нашёлся узел, работает планировщик. Под есть, контейнер не стартует - работает агент узла. Поды здоровы, а трафика нет - работает контур адресатов сервиса. Вопрос «что сломалось» превращается в вопрос «какой контур не смог закрыть разницу и почему», а у него есть конечный список ответов.</li>
+      <li><strong>Скорость сходимости - это не мгновенность.</strong> Между вашим применением и результатом стоят несколько независимых циклов, у каждого свой темп. Ожидать мгновенной реакции от системы, устроенной как последовательность сверок, значит ожидать не того поведения, которое заложено.</li>
+    </ol>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <ol>
+        <li><strong>Схема пути изменения.</strong> Вы можете назвать по шагам, что происходит между <code>apply</code> и работающим контейнером, и кто отвечает за каждый шаг.</li>
+        <li><strong>Приём диагностики.</strong> Сравнение <code>metadata.generation</code> с <code>status.observedGeneration</code> отвечает, дошло ли ваше изменение до исполнителя, прежде чем вы начнёте смотреть на поды.</li>
+        <li><strong>Понимание отказа управляющего слоя.</strong> Вы знаете, что при этом продолжает работать, что перестаёт, и почему такой отказ обнаруживается по прекращению самолечения.</li>
+        <li><strong>Требования к резервной копии.</strong> Снимок etcd вне кластера, по расписанию, проверенный восстановлением, и обращение с ним как с файлом всех секретов сразу.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="02.html">Объект, схема и API</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="index.html">Посадочная страница</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

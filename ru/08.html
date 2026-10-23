@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Доступ: аутентификация, RBAC и допуск · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Путь запроса через API-сервер: аутентификация, авторизация ролями и привязками, служебная учётная запись Служебная учётная запись (ServiceAccount) ×...">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/08.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/08.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/08.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/08.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/08.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Доступ: аутентификация, RBAC и допуск">
+<meta property="og:description" content="Путь запроса через API-сервер: аутентификация, авторизация ролями и привязками, служебная учётная запись Служебная учётная запись (ServiceAccount) ×...">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/08.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Доступ: аутентификация, RBAC и допуск","description":"Путь запроса через API-сервер: аутентификация, авторизация ролями и привязками, служебная учётная запись Служебная учётная запись (ServiceAccount) ×...","url":"https://y-kolyada.github.io/kubernetes/ru/08.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/"}}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/08.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="08.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/08.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/08.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html" aria-current="page"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Доступ: аутентификация, RBAC и допуск</h1>
+    <p class="page-size" data-words="1468">Слов: 1468</p>
+    <p class="lead">Путь запроса через API-сервер: аутентификация, авторизация ролями и привязками, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">служебная учётная запись</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Служебная учётная запись (ServiceAccount)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Удостоверение, с которым под обращается к API кластера.</span><span class="term-links"><a href="glossary.html#term-serviceaccount">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> и токен пода, конт<span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">роль</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Права доступа (RBAC)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Модель прав, в которой роль описывает набор глаголов, а привязка - область их действия.</span><span class="term-links"><a href="glossary.html#term-rbac">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> допуска, стандарты безопасности подов и контекст безопасности.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>В главе 01 сказано, что API-сервер - единственная дверь в кластер. Эта глава про то, что стоит в дверном проёме. Каждый запрос - ваш, контроллера, агента узла, панели мониторинга - проходит одну и ту же цепочку из трёх разных вопросов: кто вы, можно ли вам это, и допустим ли сам объект. Вопросы задают разные механизмы, настраиваются они по-разному и отказывают по-разному, и первое, что нужно уметь, - это по ответу понять, на каком шаге вас остановили. Отказ «не знаю вас» и отказ «вам нельзя» чинятся в совершенно разных местах.</p>
+    </div>
+
+    <h2 id="pipeline">1 · Путь запроса через API-сервер <a class="anchor-link" href="#pipeline">#</a></h2>
+    <p>Запрос, дошедший до API-сервера по защищённому соединению, последовательно проходит через аутентификацию, авторизацию и <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">контроль допуска</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Контроль допуска (Admission)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Шаг обработки запроса после аутентификации и прав, на котором объект можно изменить или отклонить.</span><span class="term-links"><a href="glossary.html#term-admission">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, и только после этого объект попадает в хранилище. Порядок жёсткий, и каждый шаг может отказать, не дав запросу идти дальше.</p>
+    <p>Это разделение объясняет вещь, которая иначе кажется странной: вы можете иметь безупречные права и всё равно получить отказ, потому что объект не прошёл политику допуска. И наоборот, безупречный объект не поможет, если вам не разрешено его создавать. Три шага независимы.</p>
+
+    <div class="box">
+      <svg viewBox="0 0 320 270" width="100%" style="max-width:320px;height:auto;display:block;margin:0 auto" role="img" aria-label="Запрос проходит аутентификацию, затем авторизацию по ролям, затем изменяющий и проверяющий контроль допуска, и только потом записывается в хранилище; отказ на любом шаге останавливает запрос">
+        <defs>
+          <marker id="arr08" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <g stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.05">
+          <rect x="2" y="4" width="252" height="44" rx="8"/>
+          <rect x="2" y="60" width="252" height="44" rx="8"/>
+          <rect x="2" y="116" width="252" height="44" rx="8"/>
+          <rect x="2" y="172" width="252" height="44" rx="8"/>
+          <rect x="2" y="230" width="252" height="36" rx="8"/>
+        </g>
+        <g fill="currentColor" font-size="13">
+          <text x="12" y="24">запрос с удостоверением</text>
+          <text x="12" y="80">аутентификация</text>
+          <text x="12" y="136">авторизация: RBAC</text>
+          <text x="12" y="192">контроль допуска</text>
+          <text x="12" y="253">запись в etcd</text>
+        </g>
+        <g fill="currentColor" font-size="12" opacity="0.75">
+          <text x="12" y="40">сертификат, токен, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">OIDC</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Внешний вход (OIDC)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Протокол, по которому кластер доверяет внешнему провайдеру удостоверений вместо собственных сертификатов.</span><span class="term-links"><a href="glossary.html#term-oidc">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span></text>
+          <text x="12" y="96">кто вы и в каких группах</text>
+          <text x="12" y="152">можно ли вам это действие</text>
+          <text x="12" y="208">изменяющий, затем проверяющий</text>
+        </g>
+        <g stroke="currentColor" stroke-width="1.2" fill="none">
+          <path d="M128 48 V 56" marker-end="url(#arr08)"/>
+          <path d="M128 104 V 112" marker-end="url(#arr08)"/>
+          <path d="M128 160 V 168" marker-end="url(#arr08)"/>
+          <path d="M128 216 V 226" marker-end="url(#arr08)"/>
+          <path d="M254 82 H 290 V 248" stroke-dasharray="4 3" opacity="0.5"/>
+          <path d="M254 138 H 290" stroke-dasharray="4 3" opacity="0.5"/>
+          <path d="M254 194 H 290" stroke-dasharray="4 3" opacity="0.5"/>
+        </g>
+        <text x="308" y="165" fill="currentColor" font-size="12" opacity="0.7" text-anchor="middle" transform="rotate(-90 308 165)">отказ на любом шаге</text>
+      </svg>
+      <p class="dim">Схема 8. Три вопроса задаются по очереди и разными механизмами. Поэтому по тексту отказа всегда можно сказать, какой шаг вас остановил, и чинить именно его.</p>
+    </div>
+
+    <h2 id="authn">2 · Аутентификация: кто вы <a class="anchor-link" href="#authn">#</a></h2>
+    <p>Первое, что удивляет: <strong>в Kubernetes нет объекта «пользователь».</strong> Людей кластер не хранит и не создаёт. Он умеет только проверить предъявленное удостоверение и извлечь из него имя и список групп. Удостоверения бывают трёх основных видов: клиентский сертификат, подписанный удостоверяющим центром кластера; токен служебной учётной записи, который получают процессы внутри кластера; токен внешнего поставщика входа по протоколу OIDC, за которым стоит корпоративный каталог.</p>
+    <p>Отсюда практика: учётные записи людей в нормальном кластере не раздаются сертификатами по одному, потому что отозвать сертификат трудно, а срок его жизни велик. Людей подключают через внешнего поставщика, где увольнение закрывает доступ в одном месте. Имя и группы приходят оттуда, а кластер отвечает только на вопрос «что этому имени и этим группам разрешено».</p>
+
+    <h2 id="rbac">3 · Авторизация: роли и привязки <a class="anchor-link" href="#rbac">#</a></h2>
+    <p>Разрешения описываются двумя парами объектов. Роль перечисляет, что можно делать: с какими видами ресурсов, какие действия, иногда с какими именами объектов. Привязка соединяет роль с теми, кому она выдана: пользователям, группам, служебным учётным записям. Роль в пространстве имён и привязка в пространстве имён дают права внутри него; кластерная роль и кластерная привязка - во всём кластере.</p>
+    <p>Два правила делают эту систему предсказуемой.</p>
+    <ol>
+      <li><strong>Разрешения только складываются.</strong> Запретов в этой модели нет вообще: нельзя написать правило «всё можно, кроме секретов». Если кому-то досталось лишнее, надо убирать выдавшую это привязку, а не добавлять запрет поверх.</li>
+      <li><strong>Нет разрешения - значит отказ.</strong> Умолчание закрыто, и права выдаются от нуля вверх.</li>
+    </ol>
+    <p>Есть одна комбинация, которую стоит знать отдельно, потому что она экономит множество почти одинаковых ролей: кластерную роль можно выдать <strong>привязкой в пространстве имён</strong>. Тогда её правила действуют только внутри этого пространства. Так одна роль «читатель» пишется один раз и выдаётся десяти командам, каждой в её пространстве.</p>
+    <p>Проверять права гаданием не нужно: у клиента есть команда <code>auth can-i</code>, которая спрашивает у самого API-сервера, разрешено ли действие, в том числе от имени другого субъекта. Это и есть правильный ответ на вопрос «почему у него не работает».</p>
+
+<pre data-run="syntax"><code>apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: web
+  namespace: shop
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: config-reader
+  namespace: shop
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: web-config-reader
+  namespace: shop
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: config-reader
+subjects:
+  - kind: ServiceAccount
+    name: web
+    namespace: shop</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Минимальный комплект из трёх объектов: кто действует, что разрешено, и соединение между ними. Пустая строка в <code>apiGroups</code> - это группа без имени, та самая, в которой живут поды, сервисы и конфигурационные объекты (глава 02): её пишут пустой строкой, а не пропускают. Секреты в этой роли не упомянуты, и значит, читать их нельзя: разрешения только складываются, и то, что не выдано, запрещено.</div>
+
+    <h2 id="serviceaccount">4 · Служебная учётная запись и токен пода <a class="anchor-link" href="#serviceaccount">#</a></h2>
+    <p>Процессы внутри кластера обращаются к API-серверу от имени служебной учётной записи. В каждом пространстве имён есть учётная запись по умолчанию, и под, не указавший другую, получает именно её. Токен подкладывается в контейнер отдельным томом, и современные версии Kubernetes делают его коротко живущим: токен выдаётся на срок, привязан к конкретному поду и обновляется агентом узла, а не лежит вечным секретом.</p>
+    <p>Два практических правила. Первое: <strong>не копите права на учётной записи по умолчанию.</strong> Её получает всякий под, не указавший своей, в том числе чужой и случайный; любое разрешение, выданное ей, становится разрешением для всего пространства имён. Второе: если приложению API-сервер не нужен - а большинству прикладных контейнеров он не нужен, - отключите подкладывание токена. Это одна строка, и она убирает из контейнера учётные данные, которые незачем там держать.</p>
+
+    <h2 id="admission">5 · Контроль допуска: изменяющий и проверяющий <a class="anchor-link" href="#admission">#</a></h2>
+    <p>Третий шаг отличается от первых двух тем, что он про сам объект, а не про того, кто его прислал. Сначала работают изменяющие обработчики: они имеют право <strong>править</strong> приходящий объект - дописать умолчания, подставить значения, добавить в под контейнер-сопроводитель. Потом объект проверяется на соответствие схеме. Потом работают проверяющие обработчики: они объект не меняют, а только принимают или отклоняют.</p>
+    <p>Часть обработчиков встроена в API-сервер: именно они применяют квоты пространства имён, подставляют ограничения ресурсов по умолчанию, применяют стандарты безопасности подов. Часть - ваши или сторонние, они живут в кластере как службы, и API-сервер ходит к ним по сети.</p>
+    <p>Отсюда вывод, которым оплачено немало ночных дежурств: <strong>внешний обработчик допуска - это зависимость API-сервера.</strong> Если он объявлен обязательным и при этом недоступен, кластер перестаёт принимать затронутые им изменения целиком. Поэтому у такого обработчика всегда ограничивают область применения и осознанно выбирают поведение при недоступности, а собственное пространство имён исключают из его действия, чтобы иметь возможность его же и починить.</p>
+    <p>Полезно и обратное знание: если ваш объект в кластере отличается от того, что вы применяли, - в нём появились поля, контейнеры или метки, которых вы не писали, - это не магия, а изменяющий обработчик. Искать надо его, а не ошибку в своём манифесте.</p>
+
+    <h2 id="psa">6 · Стандарты безопасности подов <a class="anchor-link" href="#psa">#</a></h2>
+    <p>Встроенный механизм, который проверяет поды на соответствие одному из трёх уровней строгости. Самый свободный не запрещает ничего. Средний закрывает известные способы выйти за границы контейнера. Строгий дополнительно требует непривилегированного пользователя, запрещает повышение прав и требует минимального набора возможностей ядра.</p>
+    <p>Включается он метками на пространстве имён, и у него три режима, которые можно сочетать: отклонять, предупреждать и писать в журнал аудита. Это и есть правильный путь внедрения в живом кластере: сначала предупреждение и аудит, посмотреть, сколько рабочих нагрузок не проходит, починить их, и только потом включать отклонение. Включённое сразу отклонение на пространстве имён с работающими приложениями останавливает их раскатку в тот же час.</p>
+
+    <h2 id="securitycontext">7 · Контекст безопасности контейнера <a class="anchor-link" href="#securitycontext">#</a></h2>
+    <p>Стандарт проверяет, а контекст безопасности задаёт. Это раздел описания пода и контейнера, где сказано, от какого пользователя работать, можно ли повышать права, какие возможности ядра оставить, доступна ли корневая файловая система на запись.</p>
+    <p>Отдельно о привилегированном контейнере: это не «немного больше прав», это фактически права суперпользователя на узле. Такому контейнеру доступны устройства машины и чужие процессы, и граница между ним и узлом перестаёт существовать. Привилегированными бывают сетевые модули и драйверы хранения - то есть то, что обслуживает сам узел; прикладной контейнер привилегированным не бывает никогда.</p>
+
+<pre data-run="syntax"><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+  namespace: shop
+spec:
+  serviceAccountName: web
+  automountServiceAccountToken: false
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    fsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: web
+      image: nginx:1.27-alpine
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: ["ALL"]</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Так выглядит под, проходящий строгий уровень стандарта. Верхний раздел задаёт пользователя для всех контейнеров пода, нижний ужесточает отдельный контейнер. Запрет повышения прав закрывает самый короткий путь к суперпользователю внутри контейнера. Корневая файловая система только для чтения ломает сценарий «скачал и запустил»: приложению, которому нужно писать, выдают отдельный том, а не открывают всю систему. Отключённое подкладывание токена убирает из контейнера учётные данные, которые ему не нужны.</div>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <ol>
+        <li><strong>Чтение отказа по шагам.</strong> Вы различаете «не знаю вас», «вам нельзя» и «объект недопустим» и чините каждый в своём месте.</li>
+        <li><strong>Модель прав без запретов.</strong> Разрешения только складываются, умолчание закрыто, лишнее убирается снятием привязки; кластерная роль с привязкой в пространстве имён экономит десяток одинаковых ролей.</li>
+        <li><strong>Гигиена служебных учётных записей.</strong> Ничего не копить на учётной записи по умолчанию и отключать подкладывание токена там, где API-сервер приложению не нужен.</li>
+        <li><strong>Понимание происхождения «лишних» полей.</strong> Объект, отличающийся от применённого, изменён обработчиком допуска, и это же место - зависимость, способная остановить приём изменений в кластере.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="09.html">Почему под не работает</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="07.html">Конфигурация, секреты и хранение</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

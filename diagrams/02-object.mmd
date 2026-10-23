@@ -1,0 +1,12 @@
+%% ru/02.html - анатомия объекта: кто пишет какое поле
+flowchart LR
+    subgraph OBJ["объект API"]
+        GVK["apiVersion + kind<br/>адрес схемы"]
+        META["metadata<br/>имя, метки, аннотации"]
+        SPEC["spec<br/>желаемое состояние"]
+        STATUS["status<br/>фактическое состояние"]
+    end
+    YOU["вы"] --> GVK
+    YOU --> META
+    YOU --> SPEC
+    CTRL["контроллер и агент узла"] --> STATUS

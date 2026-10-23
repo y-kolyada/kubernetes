@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Под: единица запуска · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Под как единица запуска: общее сетевое пространство имён и тома, инициализирующие контейнеры Инициализирующий и сопроводительный контейнер × Контейнеры пода...">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/03.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/03.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/03.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/03.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/03.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Под: единица запуска">
+<meta property="og:description" content="Под как единица запуска: общее сетевое пространство имён и тома, инициализирующие контейнеры Инициализирующий и сопроводительный контейнер × Контейнеры пода...">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/03.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Под: единица запуска","description":"Под как единица запуска: общее сетевое пространство имён и тома, инициализирующие контейнеры Инициализирующий и сопроводительный контейнер × Контейнеры пода...","url":"https://y-kolyada.github.io/kubernetes/ru/03.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/"}}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/03.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="03.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/03.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/03.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html" aria-current="page"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Под: единица запуска</h1>
+    <p class="page-size" data-words="1662">Слов: 1662</p>
+    <p class="lead">Под как единица запуска: общее сетевое пространство имён и тома, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">инициализирующие контейнеры</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Инициализирующий и сопроводительный контейнер</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Контейнеры пода, которые запускаются до основных: первый обязан завершиться, второй работает всё время жизни пода.</span><span class="term-links"><a href="glossary.html#term-init-sidecar">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> и сопроводители, фазы жизни, политика перезапуска, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">три пробы</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Пробы готовности, живости и стартовая</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Три проверки контейнера, отвечающие за разные решения: трафик, перезапуск и отсрочка на старте.</span><span class="term-links"><a href="glossary.html#term-probe">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> и корректное завершение.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>Под - это не «контейнер по-кубернетовски» и не папка для контейнеров. Это граница изоляции: группа контейнеров, которым выдали один сетевой стек, одни общие тома и одну судьбу. Они всегда на одном узле, запускаются и умирают вместе, видят друг друга по <code>localhost</code> и для всего остального кластера выглядят как один адрес. Почти всё, что кажется странным в поведении <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">под</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Под (Pod)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Наименьшая единица размещения: один или несколько контейнеровПод (Pod)&times;Наименьшая единица размещения: один или несколько контейнеров с общим сетевым пространством имён и общими томами.В словарь понятий  с общим сетевым пространством имён и общими томами.</span><span class="term-links"><a href="glossary.html#term-pod">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>ов - от невозможности поменять образ на месте до перезапусков под нагрузкой, - объясняется этой границей и тем, кто её обслуживает.</p>
+    </div>
+
+    <h2 id="what-is-pod">1 · Что такое под физически <a class="anchor-link" href="#what-is-pod">#</a></h2>
+    <p>Когда агент узла получает назначенный ему под, он сначала создаёт песочницу: набор пространств имён операционной системы, которые будут общими для всех контейнеров пода. Общими становятся сетевой стек, межпроцессное взаимодействие и имя узла; при желании можно разделить и пространство процессов, но по умолчанию оно у каждого контейнера своё. Песочницу держит отдельный служебный контейнер, который ничего не делает и существует только для того, чтобы пространства имён не исчезли, когда ваши контейнеры перезапускаются.</p>
+    <p>Из общего сетевого стека следуют сразу три факта, которые вы будете использовать ежедневно. У пода один адрес, а не по одному на контейнер. Контейнеры внутри пода обращаются друг к другу через <code>localhost</code> и не нуждаются ни в сервисе, ни в DNS. И порты в поде общие: два контейнера не могут слушать один порт, и конфликт проявится при запуске, а не при обращении.</p>
+    <div class="box">
+      <svg viewBox="0 0 320 344" width="100%" style="max-width:320px;height:auto;display:block;margin:0 auto" role="img" aria-label="Песочница пода: один адрес, два контейнера, общий том, обращение по localhost. Ниже порядок запуска: init завершается, sidecar работает всё время, основные контейнеры стартуют последними">
+        <defs>
+          <marker id="arr03" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <rect x="2" y="4" width="316" height="148" rx="10" stroke="currentColor" stroke-width="1.2" stroke-dasharray="5 4" fill="none"/>
+        <text x="12" y="20" fill="currentColor" font-size="12" opacity="0.75">под: один сетевой стек, один адрес</text>
+        <g stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.05">
+          <rect x="4" y="28" width="124" height="48" rx="6"/>
+          <rect x="188" y="28" width="124" height="48" rx="6"/>
+          <rect x="80" y="96" width="160" height="36" rx="6"/>
+        </g>
+        <g fill="currentColor" font-size="12">
+          <text x="12" y="48">контейнер app</text>
+          <text x="196" y="48">контейнер proxy</text>
+        </g>
+        <text x="92" y="119" fill="currentColor" font-size="13">общий том</text>
+        <g fill="currentColor" font-size="12" opacity="0.75">
+          <text x="12" y="64">слушает :8080</text>
+          <text x="196" y="64">слушает :9090</text>
+        </g>
+        <g stroke="currentColor" stroke-width="1.2" fill="none">
+          <path d="M132 56 H 184" marker-start="url(#arr03)" marker-end="url(#arr03)"/>
+          <path d="M66 76 V 86 H 110 V 94" marker-end="url(#arr03)"/>
+          <path d="M250 76 V 86 H 210 V 94" marker-end="url(#arr03)"/>
+        </g>
+        <text x="158" y="48" fill="currentColor" font-size="12" opacity="0.75" text-anchor="middle">localhost</text>
+        <text x="2" y="176" fill="currentColor" font-size="12" opacity="0.75">порядок запуска</text>
+        <g stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.05">
+          <rect x="2" y="184" width="316" height="44" rx="6"/>
+          <rect x="2" y="240" width="316" height="44" rx="6"/>
+          <rect x="2" y="296" width="316" height="44" rx="6"/>
+        </g>
+        <g fill="currentColor" font-size="13">
+          <text x="14" y="204">init</text>
+          <text x="14" y="260">sidecar</text>
+          <text x="14" y="316">основные</text>
+        </g>
+        <g fill="currentColor" font-size="12" opacity="0.75">
+          <text x="14" y="220">должен завершиться</text>
+          <text x="14" y="276">работает всё время</text>
+          <text x="14" y="332">стартуют последними</text>
+        </g>
+        <g stroke="currentColor" stroke-width="1.2" fill="none">
+          <line x1="160" y1="228" x2="160" y2="236" marker-end="url(#arr03)"/>
+          <line x1="160" y1="284" x2="160" y2="292" marker-end="url(#arr03)"/>
+        </g>
+      </svg>
+      <p class="dim">Схема 3. Сверху - граница изоляции: адрес и тома общие, поэтому <code>localhost</code> работает, а два слушателя на одном порту конфликтуют. Снизу - порядок запуска; уход идёт в обратную сторону, и сопроводитель останавливается после основных контейнеров.</p>
+    </div>
+
+    <p>Тома объявляются на уровне пода, а не контейнера, и каждый контейнер монтирует нужные ему в своё место. Это второй способ, которым контейнеры пода связаны: один пишет файл, другой его читает, и никакой сети для этого не нужно.</p>
+    <p>Под почти целиком неизменяем. Поменять образ, добавить том, изменить переменную среды у существующего пода нельзя: кластер создаёт новый под, а старый удаляет. Именно поэтому вы работаете не с подами, а с контроллерами, которые их создают: правка описания в контроллере и есть способ «изменить» под.</p>
+
+    <h2 id="multi-container">2 · Несколько контейнеров в одном поде, и когда это оправдано <a class="anchor-link" href="#multi-container">#</a></h2>
+    <p>Положить два контейнера в один под - решение, а не удобство. Оно означает: эти процессы всегда на одном узле, всегда масштабируются вместе, всегда перезапускаются и обновляются вместе, и делят лимиты узла. Если любое из этих «всегда» вам не нужно, это два пода и два контроллера.</p>
+    <p>Случаи, когда одна граница оправдана, узнаваемы. Процесс-сопроводитель собирает журналы основного контейнера из общего тома или отдаёт показатели в удобном виде. Прокси принимает весь сетевой трафик пода и добавляет шифрование или политику, что возможно только при общем сетевом стеке. Вспомогательный процесс обновляет файлы в общем томе, который читает основной. Во всех случаях связь идёт через то, что у пода общее, и вынести такой процесс в отдельный под нельзя без потери механизма.</p>
+
+    <h2 id="init-sidecar">3 · Инициализирующие контейнеры и сопроводители <a class="anchor-link" href="#init-sidecar">#</a></h2>
+    <p>Инициализирующие контейнеры выполняются до основных, строго по одному и строго по порядку списка, и каждый должен успешно завершиться, прежде чем начнётся следующий. У них свои образы, и это их главная ценность: подготовка не тащит инструменты в основной образ. Дождаться доступности базы, выполнить миграцию схемы, получить файл конфигурации, выставить права на томе - всё это делается образом с нужными утилитами, а рабочий образ остаётся минимальным.</p>
+    <p>Пока инициализирующие контейнеры не прошли, под остаётся в состоянии ожидания, и это частая причина пода, который «висит и ничего не пишет»: смотреть надо журнал инициализирующего контейнера, а не основного. Если такой контейнер падает, под перезапускает его по своей политике, то есть вечный цикл ожидания недоступной зависимости выглядит как под, который бесконечно не стартует.</p>
+    <p>Отдельная конструкция - сопроводитель, который должен работать всё время жизни пода, а не завершиться. В современных версиях Kubernetes его объявляют в том же списке инициализирующих, но с политикой перезапуска «всегда». Такой контейнер стартует до основных, не блокирует их ожиданием своего завершения, работает параллельно и останавливается после них. Это важное отличие от простого второго контейнера в списке основных: прокси или сборщик журналов, объявленный сопроводителем, гарантированно готов раньше приложения и уходит позже, а не в произвольном порядке.</p>
+
+    <h2 id="phases">4 · Фазы жизни и политика перезапуска <a class="anchor-link" href="#phases">#</a></h2>
+    <p>У пода есть фаза, короткая сводка его жизни: ожидание, работа, успешное завершение, отказ и неизвестность, когда узел не отвечает. Фаза - это именно сводка; подробности лежат в состояниях отдельных контейнеров, где у каждого своё: ожидание с причиной, работа или завершение с кодом выхода.</p>
+    <p>Привычка смотреть только на фазу - источник большей части потерянного времени. Под в фазе работы может не обслуживать запросы, потому что не прошёл пробу готовности. Под в фазе ожидания может ждать узла, а может тянуть образ: это два разных отказа с разными причинами. Правильное чтение - всегда через состояния контейнеров и события объекта.</p>
+    <p>Политика перезапуска задаётся на весь под. Значение «всегда» подходит долгоживущим службам и используется контроллерами по умолчанию; «при отказе» - задачам, которые должны однажды завершиться успехом; «никогда» - тем, чей отказ должен остаться отказом. Перезапуск делает агент узла и делает его на том же узле: это повторный запуск контейнера внутри существующего пода, а не новый под. Поэтому счётчик перезапусков растёт у того же объекта, и поэтому перезапуск не лечит проблему, связанную с узлом.</p>
+    <p>Повторяющиеся падения агент узла замедляет: пауза между попытками растёт от нескольких секунд до нескольких минут. Состояние, которое вы при этом видите, означает именно это - контейнер падает, и кластер уже ждёт, прежде чем пробовать снова. Полезное следствие: такой под не нужно удалять, чтобы «ускорить» его, но и ждать от него самоизлечения бессмысленно, потому что падает он по причине внутри себя.</p>
+
+    <h2 id="probes">5 · Три пробы и что каждая решает <a class="anchor-link" href="#probes">#</a></h2>
+    <p>Пробы - это то, чем агент узла отличает «процесс запущен» от «служба работает». Их три, и у каждой своё решение.</p>
+    <ul>
+      <li><strong>Стартовая проба</strong> отвечает на вопрос «приложение ещё поднимается?». Пока она не прошла успешно, две другие не выполняются вовсе. Это правильный способ обслуживать медленный старт: вы даёте приложению сколько нужно времени, не ослабляя последующий контроль.</li>
+      <li><strong>Проба готовности</strong> отвечает на вопрос «можно ли сейчас присылать запросы?». Её результат не перезапускает контейнер: он решает, входит ли под в множество адресатов сервиса. Это единственный штатный способ временно вывести под из-под трафика, оставив его работающим, например пока он прогревает кеш или потерял доступ к зависимости.</li>
+      <li><strong>Проба живости</strong> отвечает на вопрос «надо ли убить контейнер?». Провал приводит к перезапуску. Это лечение зависшего процесса, который не падает сам.</li>
+    </ul>
+    <p>Проверка выполняется HTTP-запросом, подключением к порту, запуском команды внутри контейнера или вызовом по gRPC; у каждой пробы свои задержка начала, период, таймаут и пороги срабатывания.</p>
+    <p>Главная ошибка здесь стоит дорого и выглядит как загадка. Проба живости, проверяющая доступность внешней зависимости, превращает недоступность этой зависимости в перезапуск всех ваших подов сразу. Проба живости с коротким таймаутом под нагрузкой начинает отваливаться по таймауту и перезапускает именно те поды, которые нужнее всего. В обоих случаях вы видите массовые перезапуски без очевидной причины, а причина в том, что живость - это про зависший процесс, а всё остальное - это готовность. Правило короткое: живость проверяет только себя и только дёшево; зависимости и прогрев - дело готовности.</p>
+<pre data-run="syntax"><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+spec:
+  terminationGracePeriodSeconds: 45
+  initContainers:
+    - name: migrate
+      image: migrate:1.4
+      command: ["./migrate", "up"]
+    - name: logs
+      image: fluent-bit:3.1
+      restartPolicy: Always
+  containers:
+    - name: web
+      image: nginx:1.27-alpine
+      startupProbe:
+        httpGet:
+          path: /healthz
+          port: 8080
+        failureThreshold: 30
+        periodSeconds: 2
+      readinessProbe:
+        httpGet:
+          path: /ready
+          port: 8080
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 8080
+      lifecycle:
+        preStop:
+          exec:
+            command: ["sleep", "5"]</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Сравните три пробы в одном описании. Стартовая даёт приложению до шестидесяти секунд на подъём и до своего успеха отключает две остальные. Готовность смотрит <code>/ready</code> - путь, который знает про зависимости, и решает, идёт ли в под трафик. Живость смотрит <code>/healthz</code> - дешёвую проверку самого процесса, и решает, убивать ли контейнер. Второй элемент в <code>initContainers</code> с политикой перезапуска «всегда» - это сопроводитель: он стартует до основного и уходит после него. Пауза в <code>preStop</code> даёт правилам маршрутизации узнать об уходе пода прежде, чем он закроет порт.</div>
+
+
+    <h2 id="termination">6 · Как под уходит <a class="anchor-link" href="#termination">#</a></h2>
+    <p>Удаление пода - не мгновенное действие. API-сервер ставит в объекте отметку о времени удаления, после чего параллельно начинаются две вещи: контур сервисов убирает под из множества адресатов, а агент узла начинает его останавливать. Агент выполняет хук перед остановкой, если он объявлен, затем посылает основному процессу сигнал завершения и ждёт отведённый срок ожидания; по его истечении процесс убивается принудительно.</p>
+    <p>Обратите внимание, что эти две вещи идут параллельно и не синхронизированы. Балансировщики и правила на узлах узнают об уходе пода не в тот же миг, когда он получил сигнал завершения, поэтому запросы могут приходить в уже завершающийся под. Отсюда два требования к приложению, которые на собеседованиях спрашивают постоянно: оно должно обрабатывать сигнал завершения, а не игнорировать его до принудительного убийства, и у него должна быть пауза между получением сигнала и закрытием слушающего порта - обычно её делают хуком перед остановкой. Без этого каждая раскатка стоит вам порции ошибок у читателей, причём в журналах приложения их не видно.</p>
+    <p>Срок ожидания задаётся в поде и по умолчанию равен тридцати секундам. Он должен быть больше, чем самая долгая операция, которую приложение обязано закончить корректно: иначе вы теряете не соединения, а данные.</p>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <ol>
+        <li><strong>Критерий границы пода.</strong> Четыре «всегда» - один узел, общая судьба, общее масштабирование, общее обновление, - по которым вы решаете, один это под или два.</li>
+        <li><strong>Чтение состояния.</strong> Вы смотрите не на фазу, а на состояния контейнеров и события, и различаете ожидание узла, загрузку образа и цикл падений.</li>
+        <li><strong>Правило проб.</strong> Живость проверяет только себя и только дёшево, зависимости и прогрев - дело готовности, медленный старт - дело стартовой пробы.</li>
+        <li><strong>Контракт завершения.</strong> Обработка сигнала завершения, пауза перед закрытием порта и срок ожидания больше самой долгой операции.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="04.html">Контроллеры рабочих нагрузок</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="02.html">Объект, схема и API</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

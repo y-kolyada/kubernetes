@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Примеры · IGL · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Шесть задач того, кто отвечает не за своё приложение, а за правила, по которым в кластере живут чужие.">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/12.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/12.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/12.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/12.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/12.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Примеры · IGL">
+<meta property="og:description" content="Шесть задач того, кто отвечает не за своё приложение, а за правила, по которым в кластере живут чужие.">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/12.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Примеры · IGL","description":"Шесть задач того, кто отвечает не за своё приложение, а за правила, по которым в кластере живут чужие.","url":"https://y-kolyada.github.io/kubernetes/ru/12.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/"}}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/12.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="12.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/12.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/12.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html" aria-current="page"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Примеры · IGL</h1>
+    <p class="page-size" data-words="1466">Слов: 1466</p>
+    <p class="lead">Шесть задач того, кто отвечает не за своё приложение, а за правила, по которым в кластере живут чужие.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>На этой ступени меняется адресат правила. Pro настраивает своё приложение и отвечает за него; IGL задаёт правило, по которому живут команды, которых он не знает, и приложения, которых он не писал. Отсюда два требования, которых не было раньше. Правило должно вводиться так, чтобы не уронить то, что уже работает, - поэтому почти каждый сценарий ниже начинается с режима наблюдения и только потом становится запретом. И у правила должен быть посчитанный <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">радиус</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Радиус отказа</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Круг того, что перестаёт работать при конкретном отказе.</span><span class="term-links"><a href="glossary.html#term-blast-radius">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>: что именно перестанет работать, когда сломается оно само.</p>
+      <p>Команды управляющего узла в этой главе - `kubeadm` и снимок хранилища - показаны как работа администратора на управляющем слое. На машине, где собран сайт, нет ни кластера, ни этих инструментов, поэтому они здесь не исполняются и не выдаются за проверенные: машина проверяет то, что может, и говорит об этом прямо.</p>
+    </div>
+
+    <h2 id="tenants">1 · Разделение арендаторов по пространствам имён <a class="anchor-link" href="#tenants">#</a></h2>
+    <p><strong>Задача:</strong> дать трём командам работать в одном кластере, не мешая друг другу и не видя чужого.</p>
+    <pre data-run="syntax"><code>apiVersion: v1
+kind: Namespace
+metadata:
+  name: shop
+  labels:
+    team: shop
+    env: prod
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: shop-developers
+  namespace: shop
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+subjects:
+- kind: Group
+  name: shop-developers
+  apiGroup: rbac.authorization.k8s.io</code></pre>
+    <div class="prints"><strong>Почему так:</strong> <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">пространство имён</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Пространство имён (Namespace)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Область внутри кластера, в которой уникальны имена и действуют права, квоты и политики.</span><span class="term-links"><a href="glossary.html#term-namespace">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> - граница для имён, прав, квот и политик, и только для них. Оно **не** граница для сети: без политик из главы 11 под из одного пространства спокойно постучится в под другого. Оно не граница для ядра: поды разных команд делят ядро узла, и уязвимость рантайма не знает о пространствах. И оно не граница для объектов уровня кластера - узлы, носители, определения своих типов общие, и право на них выдаётся кластерной ролью, а не этой. Кластерная роль в привязке здесь не ошибка: роль описывает набор глаголов, а привязка ограничивает его одним пространством. Отсюда честная формулировка, которую стоит произносить вслух при обещаниях бизнесу: пространства имён дают **мягкое** разделение - защиту от случайного соседа, а не от враждебного. Враждебный требует отдельных кластеров или изолированного рантайма, и это другой бюджет.</div>
+
+    <h2 id="quota">2 · Квоты и ограничения по умолчанию <a class="anchor-link" href="#quota">#</a></h2>
+    <p><strong>Задача:</strong> не дать одной команде занять весь кластер и при этом не ломать тех, кто забыл проставить запросы.</p>
+    <pre data-run="syntax"><code>apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: shop
+  namespace: shop
+spec:
+  hard:
+    requests.cpu: "20"
+    requests.memory: 20Gi
+    limits.memory: 40Gi
+    pods: "80"
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: defaults
+  namespace: shop
+spec:
+  limits:
+  - type: Container
+    defaultRequest:
+      cpu: 100m
+      memory: 256Mi
+    default:
+      memory: 512Mi</code></pre>
+    <div class="prints"><strong>Почему так:</strong> эти два объекта обязаны вводиться вместе. Квота на запросы означает, что контейнер **без** запроса кластером не принимается вовсе: кластеру нечего прибавить к сумме. Если выставить квоту в живое пространство имён, где половина подов запросов не объявляет, сломается не сразу всё, а следующая раскатка каждой такой команды - в худший момент и без видимой связи с вашим изменением. Диапазон ограничений закрывает эту дыру: он подставляет запрос по умолчанию тем, кто его не написал. Дальше арифметика, которую стоит сделать до внедрения: двадцать гигабайт запросов при подставляемых двухстах пятидесяти шести мегабайтах - это восемьдесят подов, ровно столько же, сколько разрешает отдельный счётчик. Числа согласованы нарочно: <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">квота</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Квота и диапазон ограничений</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Пара объектов: предел потребления пространства имён и значения по умолчанию для тех, кто их не указал.</span><span class="term-links"><a href="glossary.html#term-quota">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, у которой счётчик подов и сумма памяти расходятся, упирается в одно из ограничений раньше другого, и команда получает отказ, причину которого ищет полдня. И помните, что квота считает **запросы**, а не потребление, и применяется на допуске: уменьшение квоты не убивает уже работающие поды, оно запрещает следующие.</div>
+
+    <h2 id="psa">3 · Стандарт безопасности подов на весь кластер <a class="anchor-link" href="#psa">#</a></h2>
+    <p><strong>Задача:</strong> запретить привилегированные поды везде, не сломав то, что уже работает.</p>
+    <pre data-run="syntax"><code>apiVersion: v1
+kind: Namespace
+metadata:
+  name: shop
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: v1.33
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted</code></pre>
+    <div class="prints"><strong>Почему так:</strong> проверка встроена в API-сервер, и включается она метками на пространстве имён - ни одного дополнительного компонента ставить и обслуживать не нужно. Уровней три: разрешено всё, базовый и строгий; режимов тоже три, и в этом вся техника безопасного внедрения. Сначала ставятся только `audit` и `warn`: кластер начинает писать в журнал аудита и отвечать предупреждением в ответ на применение, но ничего не запрещает. Вы собираете список нарушителей, чините их и лишь потом добавляете `enforce`. Версию стандарта закрепляют намеренно: требования строгого уровня от выпуска к выпуску ужесточаются, и незакреплённая версия означает, что очередное обновление кластера само по себе сделает часть подов нерабочими. Важная граница: запрет действует на **создание** подов, уже запущенные продолжают работать, поэтому включение строгого уровня не убивает кластер мгновенно - оно останавливает следующую раскатку, и это ещё один довод сначала посмотреть, потом запрещать.</div>
+
+    <h2 id="admission">4 · Политика допуска как код <a class="anchor-link" href="#admission">#</a></h2>
+    <p><strong>Задача:</strong> принимать образы только из своего реестра, и чтобы правило жило в репозитории, а не в голове дежурного.</p>
+    <pre data-run="syntax"><code>apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: images-from-our-registry
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups: [""]
+      apiVersions: ["v1"]
+      operations: ["CREATE", "UPDATE"]
+      resources: ["pods"]
+  validations:
+  - expression: "object.spec.containers.all(c, c.image.startsWith('registry.internal/'))"
+    message: "образ не из нашего реестра"
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: images-from-our-registry
+spec:
+  policyName: images-from-our-registry
+  validationActions: [Audit, Warn]
+  matchResources:
+    namespaceSelector:
+      matchExpressions:
+      - key: kubernetes.io/metadata.name
+        operator: NotIn
+        values: [kube-system]</code></pre>
+    <div class="prints"><strong>Почему так:</strong> правило - это выражение, которое считает сам API-сервер, а не ваш веб-обработчик. Разница не косметическая. Внешний обработчик - это компонент, который нужно развернуть, обновлять и держать живым; при `failurePolicy: Fail` его недоступность означает, что кластер перестаёт принимать изменения, и такая авария случалась у многих. Встроенная политика этой зависимости не создаёт. Привязка здесь намеренно отделена от самого правила: правило описывает, что считать нарушением, привязка - где и насколько строго. Поэтому внедрение идёт тем же путём, что и <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">стандарт безопасности</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Стандарт безопасности подов (Pod Security Admission)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Встроенная проверка параметров пода по трём уровням строгости, включаемая метками пространства имён.</span><span class="term-links"><a href="glossary.html#term-psa">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>: сначала `Audit` и `Warn`, потом `Deny`. И обратите внимание на исключение системного пространства: правило, применённое ко всему кластеру без него, запрещает перезапуск системных компонентов, образы которых живут в чужом реестре, - то есть ломает кластер руками того, кто его защищал.</div>
+
+    <h2 id="upgrade">5 · Обслуживание и обновление узлов без простоя <a class="anchor-link" href="#upgrade">#</a></h2>
+    <p><strong>Задача:</strong> поднять кластер на следующую минорную версию, не получив простоя и сохранив возможность вернуться.</p>
+    <pre data-run="cmd"><code>etcdctl snapshot save /backup/etcd-$(date +%F).db
+kubeadm upgrade plan
+kubeadm upgrade apply v1.33.4
+kubectl drain node-3 --ignore-daemonsets --delete-emptydir-data
+kubeadm upgrade node
+systemctl restart kubelet
+kubectl uncordon node-3</code></pre>
+    <div class="prints"><strong>Почему так:</strong> порядок здесь не вкусовой. Снимок хранилища делается **до всего**, потому что обновление само по себе необратимо: откатить версию управляющего слоя назад штатными средствами нельзя, и единственный путь назад - восстановление из снимка. Управляющий слой обновляется раньше узлов, потому что правило совместимости версий разрешает агенту узла отставать от API-сервера, но не опережать его; обратный порядок даёт узлы, которые сервер откажется обслуживать. Минорная версия берётся по одной: перепрыгнуть через выпуск нельзя, и попытка кончается отказом ещё на этапе плана. Дальше идёт цикл по узлам, и именно здесь эта глава встречается с предыдущей: <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">увод узла</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Увод узла (drain) и обновление</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Плановое освобождение узла от подов и смена версии кластера.</span><span class="term-links"><a href="glossary.html#term-drain">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> уважает бюджеты недоступности, поэтому команда ждёт, а не рвёт, и при верно написанном бюджете обслуживание идёт без простоя само собой. Флаг про демонов обязателен - иначе увод остановится на подах, которые по своей природе есть на каждом узле и переезжать не должны. Ни одна из этих команд не выполняется на машине, где собран сайт: кластера здесь нет, и проверка это честно показывает, разбирая блок как сценарий оболочки, но не запуская его.</div>
+
+    <h2 id="blast">6 · Защита управляющего слоя и радиус отказа <a class="anchor-link" href="#blast">#</a></h2>
+    <p><strong>Задача:</strong> заранее знать, что именно перестанет работать, если управляющий слой пропадёт на час.</p>
+    <pre data-run="cmd"><code>kubectl get nodes
+kubectl get --raw=/readyz?verbose
+kubectl get events --field-selector type=Warning --all-namespaces</code></pre>
+    <div class="prints"><strong>Почему так:</strong> первое, что нужно произнести вслух на разборе рисков: при отказе управляющего слоя **уже работающие поды продолжают работать**. Трафик идёт, потому что путь данных не спрашивает API-сервер на каждый запрос. Останавливается другое: размещение новых подов, масштабирование, раскатки и откаты, перезапуск упавшего пода на другом узле, работа всех контроллеров и операторов - и ваш собственный `kubectl`. То есть кластер не падает, он **застывает**, и опасность в том, что в таком состоянии он выглядит живым ровно до первой аварии на узле. Отсюда арифметика кворума, которую стоит помнить без шпаргалки: хранилище из трёх членов переживает отказ одного, из пяти - двух, из семи - трёх; чётное число членов не добавляет живучести, а добавляет только расход. И последнее, что обычно забывают посчитать: радиус шире кластера. В тот же API ходят сборочный конвейер, панели мониторинга и автомасштабатор узлов, поэтому часовой простой управляющего слоя останавливает и выкатки, и часть наблюдаемости - вещи, которые в отчёте о доступности сервиса обычно не числятся.</div>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <ul>
+        <li>Разделение арендаторов и честная формулировка его границы: мягкое, от случайного соседа.</li>
+        <li>Квота и ограничения по умолчанию, введённые вместе и согласованные арифметикой.</li>
+        <li>Стандарт безопасности подов с закреплённой версией и внедрением через наблюдение.</li>
+        <li>Политика допуска, которая живёт в репозитории и не добавляет кластеру зависимости.</li>
+        <li>Порядок обновления: снимок, управляющий слой, узлы по одному через увод.</li>
+        <li>Посчитанный радиус отказа: что застывает, что продолжает работать и кто ещё ходит в тот же API.</li>
+      </ul>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="13.html">Вопросы · Noob</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="11.html">Примеры · Pro</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ru" data-site="kubernetes">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сеть, сервисы и обнаружение · devops-kubernetes · ai|</title>
+<!-- meta: built by tools/build-meta.py - do not edit by hand -->
+<meta name="description" content="Модель сети кластера, сервис Сервис (Service) × Устойчивое имя и адрес для набора подов, найденных по селектору.">
+<link rel="canonical" href="https://y-kolyada.github.io/kubernetes/ru/06.html">
+<link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/06.html">
+<link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/06.html">
+<link rel="alternate" hreflang="uk" href="https://y-kolyada.github.io/kubernetes/uk/06.html">
+<link rel="alternate" hreflang="de" href="https://y-kolyada.github.io/kubernetes/de/06.html">
+<link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="devops-kubernetes">
+<meta property="og:title" content="Сеть, сервисы и обнаружение">
+<meta property="og:description" content="Модель сети кластера, сервис Сервис (Service) × Устойчивое имя и адрес для набора подов, найденных по селектору.">
+<meta property="og:url" content="https://y-kolyada.github.io/kubernetes/ru/06.html">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Сеть, сервисы и обнаружение","description":"Модель сети кластера, сервис Сервис (Service) × Устойчивое имя и адрес для набора подов, найденных по селектору.","url":"https://y-kolyada.github.io/kubernetes/ru/06.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/"}}</script>
+<!-- /meta -->
+<link rel="stylesheet" href="../assets/style.css?v=1">
+<script>
+  (function() {
+    var s = document.documentElement.dataset.site || 'swa';
+    var t = localStorage.getItem('swa-' + s + '-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var f = localStorage.getItem('swa-' + s + '-font');
+    if (f) document.documentElement.setAttribute('data-font', f);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand-group">
+    <a class="home" href="index.html">
+      <span class="badge-ai">ai|</span>
+      <span class="sub-brand">devops-kubernetes</span>
+    </a>
+    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+  </div>
+  <div class="utility-tray" role="toolbar" aria-label="Настройки отображения и язык">
+    <nav class="lang-switcher" aria-label="Язык страницы">
+      <a href="../en/06.html" lang="en" hreflang="en" aria-label="English">EN</a>
+      <a href="06.html" lang="ru" hreflang="ru" aria-label="Русский" class="active" aria-current="page">RU</a>
+      <a href="../uk/06.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
+      <a href="../de/06.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
+    </nav>
+    <div class="font-scaler" role="group" aria-label="Размер шрифта">
+      <button type="button" class="font-btn font-s" data-size="s" title="Мелкий шрифт" aria-label="Мелкий шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Стандартный шрифт" aria-label="Стандартный шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Крупный шрифт" aria-label="Крупный шрифт">A</button>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" title="Сменить тему (День/Ночь)" aria-label="Сменить тему день/ночь">
+      <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
+    </button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <nav class="contents" aria-label="Разделы сайта">
+    <ol>
+      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
+      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
+      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
+      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
+      <li><a href="06.html" aria-current="page"><span class="num">6</span>Сеть и сервисы</a></li>
+      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
+      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
+      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
+      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+    </ol>
+    <div class="nav-extra">
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навигатор</a></div>
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словарь понятий</a></div>
+    </div>
+    <div class="page-toc" id="pageToc" aria-label="Разделы этой страницы" hidden>
+      <ul class="toc-list" id="tocList"></ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <h1>Сеть, сервисы и обнаружение</h1>
+    <p class="page-size" data-words="1637">Слов: 1637</p>
+    <p class="lead">Модель сети кластера, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">сервис</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Сервис (Service)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Устойчивое имя и адрес для набора подов, найденных по селектору.</span><span class="term-links"><a href="glossary.html#term-service">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> как устойчивый адрес над меняющимся множеством подов, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">срез адресатов</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Срез адресатов (EndpointSlice)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Список адресов подов сервиса, который ведёт контроллер и в который попадают только готовые поды.</span><span class="term-links"><a href="glossary.html#term-endpointslice">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> и готовность, правила на узле, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">DNS</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Служба имён кластера</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Внутренний DNS, превращающий имя сервиса в его адрес.</span><span class="term-links"><a href="glossary.html#term-dns">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">вход снаружи</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Вход снаружи (Ingress, Gateway API)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Слой маршрутизации внешнего трафика по именам и путям поверх одного входа в кластер.</span><span class="term-links"><a href="glossary.html#term-ingress">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span> и сетевые политики.</p>
+
+    <div class="box key" id="key-idea">
+      <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
+      <p>Поды появляются и исчезают, и адрес каждого живёт ровно столько, сколько живёт он сам. Обращаться по адресу пода бессмысленно, и поэтому в Kubernetes есть сервис - имя и адрес, которые не меняются никогда, а за ними стоит множество, которое меняется постоянно. Всё поведение сети кластера выводится из одного вопроса: кто и по какому правилу поддерживает это множество. Ответ короткий: контроллер, по селектору меток и по пробе готовности. Отсюда и то, что сервис начинает отдавать трафик в новый под сам, и то, что под в состоянии работы может не получать запросов, и то, что <span class="term"><button type="button" class="term-btn" aria-expanded="false" style="background:none;border:none;padding:1px 4px;margin:-1px -4px;font:inherit;color:inherit;cursor:pointer;border-bottom:2px dashed var(--term-accent,#db8b0e);border-radius:4px;">сетевая политика</button><span class="term-card" role="tooltip" hidden><span class="term-header"><strong class="term-title">Сетевая политика (NetworkPolicy)</strong><button type="button" class="term-close" aria-label="Закрыть">&times;</button></span><span class="term-desc">Объект, описывающий, какой трафик разрешён к подам и от них.</span><span class="term-links"><a href="glossary.html#term-netpol">В словарь понятий <svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg></a></span></span></span>, написанная без учёта этого множества, молча не действует.</p>
+    </div>
+
+    <h2 id="flat-network">1 · Плоская сеть: у каждого пода свой адрес <a class="anchor-link" href="#flat-network">#</a></h2>
+    <p>Модель сети Kubernetes описывается тремя обещаниями. У каждого пода есть собственный адрес. Любой под может обратиться к любому другому поду напрямую по этому адресу, без преобразования адресов и без проброса портов. Узел может обратиться к поду на себе и на любом другом узле. Никаких исключений в модели нет: сеть плоская.</p>
+    <p>Сам Kubernetes этого не реализует. Реализует сетевой модуль, который вы ставите в кластер отдельно, и он может быть устроен очень по-разному: наложенная сеть с туннелями, маршрутизация без наложения, сеть облачного провайдера. Для вас как инженера приложения разница почти незаметна, кроме двух мест, где она вылезает всегда: производительность на больших объёмах трафика и поддержка сетевых политик, о которых в конце главы.</p>
+    <p>Главное свойство адреса пода - он временный. Пересоздали под, и адрес другой. Поэтому в описаниях приложения адресов подов не бывает: ни в конфигурации, ни в коде, ни в списке соседей. Везде, где вам нужен адрес чего-то в кластере, стоит имя сервиса.</p>
+
+    <h2 id="service">2 · Сервис: имя, которое не меняется <a class="anchor-link" href="#service">#</a></h2>
+    <p>Сервис - это объект с собственным адресом из отдельного диапазона кластера и селектором меток. Адрес выдаётся при создании и держится до удаления объекта. Самое важное о нём: <strong>за этим адресом не стоит никакой процесс</strong>. Это не прокси, не балансировщик и не виртуальная машина; никто его не слушает. Это запись, из которой на каждом узле собираются правила перенаправления.</p>
+    <p>Типов сервиса четыре, и выбор между ними - это выбор, кто и откуда должен достучаться.</p>
+    <ul>
+      <li><strong>ClusterIP</strong> - адрес виден только внутри кластера. Значение по умолчанию и правильный выбор в девяти случаях из десяти.</li>
+      <li><strong>NodePort</strong> - вдобавок открывает один и тот же порт на каждом узле. Простой способ пустить трафик снаружи и плохой способ делать это в продакшне: порт из верхнего диапазона, узлы меняются, балансировку перед ними всё равно придётся строить самому.</li>
+      <li><strong>LoadBalancer</strong> - просит у инфраструктуры внешний балансировщик. Работает там, где эту просьбу есть кому исполнить; в кластере без такой интеграции объект останется в ожидании внешнего адреса навсегда, и это частая причина недоумения на учебном кластере.</li>
+      <li><strong>Без адреса вовсе</strong> - сервис, у которого адрес явно отключён. Тогда имя в DNS отдаёт не один адрес сервиса, а адреса всех подов множества. Так работают клиенты, которым нужно видеть участников поимённо: драйверы баз данных, клиенты очередей, сам набор состояний из главы 04.</li>
+    </ul>
+
+    <h2 id="endpoints">3 · Срез адресатов: где готовность встречается с сетью <a class="anchor-link" href="#endpoints">#</a></h2>
+    <p>Между сервисом и подами стоит третий объект - срез адресатов. Его ведёт отдельный контроллер: он берёт селектор сервиса, находит подходящие поды и записывает адреса тех из них, которые <strong>готовы</strong>. Не запущены, а именно готовы, то есть прошли пробу готовности из главы 03.</p>
+    <p>Это место стоит запомнить точнее всего остального в главе, потому что через него объясняются два самых частых недоумения. Первое: под в состоянии работы, журнал чистый, а запросов нет - значит, его нет в срезе, и смотреть надо пробу готовности, а не сеть. Второе: во время раскатки часть запросов получает ошибку - значит, поды попадают в срез раньше, чем действительно готовы обслуживать, и проба готовности врёт.</p>
+
+    <div class="box">
+      <svg viewBox="0 0 320 198" width="100%" style="max-width:320px;height:auto;display:block;margin:0 auto" role="img" aria-label="Сервис с селектором ведёт к срезу адресатов, в который контроллер записывает адреса только готовых подов; неготовый под в срез не попадает и трафика не получает">
+        <defs>
+          <marker id="arr06" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <g stroke="currentColor" stroke-width="1.2" fill="currentColor" fill-opacity="0.05">
+          <rect x="2" y="4" width="316" height="46" rx="8"/>
+          <rect x="2" y="62" width="316" height="46" rx="8"/>
+          <rect x="2" y="146" width="96" height="48" rx="6"/>
+          <rect x="112" y="146" width="96" height="48" rx="6"/>
+        </g>
+        <rect x="222" y="146" width="96" height="48" rx="6" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 3" fill="none"/>
+        <g fill="currentColor" font-size="13">
+          <text x="12" y="24">Service web</text>
+          <text x="12" y="82">EndpointSlice</text>
+          <text x="12" y="166">Pod</text>
+          <text x="122" y="166">Pod</text>
+          <text x="232" y="166">Pod</text>
+        </g>
+        <g fill="currentColor" font-size="12" opacity="0.75">
+          <text x="12" y="40">селектор app: web</text>
+          <text x="12" y="98">адреса только готовых подов</text>
+          <text x="12" y="184">готов</text>
+          <text x="122" y="184">готов</text>
+          <text x="232" y="184">не готов</text>
+        </g>
+        <g stroke="currentColor" stroke-width="1.2" fill="none">
+          <path d="M160 50 V 58" marker-end="url(#arr06)"/>
+          <path d="M160 108 V 130 H 50 V 144" marker-end="url(#arr06)"/>
+          <path d="M160 130 V 144" marker-end="url(#arr06)"/>
+          <path d="M160 130 H 270 V 144" stroke-dasharray="4 3" opacity="0.4"/>
+        </g>
+        <text x="270" y="126" fill="currentColor" font-size="12" opacity="0.6" text-anchor="middle">не в срезе</text>
+      </svg>
+      <p class="dim">Схема 6. Проба готовности управляет не перезапуском, а членством в этом множестве. Поэтому «под работает, но трафика нет» - вопрос к пробе, а не к сети.</p>
+    </div>
+
+<pre data-run="syntax"><code>apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  selector:
+    app: web
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  clusterIP: None
+  selector:
+    app: db
+  ports:
+    - name: pg
+      port: 5432</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Два сервиса к двум разным задачам. Первый даёт один устойчивый адрес и раскладывает по нему соединения: клиенту всё равно, сколько подов за именем. Второй отключает адрес совсем, и тогда имя в DNS отдаёт адреса самих подов - это нужно базе, участники которой должны знать друг друга поимённо. Обратите внимание на разделение портов: <code>port</code> - это порт сервиса, <code>targetPort</code> - порт контейнера, и путать их означает получить соединение, которое устанавливается и молчит.</div>
+
+    <h2 id="kube-proxy">4 · Как запрос попадает в под <a class="anchor-link" href="#kube-proxy">#</a></h2>
+    <p>На каждом узле работает агент, который следит за сервисами и срезами адресатов и превращает их в правила ядра. Когда контейнер на этом узле обращается к адресу сервиса, правило подменяет адрес назначения на адрес одного из подов множества. Никакого прокси в пути нет, перенаправление делает ядро.</p>
+    <p>Из этого следуют свойства, которые на собеседовании спрашивают именно в такой формулировке. Распределение идёт по соединениям, а не по запросам: если клиент держит одно долгое соединение, все его запросы придут в один и тот же под, сколько бы их ни было - постоянное соединение и балансировка на этом уровне несовместимы. Протокол не разбирается: сеть не знает, что внутри HTTP, и не умеет ни повторить запрос, ни отправить его в другой под при ошибке. И правила обновляются не мгновенно: между исчезновением пода и исчезновением его адреса из правил на всех узлах проходит время - именно его закрывает пауза перед остановкой из главы 03.</p>
+
+    <h2 id="dns">5 · DNS внутри кластера <a class="anchor-link" href="#dns">#</a></h2>
+    <p>Каждый сервис получает имя в кластерном DNS, и полная форма имени складывается из имени сервиса, пространства имён и общего кластерного суффикса. Внутри своего пространства имён достаточно короткого имени, в чужое обращаются по имени с пространством.</p>
+    <p>Разрешение коротких имён работает за счёт списка доменов поиска, который подставляется в поде. У этого механизма есть известная цена: прежде чем признать имя внешним, клиент перебирает домены поиска по очереди, и обращение к внешнему адресу стоит нескольких лишних запросов. На нагруженном сервисе, который ходит наружу, это видно в задержке и в нагрузке на DNS, и лечится либо полным именем с точкой на конце, либо настройкой политики DNS в поде.</p>
+    <p>Сервис без адреса, упомянутый выше, в DNS ведёт себя иначе: имя отдаёт адреса подов, а у набора состояний каждый под получает ещё и собственное имя с номером. Это и есть способ обратиться к третьей реплике базы, а не к любой.</p>
+
+    <h2 id="ingress">6 · Вход снаружи: Ingress и Gateway API <a class="anchor-link" href="#ingress">#</a></h2>
+    <p>Сервис решает задачу внутри кластера. Чтобы пустить внутрь внешний трафик по именам сайтов и путям, нужен вход. Объект входа описывает правила маршрутизации: такой домен и такой путь ведут в такой сервис на такой порт.</p>
+    <p>И здесь обязательна оговорка, которая экономит часы: <strong>объект входа сам по себе не делает ничего.</strong> Его исполняет контроллер входа, который вы ставите в кластер отдельно. Нет контроллера - объект создан, выглядит правильно, и трафик не идёт. Это тот же урок, что с собственными видами ресурсов из главы 02: объект описывает желаемое, а поведение даёт контроллер.</p>
+    <p>На смену входу постепенно приходит Gateway API - набор объектов, разделённый по ролям: администратор кластера описывает шлюз и его слушатели, команда приложения описывает маршруты к своим сервисам. Разделение решает главную боль входа: раньше все команды правили один объект на всех, с чужими настройками в аннотациях.</p>
+
+    <h2 id="netpol">7 · Сетевые политики: запрет по умолчанию <a class="anchor-link" href="#netpol">#</a></h2>
+    <p>По умолчанию в кластере разрешено всё: любой под обращается к любому поду в любом пространстве имён. Пространство имён не изоляция, и об этом говорилось в главе 02.</p>
+    <p>Сетевая политика меняет это выборочно и по правилу, которое надо понять точно. Политика выбирает поды селектором и объявляет разрешённые направления. <strong>Как только под выбран хотя бы одной политикой для направления, всё остальное в этом направлении ему запрещено.</strong> То есть политики не складываются как запреты - они складываются как разрешения поверх запрета, который включился от факта выбора. Поэтому стандартный приём - сначала политика, выбирающая все поды пространства и не разрешающая ничего, а затем отдельные политики, открывающие нужное.</p>
+    <p>И вторая оговорка того же сорта, что с входом: <strong>сетевые политики исполняет сетевой модуль.</strong> Если установленный в кластере модуль их не поддерживает, объект создастся, будет выглядеть правильно и не будет действовать. Проверяется это не чтением манифеста, а попыткой соединения, которое политика должна была запретить.</p>
+
+<pre data-run="syntax"><code>apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: shop
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: web-from-gateway
+  namespace: shop
+spec:
+  podSelector:
+    matchLabels:
+      app: web
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: gateway
+      ports:
+        - protocol: TCP
+          port: 8080</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Пустой селектор в первом объекте означает «все поды пространства», а отсутствие правил - «ничего не разрешено». Это и есть запрет по умолчанию, и писать его надо явно, потому что сам по себе кластер его не включает. Второй объект открывает ровно одну щель. Заметьте, что запрет исходящего трафика в первом объекте ломает и обращения к кластерному DNS: как только вы включили <code>Egress</code>, разрешение имён придётся разрешить отдельным правилом - это первая ошибка, на которую наступают все.</div>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
+      <ol>
+        <li><strong>Правило адресации.</strong> В описаниях не бывает адресов подов: везде имя сервиса, а имя разрешается кластерным DNS.</li>
+        <li><strong>Диагностика «работает, но трафика нет».</strong> Вы начинаете со среза адресатов и пробы готовности, а не с сети.</li>
+        <li><strong>Понимание балансировки.</strong> Она идёт по соединениям и не разбирает протокол, поэтому постоянное соединение приходит в один под, а повтор запроса - забота клиента.</li>
+        <li><strong>Два объекта, которые ничего не делают сами.</strong> Вход и сетевая политика работают только при установленном исполнителе, и проверяются попыткой, а не чтением манифеста.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Соседние темы">
+        <p class="pager-next">Следующая тема: <a href="07.html">Конфигурация, секреты и хранение</a></p>
+        <p class="pager-prev">Предыдущая тема: <a href="05.html">Планировщик, ресурсы и вытеснение</a></p>
+      </nav>
+      <p class="footer-note">Сайт серии AI Factory. Сделан той же оснасткой, что и остальные: обычный HTML и CSS, проверка на bash, публикация через GitHub Pages.</p>
+    </footer>
+  </main>
+
+</div>
+</div>
+<script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
+</body>
+</html>
