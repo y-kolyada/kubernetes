@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Практический справочник-ассессмент по Kubernetes для инженера · devops-kubernetes · ai|</title>
+<title>A practical Kubernetes handbook and assessment for engineers · devops-kubernetes · ai|</title>
 <!-- meta: built by tools/build-meta.py - do not edit by hand -->
-<meta name="description" content="">
+<meta name="description" content="A practical Kubernetes handbook and assessment for engineers: from the reconciliation loop and the anatomy of an API object to networking, storage, RBAC...">
 <link rel="canonical" href="https://y-kolyada.github.io/kubernetes/en/index.html">
 <link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/kubernetes/ru/index.html">
 <link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/kubernetes/en/index.html">
@@ -14,13 +14,13 @@
 <link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/kubernetes/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="devops-kubernetes">
-<meta property="og:title" content="Практический справочник-ассессмент по Kubernetes для инженера">
-<meta property="og:description" content="">
+<meta property="og:title" content="A practical Kubernetes handbook and assessment for engineers">
+<meta property="og:description" content="A practical Kubernetes handbook and assessment for engineers: from the reconciliation loop and the anatomy of an API object to networking, storage, RBAC...">
 <meta property="og:url" content="https://y-kolyada.github.io/kubernetes/en/index.html">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/","inLanguage":"en","description":""}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"devops-kubernetes","url":"https://y-kolyada.github.io/kubernetes/","inLanguage":"en","description":"A practical Kubernetes handbook and assessment for engineers: from the reconciliation loop and the anatomy of an API object to networking, storage, RBAC..."}</script>
 <!-- /meta -->
 <link rel="stylesheet" href="../assets/style.css?v=2">
 <script>
@@ -43,7 +43,7 @@
       <span class="badge-ai">ai|</span>
       <span class="sub-brand">devops-kubernetes</span>
     </a>
-    <div class="three" aria-hidden="true">инструменты · <span class="topic">Kubernetes</span> · практика · 150 вопросов</div>
+    <div class="three" aria-hidden="true">tools · <span class="topic">Kubernetes</span> · practice · 150 questions</div>
   </div>
   <div class="utility-tray" role="toolbar" aria-label="Anzeigeeinstellungen und Sprache">
     <nav class="lang-switcher" aria-label="Page language">
@@ -67,21 +67,21 @@
 
   <nav class="contents" aria-label="Bereiche der Website">
     <ol>
-      <li><a href="01.html"><span class="num">1</span>Желаемое состояние</a></li>
-      <li><a href="02.html"><span class="num">2</span>Объект и API</a></li>
-      <li><a href="03.html"><span class="num">3</span>Под: единица запуска</a></li>
-      <li><a href="04.html"><span class="num">4</span>Контроллеры нагрузок</a></li>
-      <li><a href="05.html"><span class="num">5</span>Узлы и ресурсы</a></li>
-      <li><a href="06.html"><span class="num">6</span>Сеть и сервисы</a></li>
-      <li><a href="07.html"><span class="num">7</span>Секреты и хранение</a></li>
-      <li><a href="08.html"><span class="num">8</span>Доступ, RBAC и допуск</a></li>
-      <li><a href="09.html"><span class="num">9</span>Разбор отказов</a></li>
-      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
-      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
-      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
-      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
-      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
-      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+      <li><a href="01.html"><span class="num">1</span>Desired state</a></li>
+      <li><a href="02.html"><span class="num">2</span>Object and API</a></li>
+      <li><a href="03.html"><span class="num">3</span>Pod as the unit</a></li>
+      <li><a href="04.html"><span class="num">4</span>Workload controllers</a></li>
+      <li><a href="05.html"><span class="num">5</span>Nodes and resources</a></li>
+      <li><a href="06.html"><span class="num">6</span>Network and services</a></li>
+      <li><a href="07.html"><span class="num">7</span>Secrets and storage</a></li>
+      <li><a href="08.html"><span class="num">8</span>Access and RBAC</a></li>
+      <li><a href="09.html"><span class="num">9</span>Failure analysis</a></li>
+      <li><a href="10.html"><span class="num">10</span>Examples · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Examples · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Examples · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Questions · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Questions · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Questions · IGL</a></li>
     </ol>
     <div class="nav-extra">
       <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Navigator</a></div>
@@ -93,17 +93,105 @@
   </nav>
 
   <main id="main">
-    <h1>Практический справочник-ассессмент по Kubernetes для инженера</h1>
-    <p class="page-size" data-words="33">Words: 33</p>
+    <h1>A practical Kubernetes handbook and assessment for engineers</h1>
+    <p class="page-size" data-words="2579">Words: 2579</p>
+    <p class="lead">A practical Kubernetes handbook and assessment for engineers: from the reconciliation loop and the anatomy of an API object to networking, storage, RBAC, failure analysis and 150 qualification questions.</p>
 
-    <div class="stub-card">
-      <h2>The English version is in preparation</h2>
-      <p>The full working version of this page is published in Russian.</p>
-      <p>Open the full version:</p>
-      <div class="stub-actions">
-        <a href="../ru/index.html" class="btn-primary">Практический справочник-ассессмент по Kubernetes для инженера →</a>
-      </div>
+    <div class="box key" id="key-idea">
+      <h2>The key idea of this site <a class="anchor-link" href="#key-idea" aria-label="link to this block">#</a></h2>
+      <p>Most engineers treat Kubernetes as a complicated way to start a container. You take a manifest from the internal wiki, change the image name, run <code>kubectl apply</code> and wait. The Pod does not come up, so you delete it and create it again, add a replica, restart the Deployment, double the memory limit. Sometimes that helps. When it does not, what engineers call "Kubernetes being flaky" begins: random YAML edits copied from somebody's forum answer until something works. Six months later the team owns a dozen manifests nobody dares to touch, because nobody can tell which line was needed and which one arrived by accident and now holds production up.</p>
+      <p>The cause is not the complexity of the tool but the absence of a model of how it works. Kubernetes does not run your container. It stores a description of the desired state and continuously reconciles the actual state with it. When you run <code>apply</code> you are not issuing a start command: you are writing an object into the cluster store that says "let there be three replicas of this shape". From there a set of independent controllers takes over, and every one of them does the same thing: it compares desired with actual and takes the smallest action that reduces the difference. The Deployment controller creates a ReplicaSet, that one creates Pod objects, the scheduler assigns a node to each Pod, the node agent picks up the assignment and starts the containers, then writes the actual status back into the object. None of them knows about the others and none calls another directly: they communicate only through objects in the API.</p>
+      <p>Every practical conclusion in this course follows from that model. Declarative means the Pod you deleted will come back: the controller will see the shortfall and restore it, so the thing to argue with is the description, not the Pod. A failure always narrows down to one loop that stalled: a Pod in <code>Pending</code> means the scheduler found no node, <code>ImagePullBackOff</code> means the node agent could not fetch the image, a Pod in <code>Running</code> with no traffic means the readiness probe did not let it into the service endpoint slice. Diagnosis stops being guesswork and becomes a sequence of questions: which loop stalled, and what stopped it from closing the gap. This handbook teaches you to ask them in the right order.</p>
     </div>
+
+    <h2 id="whats-here">What is on this site <a class="anchor-link" href="#whats-here">#</a></h2>
+    <p>The material covers an engineer's path from a first manifest to responsibility for a cluster other teams run their work in: nine chapters on the mechanics, three chapters of battle-tested scenarios by maturity level, and three banks of qualification questions. The analysis goes top down through the layers - from the reconciliation loop to the object, from the object to the Pod, from the Pod to the node, then networking, disk, access boundaries and finally failures. Every chapter builds on the previous one and needs nothing from the ones that follow.</p>
+
+    <h3>The reconciliation loop and objects (chapters 01-02)</h3>
+    <ul>
+      <li><strong>01 · Desired state and the reconciliation loop.</strong> What the control plane is made of: the API server as the single entry point, etcd as the single store of desired state, a set of controllers and the scheduler. What a reconciliation loop is and why a cluster converges on a state instead of executing steps. The role of etcd in practice: what a backup of it physically means, what is lost when it is lost, and why a control plane without it becomes a set of nodes living out their last known assignment.</li>
+      <li><strong>02 · The object, its schema and the API.</strong> The anatomy of an object: <code>apiVersion</code>, <code>kind</code>, <code>metadata</code>, <code>spec</code> and <code>status</code>, and why you write the first four while the cluster writes the fifth. Groups, versions and resource kinds, namespaces against cluster scope, labels and selectors as the mechanism that binds objects together, annotations as the place for tooling data, owner references and cascading deletion, extending the schema with custom resource definitions.</li>
+    </ul>
+
+    <h3>The Pod and the controllers (chapters 03-04)</h3>
+    <ul>
+      <li><strong>03 · The Pod: the unit of execution.</strong> What a Pod physically is: a shared network namespace and one address for the whole group of containers, shared volumes, containers running side by side and reaching each other over <code>localhost</code>. Init containers and their strict order, sidecars and their lifecycle, the image and the runtime through the container interface. The Pod lifecycle phases, the restart policy, exponential backoff and three probes - startup, readiness and liveness - each with its own decision and its own cost of being wrong.</li>
+      <li><strong>04 · Workload controllers.</strong> The Deployment above the ReplicaSet and why the intermediate object exists, stable identity and ordering in a StatefulSet, an agent on every node, a job that runs to completion and its schedule, autoscaling as yet another controller. Update strategies, rollout progress and rollback, revisions, and the main point: a controller is the same reconciliation loop one level up, so its failure is diagnosed with the same questions.</li>
+    </ul>
+
+    <h3>Node, network and storage (chapters 05-07)</h3>
+    <ul>
+      <li><strong>05 · The scheduler, resources and eviction.</strong> How a node is chosen: the filtering phase and the scoring phase, the node selector, affinity and anti-affinity, node taints and tolerations for them, spreading across failure zones. Requests against limits and what the physical difference between them is, the three quality of service classes, what a CPU limit does to latency through throttling and what a memory limit does to a process through OOM. Node pressure, eviction, draining a node without downtime through <code>cordon</code> and <code>drain</code>, the disruption budget.</li>
+      <li><strong>06 · Networking, services and discovery.</strong> The cluster network model and the role of the network plugin, a Service as a stable address over a changing set of Pods, service types and what each one demands from the infrastructure, endpoint slices and their link to readiness, the rules on the node, DNS inside the cluster and its name format, ingress from outside through Ingress and the Gateway API, network policies as deny by default.</li>
+      <li><strong>07 · Configuration, secrets and storage.</strong> The ConfigMap and the Secret: mounting as a volume against environment variables, and why the first updates while the second does not. What the word "secret" actually means in the cluster store and what it takes to make it true. The volume, the claim and the medium itself, the storage class and dynamic provisioning, the driver interface, the moment the disk is created and why that matters in a multi-zone cluster, access modes and what they do not promise, the reclaim policy and how data is lost through it.</li>
+    </ul>
+
+    <h3>Access boundaries and failures (chapters 08-09)</h3>
+    <ul>
+      <li><strong>08 · Access: authentication, RBAC and admission.</strong> A request's path through the API server step by step: authentication by certificate, by service account token or through an external provider, authorization by roles and bindings with a check through <code>auth can-i</code>, then admission control - mutating and validating webhooks, the built-in Pod Security Standards, the container security context and what exactly it switches off.</li>
+      <li><strong>09 · Why a Pod does not run.</strong> The engineering path from "it does not work" to the cause. <code>Pending</code> with no suitable node, <code>ImagePullBackOff</code>, <code>CrashLoopBackOff</code> and reading the exit code, <code>OOMKilled</code>, an evicted Pod, a Pod in <code>Running</code> with no traffic because of the readiness probe, a deletion stuck on a finalizer. Events as the primary source, the log of the previous run, and the rule every analysis starts with: first name the reconciliation loop that stalled.</li>
+    </ul>
+
+    <h3>Practical scenarios and question banks (chapters 10-15)</h3>
+    <p><strong>Battle-tested scenarios by maturity level.</strong> Every practical chapter holds six or seven proven scenarios in the strict triad "Task - Code - Why it is done this way":</p>
+    <ul>
+      <li><strong>10 · Examples · Noob</strong> - the foundation: a first Deployment and a Service for it, a readiness probe, requests and limits, configuration into environment variables, rolling back a failed release, reading the log of a crashed container, and the namespace that makes the Pod list look empty.</li>
+      <li><strong>11 · Examples · Pro</strong> - production in a team: a StatefulSet with a disk, a disruption budget, autoscaling on a metric, a network policy with deny by default, a service account with least privilege, graceful shutdown through <code>preStop</code> and spreading across zones.</li>
+      <li><strong>12 · Examples · IGL</strong> - the platform level: separating tenants by namespace, quotas and default limits, a Pod Security Standard for the whole cluster, admission policy as code, node maintenance and upgrades without downtime, protecting the control plane, and a blast radius counted before the incident.</li>
+    </ul>
+    <p><strong>Qualification question banks.</strong> Three banks of fifty questions each with a full engineering answer, grouped in tens:</p>
+    <ul>
+      <li><strong>13 · Questions · Noob</strong> - the object and its fields, the Pod and its containers, probes and restarts, Deployment and Service, basic diagnosis.</li>
+      <li><strong>14 · Questions · Pro</strong> - controllers and rollouts, the scheduler and affinity, resources and quality of service classes, networking and DNS, storage and secrets.</li>
+      <li><strong>15 · Questions · IGL</strong> - permissions and admission, workload security, a multi-tenant cluster and quotas, failures and their blast radius, running and upgrading a cluster.</li>
+    </ul>
+    <p><strong>Tools that run through the whole course.</strong> The engineering navigator synthesises the subject through nine canonical lenses: Components, Code and scripts, Strengths, Weaknesses and limits, Links in the ecosystem, In the context of AI, In the context of the cloud, DevOps practices and SRE practices, each with links into the chapters. The glossary collects the mechanisms and acronyms introduced by the navigator and the chapters, explaining the physics of what happens and the cost of getting it wrong in production.</p>
+
+    <h2 id="levels">Three maturity levels, and why they are kept apart <a class="anchor-link" href="#levels">#</a></h2>
+    <p>An engineer's value in running clusters is not measured by the number of <code>kubectl</code> flags memorised, but by the radius of consequences they hold in their head while editing one line of a manifest. The same task is solved differently depending on qualification, and the difference is not tidiness but the size of the picture.</p>
+    <ul>
+      <li><strong>Noob (beginner).</strong> The engineer solves the problem of a single service: bring it up, open a port, read the log. The goal of this level is to remove the magic and the fear of the command line, to learn to read an object as a document and to understand what happens between <code>apply</code> and a working Pod.</li>
+      <li><strong>Pro (professional).</strong> The engineer is responsible for the reliability of a product team's services. The goal of this level is the absence of silent failures: correct probes, honest resource requests, a predictable rollout and rollback, a disruption budget, and working in a shared cluster without harming the neighbours.</li>
+      <li><strong>IGL (In-Game Leader).</strong> The systems leader of the platform, who sees the whole field: they set the rules the other teams play by and answer for the result. Engineering is a team game: the IGL designs tenant isolation, resource limits, security standards and the upgrade order so that one team's mistake does not leave its boundaries, and the failure of a node or a zone does not turn into the failure of the product.</li>
+    </ul>
+
+    <div class="box">
+      <h3>A worked example: how the answer changes as the level grows</h3>
+      <p><strong>A question from a technical assessment:</strong> "How do you roll out a new version of a service in Kubernetes so that readers never see an error?"</p>
+      <p><strong>The Noob answer.</strong> "We change the image tag in the Deployment manifest, run <code>kubectl apply -f deploy.yaml</code> and watch <code>kubectl get pods</code>. Once all the Pods are in <code>Running</code>, the version is out. If something went wrong, we change the tag back and apply again."</p>
+      <p><strong>The Pro answer.</strong> "<code>Running</code> does not mean ready to serve: a Pod enters the service endpoint slice only after a successful readiness probe, so the container needs a readiness probe that actually checks its dependencies and a separate startup probe for a slow start. The rollout uses the <code>RollingUpdate</code> strategy with <code>maxUnavailable: 0</code> so capacity never drops, progress is watched with <code>kubectl rollout status</code> under a timeout, and a rollback is <code>kubectl rollout undo</code> to the previous revision. Old Pods must leave cleanly: the application handles the termination signal, <code>terminationGracePeriodSeconds</code> has headroom, and a <code>preStop</code> hook lets the Pod leave the load balancer before it closes connections. A disruption budget protects the quorum while nodes are drained."</p>
+      <p><strong>The IGL answer.</strong> "A rollout is a property of the platform, not an action of an engineer. 1) A readiness contract: the standard for probes and graceful shutdown is enforced by admission policy, and a manifest without them never reaches the cluster. 2) A capacity invariant: <code>maxUnavailable: 0</code>, replicas spread across failure zones, and a disruption budget agreed with the replica count, or node maintenance will either stall on it or take the service down. 3) Rollout observability: automation waits not for Pods to appear but for the state and the error rate to converge, and rolls back on a threshold by itself. 4) Blast radius: a namespace quota and limits keep the new version from evicting its neighbours, and priority and preemption are set so that when resources run short the least important thing falls, not a random one. 5) Reversibility: revisions are kept and the database schema changes compatibly in both directions, so rolling back the code never requires rolling back the data. My job is to make the Pro answer the default in this cluster, rather than a feat performed by whoever is on call."</p>
+    </div>
+
+    <h2 id="features">How this handbook is built <a class="anchor-link" href="#features">#</a></h2>
+    <p>The site follows the canons of simple web architecture: plain HTML and CSS, a minimum of hand-written JavaScript, no external services and no build step. It opens straight from the file system and works as fast on a phone in the metro as on a workstation.</p>
+    <ul>
+      <li><strong>Instant local search.</strong> The box in the header finds objects, fields, commands and qualification questions without calling a server; the index is fetched only on the first query.</li>
+      <li><strong>Terms in context.</strong> Key concepts are underlined with a dashed line: a tap shows the definition and a link into the glossary without taking you off the page.</li>
+      <li><strong>Four languages.</strong> The pages are meant to be read in Russian, English, Ukrainian and German, and switching keeps you on the current section.</li>
+      <li><strong>Reading ergonomics.</strong> A light and a dark theme, three font sizes, and the choice is remembered in the browser.</li>
+      <li><strong>Copying manifests.</strong> Every example has a copy button: configuration never has to be retyped by hand.</li>
+      <li><strong>Machine-checked claims.</strong> The facts published here about object fields and tool behaviour are declared together with the command that proves them, and those commands are executed by the site check. A claim without a command does not reach the page.</li>
+    </ul>
+
+    <div class="box key" id="artifacts">
+      <h2>Artifacts: what you have after this page <a class="anchor-link" href="#artifacts">#</a></h2>
+      <p>Time spent on a model of how Kubernetes works comes back as speed in failure analysis and calm on call. Having read the handbook, you walk away with four tangible results:</p>
+      <ol>
+        <li><strong>A working model of the reconciliation loop.</strong> You understand what happens between <code>apply</code> and a running Pod, and you can name step by step who created the object, who picked the node and who started the container.</li>
+        <li><strong>The skill of locating a failure.</strong> From a Pod's state and its events you name the stalled loop and the cause, instead of restarting and hoping.</li>
+        <li><strong>A manifest with no spare lines.</strong> You know what each field in your description is there for, and you are not afraid to delete the one that arrived by accident.</li>
+        <li><strong>Readiness for an assessment.</strong> One hundred and fifty worked questions, from the anatomy of an object to tenant isolation and cluster upgrades.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Neighbouring topics">
+        <p class="pager-next">Next topic: <a href="01.html">Desired state and the reconciliation loop</a></p>
+      </nav>
+      <p class="footer-note">An AI Factory series site. Built with the same harness: plain HTML and CSS, checked with bash, published via GitHub Pages.</p>
+    </footer>
   </main>
 
 </div>
