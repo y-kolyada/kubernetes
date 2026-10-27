@@ -1,21 +1,37 @@
 #!/usr/bin/env python3
-"""Structure check: a translated page against its Russian original.
-
-A translation must stay a translation: same structure, same anchors, same
-commands. Accepting fifty pages in a language you do not read is guesswork
-otherwise.
+"""Two contracts: a finished translation, and a page that is still a stub.
 
     python3 tools/check-struct.py en            every page of a language
     python3 tools/check-struct.py en/01.html    one page
     python3 tools/check-struct.py uk de         several languages
 
-Compared: the set and order of all ids; the number of sections; the number of
-code blocks and the skeleton of each (comments and human strings stripped, so
-comments may be translated but grep -q must not become grep -Q); the number of
-questions, exactly fifty on a level page; the alphabet (no Cyrillic in English
-and German, Ukrainian letters present and Russian-only letters absent in
-Ukrainian); and the shell - fifteen navigation items, four languages, no stub
-card left behind.
+A page carrying `.stub-card` is held to the **stub contract**; a page without
+one to the **translation contract**. Which applied is printed per page, so the
+person accepting the work sees it and the day a language stops being a stub is
+visible in the output.
+
+**Translation contract.** A translation must stay a translation: the set and
+order of all ids; the number of sections; the number of code blocks and the
+skeleton of each (comments and human strings stripped, so comments may be
+translated but grep -q must not become grep -Q); the number of questions,
+exactly fifty on a level page; plus everything the stub contract asks.
+Accepting fifty pages in a language you do not read is guesswork otherwise.
+
+**Stub contract.** The alphabet of its own language; the shell - fifteen
+navigation items and four languages; and a way out: the card links to the
+source page with the same file name. Nothing about anchors, sections or code
+blocks is asked of a page that has none.
+
+The second contract exists because without it nothing checked a stub at all,
+and the gap was not theoretical: the stamp used to write the source language's
+placeholder into every folder, and a whole site shipped with Russian titles and
+Russian menus on all 54 foreign pages. Twelve checks were green and the
+Architect found it by eye (lessons/notes-1.md 10 of devops-kubernetes).
+
+Note what the stub contract does **not** ask: that the title differ from the
+original. The alphabet rule already catches a placeholder left in the source
+language, while "must differ" would redden an honest page that is called the
+same in two languages - a chapter named Docker is named Docker in both.
 
 Output is Russian: it speaks to the person who accepts the work.
 """
@@ -45,6 +61,8 @@ ENTITIES = (('&lt;', '<'), ('&gt;', '>'), ('&quot;', '"'), ('&#39;', "'"), ('&am
 CODEISH = set('${}()[]<>*~|&/=+\\`!%^')
 
 CYRILLIC = re.compile(r'[\u0400-\u04FF]')
+H1 = re.compile(r'<h1\b[^>]*>(.*?)</h1>', re.S | re.I)
+MARKUP = re.compile(r'<[^>]+>')
 UK_OWN = re.compile(r'[іїєґІЇЄҐ]')
 RU_ONLY = re.compile(r'[ыэъЫЭЪ]')
 
@@ -150,9 +168,71 @@ def facts(path):
     }
 
 
-def compare(target, source, lang):
+def title_of(raw):
+    found = H1.search(raw)
+    return ' '.join(MARKUP.sub(' ', found.group(1)).split()) if found else ''
+
+
+def shell_and_alphabet(a, b, lang, name):
+    """Общее у обоих контрактов: оболочка на месте и алфавит свой."""
     bad = []
+
+    # Заголовок, дословно совпавший с кириллическим оригиналом, не переведён.
+    # Правило точное и потому без ложных срабатываний: латинское название
+    # («Docker») совпадает на двух языках законно и кириллицы не содержит, а
+    # два многословных кириллических заголовка совпасть дословно не могут.
+    # Проверка алфавита этот случай не ловит на украинском: «есть украинские
+    # буквы» удовлетворяется любым словом страницы, и его даёт меню, поэтому
+    # «Раздел 9» в украинском заголовке проходил незамеченным.
+    here, there = title_of(a['raw']), title_of(b['raw'])
+    if here and here == there and CYRILLIC.search(here):
+        bad.append('заголовок не переведён, совпадает с оригиналом: «%s»' % here[:40])
+    if a['nav'] != SECTIONS:
+        bad.append('пунктов навигации %d вместо %d' % (a['nav'], SECTIONS))
+    if a['langs'] != 4:
+        bad.append('в переключателе языков %d ссылки вместо четырёх' % a['langs'])
+
+    # Переключатель языков вырезается из проверки алфавита: имя языка там
+    # намеренно написано на самом языке - «Русский», «Українська», - и читалка
+    # произносит его правильным голосом благодаря lang. Это требование
+    # доступности, а не недопереведённый текст.
+    speech = LANG_LINK.sub(' ', a['raw'])
+
+    if lang in ('en', 'de'):
+        left = CYRILLIC.findall(speech)
+        left = [c for c in left if c not in '\u0410']  # font-size button label, fixed by the shell generator
+        if left:
+            bad.append('осталась кириллица: %d символов' % len(left))
+    elif lang == 'uk':
+        if not UK_OWN.search(speech):
+            bad.append('нет украинских букв (і, ї, є, ґ) - страница не переведена')
+        if RU_ONLY.search(speech):
+            bad.append('остались русские буквы ы, э, ъ')
+    return bad, speech
+
+
+def stub_contract(a, b, lang, name):
+    """Страница-заглушка: своя оболочка и выход на страницу-источник.
+
+    Заглушка - честное состояние, в котором живёт каждый сайт серии по трём
+    языкам из четырёх. Требовать от неё якорей и разделов нельзя, а оставлять
+    её вовсе без проверки означает, что 54 страницы сайта не держит никто.
+    """
+    bad, speech = shell_and_alphabet(a, b, lang, name)
+    if 'class="btn-primary"' not in speech:
+        bad.append('в карточке нет кнопки выхода на полную версию')
+    elif 'href="../%s/%s"' % (SOURCE, name) not in speech:
+        bad.append('выход из заглушки ведёт не на ../%s/%s' % (SOURCE, name))
+    return bad
+
+
+def compare(target, source, lang):
     a, b = facts(target), facts(source)
+    name = os.path.basename(target)
+    if a['stub']:
+        return stub_contract(a, b, lang, name)
+
+    bad, _ = shell_and_alphabet(a, b, lang, name)
 
     if a['ids'] != b['ids']:
         only_here = [i for i in a['ids'] if i not in b['ids']]
@@ -181,29 +261,6 @@ def compare(target, source, lang):
         bad.append('вопросов %d, в оригинале %d' % (a['questions'], b['questions']))
     elif a['questions'] and a['questions'] != 50:
         bad.append('вопросов %d, а на странице уровня их ровно 50' % a['questions'])
-    if a['nav'] != SECTIONS:
-        bad.append('пунктов навигации %d вместо %d' % (a['nav'], SECTIONS))
-    if a['langs'] != 4:
-        bad.append('в переключателе языков %d ссылки вместо четырёх' % a['langs'])
-    if a['stub']:
-        bad.append('осталась карточка «перевод готовится»')
-
-    # Переключатель языков вырезается из проверки алфавита: имя языка там
-    # намеренно написано на самом языке - «Русский», «Українська», - и читалка
-    # произносит его правильным голосом благодаря lang. Это требование
-    # доступности, а не недопереведённый текст.
-    speech = LANG_LINK.sub(' ', a['raw'])
-
-    if lang in ('en', 'de'):
-        left = CYRILLIC.findall(speech)
-        left = [c for c in left if c not in '\u0410']  # font-size button label, fixed by the shell generator
-        if left:
-            bad.append('осталась кириллица: %d символов' % len(left))
-    elif lang == 'uk':
-        if not UK_OWN.search(speech):
-            bad.append('нет украинских букв (і, ї, є, ґ) - страница не переведена')
-        if RU_ONLY.search(speech):
-            bad.append('остались русские буквы ы, э, ъ')
     return bad
 
 
@@ -232,21 +289,25 @@ def main(argv):
         if lang == SOURCE:
             continue
         if not os.path.isfile(source):
-            rows.append((target, ['нет русского оригинала ' + source]))
+            rows.append((target, 'нет оригинала', ['нет русского оригинала ' + source]))
             continue
-        rows.append((target, compare(target, source, lang)))
+        kind = 'заглушка' if 'stub-card' in read(target) else 'перевод'
+        rows.append((target, kind, compare(target, source, lang)))
 
-    broken = [r for r in rows if r[1]]
+    broken = [r for r in rows if r[2]]
+    stubs = sum(1 for r in rows if r[1] == 'заглушка')
+    done = sum(1 for r in rows if r[1] == 'перевод')
     print()
-    print('  Сверка перевода с оригиналом')
+    print('  Перевод и заглушки: два контракта')
     print('  ' + '-' * 46)
-    for target, bad in rows:
+    for target, kind, bad in rows:
         mark = 'ДА ' if not bad else 'НЕТ'
-        print('  [ %s ] %s' % (mark, target))
+        print('  [ %s ] %-22s · %s' % (mark, target, kind))
         for line in bad:
             print('        -> %s' % line)
     print('  ' + '-' * 46)
-    print('  страниц сверено: %d, расходятся: %d' % (len(rows), len(broken)))
+    print('  страниц сверено: %d (переводов %d, заглушек %d), расходятся: %d'
+          % (len(rows), done, stubs, len(broken)))
     print('  %s' % ('КРАСНОЕ' if broken else 'ЗЕЛЁНОЕ'))
     print()
     return 1 if broken else 0

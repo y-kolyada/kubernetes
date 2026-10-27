@@ -17,7 +17,8 @@
 // Exits 1 if any page is faulty. Output is Russian: it speaks to the person
 // who accepts the work.
 
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { join, resolve } from 'node:path';
 
 const SKIP_DIRS = new Set(['.git', 'node_modules', '.claude', '.agents', '__pycache__']);
@@ -53,12 +54,61 @@ function pages(root) {
 const roots = process.argv.slice(2);
 const files = (roots.length ? roots : ['.']).flatMap((r) => (statSync(r).isDirectory() ? pages(r) : [r]));
 
+// A launch fails for two unrelated reasons and the repair differs: either the
+// browser binary is absent, or it is there and cannot load its system
+// libraries. Advising an install in the second case sends the reader to
+// reinstall what is already installed, and the real cause is visible only in
+// ldd's output. Measured on 26.10.2026: the binary was present at the revision
+// playwright asked for, four libraries were missing, and the old message
+// advised the browser install for twenty minutes of the wrong search.
+function browserBinaryOf(message) {
+  // Two shapes, because a launch fails at two different moments. A binary that
+  // started and died names itself in the launch line; one that was never there
+  // is named by playwright's own complaint. Without the second pattern the
+  // fallback below names the chromium binary while the headless shell was the
+  // one missing, and the reader goes looking at a path that was never tried.
+  const launched = message.match(/<launching>\s+(\S+)/);
+  if (launched) return launched[1];
+  const absent = message.match(/Executable doesn't exist at\s+(\S+)/);
+  if (absent) return absent[1];
+  try {
+    return chromium.executablePath();
+  } catch {
+    return '';
+  }
+}
+
+function missingLibrariesOf(binary) {
+  try {
+    const out = execFileSync('ldd', [binary], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+    return out.split('\n').filter((line) => line.includes('not found')).map((line) => line.trim());
+  } catch {
+    return [];
+  }
+}
+
 let browser;
 try {
   browser = await chromium.launch();
 } catch (e) {
-  console.error('браузер не запустился: ' + String(e.message).split('\n')[0]);
-  console.error('    npx playwright install chromium chromium-headless-shell');
+  const message = String(e.message);
+  console.error('браузер не запустился: ' + message.split('\n')[0]);
+  const binary = browserBinaryOf(message);
+  if (binary && existsSync(binary)) {
+    const missing = missingLibrariesOf(binary);
+    console.error('  бинарник на месте: ' + binary);
+    if (missing.length) {
+      console.error('  и не загружает системные библиотеки:');
+      for (const line of missing) console.error('    ' + line);
+      console.error('  это ставится в систему, переустановка браузера не поможет:');
+      console.error('    npx playwright install-deps');
+    } else {
+      console.error('  библиотеки загружаются, причина в самом запуске: смотрите сообщение выше');
+    }
+  } else {
+    console.error('  бинарник браузера не найден' + (binary ? ': ' + binary : ''));
+    console.error('    npx playwright install chromium chromium-headless-shell');
+  }
   process.exit(2);
 }
 
@@ -356,7 +406,14 @@ for (const file of files) {
   const overflow = await phone.evaluate(() => {
     const viewport = document.documentElement.clientWidth;
     const out = [];
+    // Выключная формула шире экрана прокручивается внутри своей обёртки:
+    // MathML не переносит формулу по строкам, а резать её на части вправе
+    // только автор. Послабление намеренно узкое - только внутри .math-block,
+    // который печатает генератор формул, - поэтому сайт без формул не теряет
+    // ни одной проверки. Измерено: формула ряда Тейлора на 390px даёт
+    // scrollWidth 620 при видимых 358 и шесть ложных срабатываний без этого.
     for (const el of document.querySelectorAll('body *')) {
+      if (el.closest('.math-block')) continue;
       if (el.getBoundingClientRect().right > viewport + 1) {
         out.push(el.tagName + ': ' + el.textContent.trim().slice(0, 30));
       }
@@ -371,6 +428,7 @@ for (const file of files) {
     const out = { font: document.documentElement.getAttribute('data-font'), over: [], early: true };
     const viewport = document.documentElement.clientWidth;
     for (const el of document.querySelectorAll('body *')) {
+      if (el.closest('.math-block')) continue;
       if (el.getBoundingClientRect().right > viewport + 1) {
         out.over.push(el.tagName + ': ' + el.textContent.trim().slice(0, 30));
       }
